@@ -16,13 +16,11 @@ export class ComplexDto {
   state: string;
 
   @IsString()
-  zip: string;
+  @IsOptional()
+  zip?: string;
 
   @IsOptional()
-  admin?: UserDto | string;
-
-  @IsOptional()
-  houses?: HouseDto[] | string[];
+  admin?: string;
 
   @IsOptional()
   metadata?: any;

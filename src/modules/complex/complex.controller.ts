@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -17,12 +18,12 @@ import { ComplexDto } from 'src/shared/dto/complex.dto';
 
 @Controller('complex')
 export class ComplexController {
-  constructor(private complexService: ComplexService) {}
-  // generate endpoints for the CRUD operations
+  constructor(private complex_service: ComplexService) {}
+
   // GET /complex
   @Get()
   async findAll(): Promise<Complex[]> {
-    const complexes: Complex[] = await this.complexService.findAll();
+    const complexes: Complex[] = await this.complex_service.findAll();
 
     if (!complexes.length) {
       throw new NotFoundException('No complexes found');
@@ -34,9 +35,9 @@ export class ComplexController {
   // POST /complex
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async createComplex(@Body() dto: ComplexDto): Complex {
+  async createComplex(@Body() dto: ComplexDto): Promise<Complex> {
     try {
-      const complex: Complex = await this.complexService.create(dto);
+      const complex: Complex = await this.complex_service.create(dto);
       return complex;
     } catch (error) {
       throw new BadRequestException(error);
@@ -46,7 +47,7 @@ export class ComplexController {
   // GET /complex/:id
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Complex> {
-    const complex: Complex = await this.complexService.findOne(id);
+    const complex: Complex = await this.complex_service.findOne(id);
 
     if (!complex) {
       throw new NotFoundException(`Complex with id ${id} not found`);
@@ -60,19 +61,17 @@ export class ComplexController {
   async updateComplex(
     @Param('id') id: string,
     @Body() dto: ComplexDto,
-  ): Promise<UpdateResult> {
-    const result: UpdateResult = await this.complexService.update(id, dto);
-    
-    if()
+  ): Promise<Complex> {
+    return this.complex_service.update(id, dto);
   }
 
   // DELETE /complex/:id
   @Delete(':id')
-  async deleteComplex(@Param('id') id: string): Promise<void> {
+  async deleteComplex(@Param('id') id: string): Promise<Complex> {
     try {
-      await this.complexService.delete(id);
+      return await this.complex_service.remove(id);
     } catch (error) {
-      throw new BadRequestException(error);
+      throw error;
     }
   }
 }
