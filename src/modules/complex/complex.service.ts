@@ -42,6 +42,7 @@ export class ComplexService {
       state,
       zip,
     });
+
     const saved_complex = await this.complex_repo.save(new_complex);
 
     return saved_complex;

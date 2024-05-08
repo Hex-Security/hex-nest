@@ -1,17 +1,11 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  OneToMany,
-  OneToOne,
-} from 'typeorm';
+import { Entity, Column, OneToMany, PrimaryColumn } from 'typeorm';
 import { Access } from './access.entity';
 import { Vehicle } from './vehicle.entity';
 
 @Entity()
 export class Visitor {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryColumn()
+  uid: string;
 
   @Column()
   name: string;

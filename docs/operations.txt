@@ -1,0 +1,19 @@
+Operations per user
+
+Admin
+  - manage house's data
+  - manage house's owner/resident accounts
+  - manage house's vehicles
+
+  - manage complex's data
+  - manage complex's users data
+
+
+Resident/owner
+  - manage house's data
+  - manage house's vehicle data
+  - manage access request creation
+
+Guard
+  - manage access's data
+  - manage access request creation

@@ -20,31 +20,23 @@ import { ComplexDto } from 'src/shared/dto/complex.dto';
 export class ComplexController {
   constructor(private complex_service: ComplexService) {}
 
-  // GET /complex
   @Get()
   async findAll(): Promise<Complex[]> {
     const complexes: Complex[] = await this.complex_service.findAll();
 
     if (!complexes.length) {
-      throw new NotFoundException('No complexes found');
+      throw new NotFoundException('No complexes were found.');
     }
 
     return complexes;
   }
 
-  // POST /complex
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createComplex(@Body() dto: ComplexDto): Promise<Complex> {
-    try {
-      const complex: Complex = await this.complex_service.create(dto);
-      return complex;
-    } catch (error) {
-      throw new BadRequestException(error);
-    }
+    return this.complex_service.create(dto);
   }
 
-  // GET /complex/:id
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Complex> {
     const complex: Complex = await this.complex_service.findOne(id);
@@ -56,7 +48,6 @@ export class ComplexController {
     return complex;
   }
 
-  // PUT /complex/:id
   @Put(':id')
   async updateComplex(
     @Param('id') id: string,
@@ -65,13 +56,10 @@ export class ComplexController {
     return this.complex_service.update(id, dto);
   }
 
-  // DELETE /complex/:id
+  // q: if i remove the try catch clause will this work the same?
+  // a:
   @Delete(':id')
   async deleteComplex(@Param('id') id: string): Promise<Complex> {
-    try {
-      return await this.complex_service.remove(id);
-    } catch (error) {
-      throw error;
-    }
+    return this.complex_service.remove(id);
   }
 }

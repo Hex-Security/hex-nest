@@ -1,18 +1,12 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  OneToMany,
-  OneToOne,
-} from 'typeorm';
+import { Entity, Column, OneToMany, PrimaryColumn } from 'typeorm';
 import { Complex } from './complex.entity';
 import { House } from './house.entity';
 import { Vehicle } from './vehicle.entity';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryColumn()
+  uid: string;
 
   @Column()
   username: string;
@@ -30,7 +24,7 @@ export class User {
   phone: string;
 
   @Column()
-  role: 'admin' | 'resident' | 'guard';
+  role: 'admin' | 'resident' | 'guard' | 'dev';
 
   @OneToMany(() => Complex, (complex) => complex.admin)
   complexes: Complex[];

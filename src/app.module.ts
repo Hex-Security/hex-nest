@@ -12,10 +12,36 @@ import { VisitorModule } from './modules/visitor/visitor.module';
 import { AccessModule } from './modules/access/access.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { FirebaseModule } from './modules/firebase/firebase.module';
+import { PassportModule } from '@nestjs/passport';
+import { FirebaseStrategy } from './modules/auth/strategy/firebase.strategy';
+import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
+import { ResponseInterceptor } from './middleware/response/response.interceptor';
+import { SwaggerModule } from './modules/swagger/swagger.module';
 
 @Module({
-  imports: [EntityModule, ComplexModule, DbModule, UserModule, HouseModule, VehicleModule, VisitorModule, AccessModule, AuthModule, FirebaseModule],
+  imports: [
+    PassportModule.register({ defaultStrategy: 'firebase' }),
+    EntityModule,
+    ComplexModule,
+    DbModule,
+    UserModule,
+    HouseModule,
+    VehicleModule,
+    VisitorModule,
+    AccessModule,
+    AuthModule,
+    FirebaseModule,
+    SwaggerModule,
+  ],
   controllers: [AppController],
-  providers: [AppService, VehicleService],
+  providers: [
+    AppService,
+    FirebaseStrategy,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseInterceptor,
+    },
+    Reflector,
+  ],
 })
 export class AppModule {}

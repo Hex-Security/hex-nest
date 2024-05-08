@@ -3,6 +3,7 @@ import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
 import * as admin from 'firebase-admin';
 import { CreateRequest } from 'firebase-admin/lib/auth/auth-config';
 import { UserRecord } from 'firebase-admin/lib/auth/user-record';
+import { TokenDto } from '../auth/dto/token.dto';
 
 @Injectable()
 export class FirebaseService {
@@ -37,6 +38,15 @@ export class FirebaseService {
     try {
       const updated_user: UserRecord = await admin.auth().updateUser(uid, user);
       return updated_user;
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
+  }
+
+  async createCustomToken(uid: string): Promise<TokenDto> {
+    try {
+      const customToken = await admin.auth().createCustomToken(uid);
+      return { token: customToken };
     } catch (error) {
       throw new BadRequestException(error);
     }
