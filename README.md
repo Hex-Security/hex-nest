@@ -81,25 +81,25 @@ Utilizing Socket.io, the system will provide:
 
 Given the detailed nature of your project, the website can have the following structure:
 1. **Home Page**
-  - Introduction to Hex Security Access Control System
-  - Key features like secure registration, role-based access, and real-time updates
-  - Call to Action (CTA) for different users to login or learn more
+    - Introduction to Hex Security Access Control System
+    - Key features like secure registration, role-based access, and real-time updates
+    - Call to Action (CTA) for different users to login or learn more
 
 2. **About Page**
-  - Detailed explanation of the system’s purpose, the technology stack, and the benefits
-  - Diagram or infographic of the architecture overview
+    - Detailed explanation of the system’s purpose, the technology stack, and the benefits
+    - Diagram or infographic of the architecture overview
 
 3. **Features Page**
-  - Breakdown of features categorized by user roles (Administrators, Guards, Residents, Developers)
-  - Highlight of security features like AES-256 encryption and real-time capabilities
+    - Breakdown of features categorized by user roles (Administrators, Guards, Residents, Developers)
+    - Highlight of security features like AES-256 encryption and real-time capabilities
 - 
 4. **Documentation/Help Page**
-  - Guides on how to use the system for each type of user
-  - FAQs addressing common queries and operational guidance
+    - Guides on how to use the system for each type of user
+    - FAQs addressing common queries and operational guidance
 
 5. **Contact Page**
-  - Form to request more information or technical support
-  - Contact details for emergency support or sales inquiries
+    - Form to request more information or technical support
+    - Contact details for emergency support or sales inquiries
 
 ### **Admin Views**
 
