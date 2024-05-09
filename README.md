@@ -109,34 +109,53 @@ Given the detailed nature of your project, the website can have the following st
       - Graphical representations of access logs and security breaches.
       - Quick stats about the number of residents, active issues, and recent activities.
     - **Visual Elements**: Customizable widgets displaying real-time data such as recent access logs, security alerts, and operational status of the complex systems.
+    - **Layout**:
+      - **Overview Panel**: The dashboard starts with an overview panel that displays key metrics such as total residents, active issues, and recent activities. This panel uses gauges and minimalist stat blocks for a quick visual snapshot.
+      - **Graphical Data Representations**: Include several widgets with:
+        - A line graph tracking access events over time.
+        - A pie chart showing resident demographics or distribution by building.
+        - A bar chart for comparing incident reports month-over-month.
+      - **Alerts and Notifications Area**: A dedicated section for urgent alerts, which highlights issues that need immediate attention. Each alert includes a brief description and a quick action button to resolve or view more details. 
     - **Interactivity**:
       - Clickable charts to drill down into specific data points, like time-specific access trends or identification of frequent visitors.
       - Alerts panel that highlights issues needing immediate attention, with one-click resolution options.
+    - **Interactivity**:
+      - **Drill-Down Capability**: Users can click on any graphical representation to get a detailed view of the data, allowing for in-depth analysis right from the dashboard.
+      - **Customizable Widgets**: Admins can customize which widgets to display or hide, depending on their priorities or management focus.
+      - **Responsive Design**: The dashboard should be fully responsive, ensuring that it is accessible and functional across devices, from desktops to tablets.
 
 2. **Complex Data Management**
     - **Purpose**: Allows admins to manage and update details about the complex they oversee.
     - **Features**:
       - Forms to update complex information like address, security settings, and contact details.
       - Option to add or remove buildings or facilities within the complex.
-    - **Layout**:
-      - Tabbed interface for different data sections like General Info, Security Settings, Facilities, and Resident Management.
+    - **Layout**: Tabbed interface for different data sections like General Info, Security Settings, Facilities, and Resident Management.
+      - **Tabs for Each Management Area**: Separate tabs for General Info, Security Settings, Facilities, and Resident Management, making navigation straightforward and minimizing information overload.
+      - **Editable Fields**: Each section has forms with editable fields that allow admins to update complex details directly. These fields include text inputs, dropdowns, date selectors, and switch toggles for enabling/disabling features.
     - **Functionalities**:
       - Editable fields with auto-save features to modify complex details.
-      - Bulk actions to manage facilities, like adding a new gym or parking area with templated security settings.
+      - **Bulk actions**: Bulk actions to manage facilities, like adding a new gym or parking area with templated security settings.
+        - **Manage Facilities**: Options to add new facilities or amenities with a template that includes checkboxes for available features (e.g., security cameras, access controls).
+        - **Bulk Resident Updates**: Ability to send notifications to residents or update resident data en masse, such as resetting access permissions or updating contact information.
+
 
 3. **Houses List within the Complex**
     - **Purpose**: Displays a list of all houses in the complex.
     - **Features**:
-      - Searchable list view of houses with options to edit, add, or delete house data.
       - Links to detailed house data management views.
-      - Search bar with advanced filtering options (e.g., by block, number of residents, recent activity).
       - Bulk actions for sending notifications or updates to multiple houses simultaneously.
+      - **Interactive List**:
+        - **Search and Filter Options**: A dynamic search bar with filters for block, number of residents, or recent activity, helping admins find information quickly.
+        - **Actionable List Items**: Each list item has hover-over effects that display quick stats and actions like edit, notify, or delete.
 
 4. **House Data Management** 
     - **Purpose**: Individual house management interface.
     - **Features**:
-      -   Manage resident accounts and roles.
-      -   Update house-specific security settings and access permissions.
+      - Manage resident accounts and roles.
+      - **Detailed Management Forms**: Update house-specific security settings and access permissions.
+        - **Resident and House Settings**: Forms for managing resident accounts, with role assignments and access level controls. Also, settings for house-specific security measures.
+        - **Access Log Integration**: Integration with historical access logs specific to each house, offering options to review and audit entries.
+
 
 ### **Guard Views**
 
