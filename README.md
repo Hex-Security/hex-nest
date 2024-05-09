@@ -28,7 +28,7 @@ The Hex web application is designed to enhance security and operational efficien
 - User-friendly dashboards for each role type, providing tailored data and actionable insights relevant to each user’s responsibilities.
 - Real-time updates for access management. Possible technologies include:
   - **Socket.io** - Ideal for real-time bi-directional event-based communication.
-- **Firebase Realtime Database** - Integrates well with FirebaseAuth, providing real-time capabilities natively.
+- **Firebase Auth** - Integrates well with FirebaseAuth, providing real-time auth operations.
 - Implementation as Docker images managed within a Docker Compose setup for ease of development and deployment.
 
 #### **Should Have**
