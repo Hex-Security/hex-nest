@@ -92,7 +92,7 @@ Given the detailed nature of your project, the website can have the following st
 3. **Features Page**
     - Breakdown of features categorized by user roles (Administrators, Guards, Residents, Developers)
     - Highlight of security features like AES-256 encryption and real-time capabilities
-- 
+
 4. **Documentation/Help Page**
     - Guides on how to use the system for each type of user
     - FAQs addressing common queries and operational guidance
