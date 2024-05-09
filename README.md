@@ -77,6 +77,99 @@ Utilizing Socket.io, the system will provide:
 - **Event-based updates**: When access logs are updated (entry/exit), an event is broadcasted to relevant users (guards or residents of the house).
 - **Live dashboard updates**: Real-time updates on user dashboards for new entries or changes.
 
+## Website Structure
+
+Given the detailed nature of your project, the website can have the following structure:
+1.**Home Page**
+- Introduction to Hex Security Access Control System
+-Key features like secure registration, role-based access, and real-time updates
+-Call to Action (CTA) for different users to login or learn more
+
+2. **About Page**
+- Detailed explanation of the system’s purpose, the technology stack, and the benefits
+- Diagram or infographic of the architecture overview
+
+3. **Features Page**
+- Breakdown of features categorized by user roles (Administrators, Guards, Residents, Developers)
+- Highlight of security features like AES-256 encryption and real-time capabilities
+- 
+4. **Documentation/Help Page**
+- Guides on how to use the system for each type of user
+- FAQs addressing common queries and operational guidance
+- 
+5. **Contact Page**
+- Form to request more information or technical support
+- Contact details for emergency support or sales inquiries
+
+### **Admin Views**
+
+1.  **Admin Dashboard**
+    
+    -   **Purpose**: Provides a quick visual overview of the entire complex's data.
+    -   **Features**:
+        -   Graphical representations of access logs and security breaches.
+        -   Quick stats about the number of residents, active issues, and recent activities.
+2.  **Complex Data Management**
+    
+    -   **Purpose**: Allows admins to manage and update details about the complex they oversee.
+    -   **Features**:
+        -   Forms to update complex information like address, security settings, and contact details.
+        -   Option to add or remove buildings or facilities within the complex.
+3.  **Houses List within the Complex**
+    
+    -   **Purpose**: Displays a list of all houses in the complex.
+    -   **Features**:
+        -   Searchable list view of houses with options to edit, add, or delete house data.
+        -   Links to detailed house data management views.
+4.  **House Data Management**
+    
+    -   **Purpose**: Individual house management interface.
+    -   **Features**:
+        -   Manage resident accounts and roles.
+        -   Update house-specific security settings and access permissions.
+
+### **Guard Views**
+
+1.  **Guard Dashboard**
+    
+    -   **Purpose**: Quick access dashboard with essential functionalities for guards.
+    -   **Features**:
+        -   Icon buttons for common actions like search, access logs, and emergency contacts.
+        -   Notifications for urgent updates or actions required.
+2.  **Search for Car Plate or House Direction**
+    
+    -   **Purpose**: To quickly process access for incoming visitors or residents.
+    -   **Features**:
+        -   Search interface to input car plates or house directions.
+        -   Results display with the option to open the access request form directly.
+3.  **Generate Access Request Form**
+    
+    -   **Purpose**: To create access permissions for visitors or new residents.
+    -   **Features**:
+        -   Form to enter details of the visit like time, date, and purpose.
+        -   Options to register new vehicles or visitors if they are not already in the system.
+
+### **Resident Views**
+
+1.  **Resident Dashboard**
+    
+    -   **Purpose**: Provides residents with a user-friendly interface to manage their home and access settings.
+    -   **Features**:
+        -   Icon buttons for quick access to house data management, access requests, and settings.
+        -   Brief list of upcoming access requests and status updates.
+2.  **House Data Management**
+    
+    -   **Purpose**: Allows residents to manage their house data and accounts for other members.
+    -   **Features**:
+        -   Form to add or remove residents and manage their access levels.
+        -   Update house settings like emergency contacts and preferred security settings.
+3.  **Generate Access Request Form**
+    
+    -   **Purpose**: Similar to the guard’s view but tailored for residents.
+    -   **Features**:
+        -   Form to request access for visitors, with additional personal notes or instructions.
+        -   Modal to quickly add new vehicles or visitors during the request process.
+
 ## Implementation
 
 The implementation of the Hex Security Access Control System will follow these steps:
