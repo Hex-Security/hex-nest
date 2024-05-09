@@ -189,11 +189,16 @@ Given the detailed nature of your project, the website can have the following st
 1. **Guard Dashboard** 
     - **Purpose**: Quick access dashboard with essential functionalities for guards.
     - **Features**:
-      - Icon buttons for common actions like search, access logs, and emergency contacts.
-      - Notifications for urgent updates or actions required.
+      - **Quick Action Buttons**: Large, easily clickable buttons for actions like "Search Plate", "Access Requests", and "Emergency Contacts". Each button should feature an intuitive icon and label.
+      - **Real-Time Alerts**: Dynamic alert notifications that can be expanded to view details and taken action upon directly from the dashboard.
     - **Design**:
       - Quick action buttons are prominently displayed for ease of access.
       - Live feed of entry gates or main doors within the complex.
+      - **Main Panel**: The dashboard should prioritize quick access to the most frequently used features, such as search functions and the real-time feed of entry points.
+      - **Theme and Color Palette**: A practical and clear color scheme is essential, using contrast effectively to highlight important functions and alerts. Neutral backgrounds with accents in blue or green can help maintain visibility under various lighting conditions.
+    - **Functional Widgets**:
+      - **Live Entry Feed**: A section of the dashboard dedicated to showing live feeds from cameras at entry points, allowing guards to visually verify and manage entries without switching screens.
+      - **Recent Activity Log**: A scrollable list displaying recent activities, such as access approvals or alerts, with timestamps and quick links to related actions.
     - **Notifications**:
       - Real-time alerts for any unauthorized attempts or overrides needed, with direct action buttons included in notifications.
 
@@ -202,6 +207,12 @@ Given the detailed nature of your project, the website can have the following st
     - **Features**:
       - Search interface to input car plates or house directions.
       - Results display with the option to open the access request form directly.
+    - **Layout**:
+      - **Search Bar**: Prominently placed at the top with an auto-complete feature that suggests results as the guard types, enhancing speed and accuracy.
+      - **Result List**: Displays search results below the search bar, each result with an actionable button to quickly generate or access the request form.
+    - **Design Elements**:
+      - **High Visibility**: Ensure that the search interface is highly visible and easy to read, using larger fonts and clear spacing.
+      - **Interactive Feedback**: Provide immediate feedback on search status, such as loading indicators or messages when no results are found.
     - **User Experience**:
       - Autocomplete suggestions as the guard types for faster processing.
       - Recent search history to quickly revisit frequent queries or issues.
@@ -209,8 +220,12 @@ Given the detailed nature of your project, the website can have the following st
 3.  **Generate Access Request Form**
     - **Purpose**: To create access permissions for visitors or new residents.
     - **Features**:
-      - Form to enter details of the visit like time, date, and purpose.
+      - **Form Design**: Form to enter details of the visit like time, date, and purpose.
+        - **Step-by-Step Layout**: Organize the form into clear, sequential steps to simplify the entry process. Each step should be clearly labeled, and the guard should be able to navigate back and forth between steps easily.
+        - **Pre-filled Options**: Include pre-filled fields based on previous entries or common choices to speed up the process.
       - Options to register new vehicles or visitors if they are not already in the system.
+      - **Dynamic Form Fields**: Introduce dynamic fields that appear based on previous selections, such as additional vehicle details if a new car is registered.
+      - **Instant Validation**: Implement instant field validation to help guards correct errors in real-time, ensuring data accuracy before submission.
     - **Functionalities**:
       - Pre-filled fields based on previous entries or resident preferences.
       - Dynamic form adjustments based on the visitor type (e.g., adding fields for vehicle details if a visitor is expected to drive).
