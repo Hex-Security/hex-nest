@@ -1,10 +1,3 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
 # **SPEC-001**\_: Hex Security Access Control System
 
 ## _**Background**_
@@ -107,54 +100,3 @@ The implementation of the Hex Security Access Control System will follow these s
 6. **M6 - Operational and Monitoring Phase Begins**: Target Date - 2024-06-24
 
 These milestones will help in tracking the progress of the project and ensure timely delivery of each phase.
-
-## Installation
-
-In order to properly install this project you must clone this repo into your local machine. After successfully having cloned the repo we need to install all the external package dependencies the project has. In order to do this, first go to your local terminal and then run the following command
-
-```bash
-$ yarn install
-```
-
-## Running the app
-
-We have 3 main modes on how to run this applicaion. Each one of them will behave differently and will load different environmental variables.
-
-- **Development** : This mode will load the `.env.local` data onto the `.env` file and run with this configuration. This operation runs the command `nest start` under the hood which basically builds and run the app.
-
-- **Watch mode**: Here the app will load the same `.env.local` into the `.env` file as the development mode does, the main difference is that whenever a change on the source code occurs, the watcher will rebuild the code and update the running instance so there is no need to run `yarn run start` each time you want to see your changes.
-
-- **Production** : This will copy the `.env.prod` data into `.env` and then will run the built from the entry file at the `dist/main.js` so the server is running on the production version.
-
-```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Christopher Ortega](https://github.com/lchrios)
-- Associate - [Jose Ceron](https://someurl.com)
