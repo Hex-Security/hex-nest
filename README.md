@@ -80,10 +80,10 @@ Utilizing Socket.io, the system will provide:
 ## Website Structure
 
 Given the detailed nature of your project, the website can have the following structure:
-1.**Home Page**
+1. **Home Page**
 - Introduction to Hex Security Access Control System
--Key features like secure registration, role-based access, and real-time updates
--Call to Action (CTA) for different users to login or learn more
+- Key features like secure registration, role-based access, and real-time updates
+- Call to Action (CTA) for different users to login or learn more
 
 2. **About Page**
 - Detailed explanation of the system’s purpose, the technology stack, and the benefits
@@ -103,72 +103,104 @@ Given the detailed nature of your project, the website can have the following st
 
 ### **Admin Views**
 
-1.  **Admin Dashboard**
-    
-    -   **Purpose**: Provides a quick visual overview of the entire complex's data.
-    -   **Features**:
-        -   Graphical representations of access logs and security breaches.
-        -   Quick stats about the number of residents, active issues, and recent activities.
-2.  **Complex Data Management**
-    
-    -   **Purpose**: Allows admins to manage and update details about the complex they oversee.
-    -   **Features**:
-        -   Forms to update complex information like address, security settings, and contact details.
-        -   Option to add or remove buildings or facilities within the complex.
-3.  **Houses List within the Complex**
-    
-    -   **Purpose**: Displays a list of all houses in the complex.
-    -   **Features**:
-        -   Searchable list view of houses with options to edit, add, or delete house data.
-        -   Links to detailed house data management views.
-4.  **House Data Management**
-    
-    -   **Purpose**: Individual house management interface.
-    -   **Features**:
-        -   Manage resident accounts and roles.
-        -   Update house-specific security settings and access permissions.
+1. **Admin Dashboard**  
+  - **Purpose**: Provides a quick visual overview of the entire complex's data.
+  - **Features**:
+    - Graphical representations of access logs and security breaches.
+    - Quick stats about the number of residents, active issues, and recent activities.
+  - **Visual Elements**: Customizable widgets displaying real-time data such as recent access logs, security alerts, and operational status of the complex systems.
+  - **Interactivity**:
+    - Clickable charts to drill down into specific data points, like time-specific access trends or identification of frequent visitors.
+    - Alerts panel that highlights issues needing immediate attention, with one-click resolution options.
+
+2. **Complex Data Management**
+  - **Purpose**: Allows admins to manage and update details about the complex they oversee.
+  - **Features**:
+    - Forms to update complex information like address, security settings, and contact details.
+    - Option to add or remove buildings or facilities within the complex.
+  - **Layout**:
+    - Tabbed interface for different data sections like General Info, Security Settings, Facilities, and Resident Management.
+  - **Functionalities**:
+    - Editable fields with auto-save features to modify complex details.
+    - Bulk actions to manage facilities, like adding a new gym or parking area with templated security settings.
+
+3. **Houses List within the Complex**
+  - **Purpose**: Displays a list of all houses in the complex.
+  - **Features**:
+    - Searchable list view of houses with options to edit, add, or delete house data.
+    - Links to detailed house data management views.
+    - Search bar with advanced filtering options (e.g., by block, number of residents, recent activity).
+    - Bulk actions for sending notifications or updates to multiple houses simultaneously.
+
+4. **House Data Management** 
+  - **Purpose**: Individual house management interface.
+  - **Features**:
+    -   Manage resident accounts and roles.
+    -   Update house-specific security settings and access permissions.
 
 ### **Guard Views**
 
-1.  **Guard Dashboard**
-    
-    -   **Purpose**: Quick access dashboard with essential functionalities for guards.
-    -   **Features**:
-        -   Icon buttons for common actions like search, access logs, and emergency contacts.
-        -   Notifications for urgent updates or actions required.
-2.  **Search for Car Plate or House Direction**
-    
-    -   **Purpose**: To quickly process access for incoming visitors or residents.
-    -   **Features**:
-        -   Search interface to input car plates or house directions.
-        -   Results display with the option to open the access request form directly.
+1. **Guard Dashboard** 
+  - **Purpose**: Quick access dashboard with essential functionalities for guards.
+  - **Features**:
+    - Icon buttons for common actions like search, access logs, and emergency contacts.
+    - Notifications for urgent updates or actions required.
+  - **Design**:
+    - Quick action buttons are prominently displayed for ease of access.
+    - Live feed of entry gates or main doors within the complex.
+  - **Notifications**:
+    - Real-time alerts for any unauthorized attempts or overrides needed, with direct action buttons included in notifications.
+
+2. **Search for Car Plate or House Direction**
+  - **Purpose**: To quickly process access for incoming visitors or residents.
+  - **Features**:
+    - Search interface to input car plates or house directions.
+    - Results display with the option to open the access request form directly.
+  - **User Experience**:
+    - Autocomplete suggestions as the guard types for faster processing.
+    - Recent search history to quickly revisit frequent queries or issues.
+
 3.  **Generate Access Request Form**
-    
-    -   **Purpose**: To create access permissions for visitors or new residents.
-    -   **Features**:
-        -   Form to enter details of the visit like time, date, and purpose.
-        -   Options to register new vehicles or visitors if they are not already in the system.
+  - **Purpose**: To create access permissions for visitors or new residents.
+  - **Features**:
+    - Form to enter details of the visit like time, date, and purpose.
+    - Options to register new vehicles or visitors if they are not already in the system.
+  - **Functionalities**:
+    - Pre-filled fields based on previous entries or resident preferences.
+    - Dynamic form adjustments based on the visitor type (e.g., adding fields for vehicle details if a visitor is expected to drive).
 
 ### **Resident Views**
 
-1.  **Resident Dashboard**
-    
-    -   **Purpose**: Provides residents with a user-friendly interface to manage their home and access settings.
-    -   **Features**:
-        -   Icon buttons for quick access to house data management, access requests, and settings.
-        -   Brief list of upcoming access requests and status updates.
+1. **Resident Dashboard** 
+  - **Purpose**: Provides residents with a user-friendly interface to manage their home and access settings.
+  - **Features**:
+    - Icon buttons for quick access to house data management, access requests, and settings.
+    - Brief list of upcoming access requests and status updates.
+  - **Highlights**:
+    - Upcoming access schedules with a countdown timer for the next visitor.
+    - Quick link to “Add Visitor” as a prominent feature for frequent use.
+  - **Customization**:
+    - Widgets to view or disable recent device integrations or smart home features linked to the security system.
+
 2.  **House Data Management**
-    
-    -   **Purpose**: Allows residents to manage their house data and accounts for other members.
-    -   **Features**:
-        -   Form to add or remove residents and manage their access levels.
-        -   Update house settings like emergency contacts and preferred security settings.
+  - **Purpose**: Allows residents to manage their house data and accounts for other members.
+  - **Features**:
+    - Form to add or remove residents and manage their access levels.
+    - Update house settings like emergency contacts and preferred security settings.
+  - **Security Settings**:
+    - Options to set temporary access codes or permissions for specific dates/times, useful for allowing entry to service personnel or temporary guests.
+  - **Management Tools**:
+    - Graphs showing access frequency and timing patterns to optimize personal security measures.  
+
 3.  **Generate Access Request Form**
     
-    -   **Purpose**: Similar to the guard’s view but tailored for residents.
-    -   **Features**:
-        -   Form to request access for visitors, with additional personal notes or instructions.
-        -   Modal to quickly add new vehicles or visitors during the request process.
+  - **Purpose**: Similar to the guard’s view but tailored for residents.
+  - **Features**:
+    - Form to request access for visitors, with additional personal notes or instructions.
+    - Modal to quickly add new vehicles or visitors during the request process.
+  - **Complexity**:
+    - Ability for residents to set recurring access for regular visitors, with the system automatically adjusting permissions based on resident feedback.
+    - Notifications to both resident and guard upon form submission and approval.  
 
 ## Implementation
 
