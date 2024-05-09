@@ -7,6 +7,12 @@
 
 # **SPEC-001**\_: Hex Security Access Control System
 
+Choose your prefered language for the README:
+
+- [ <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/1920px-Flag_of_the_United_States.svg.png" alt="US Flag" width="20" height="15"> ] [English ](README.md)
+
+- [ <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Flag_of_Mexico.svg/2560px-Flag_of_Mexico.svg.png" alt="Mexico Flag" width="20" height="15"> ] [Spanish (México)](README.mx.md)
+
 ## _**Background**_
 
 The Hex web application is designed to enhance security and operational efficiency for residential complexes through robust access control management. It enables various user roles such as Administrators, Guards, and Residents to interact with the system according to their permissions, facilitating the management of access for visitors and residents alike. This system is crucial for modernizing the administrative operations of these complexes, integrating them into digital ecosystems to streamline processes.

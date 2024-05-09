@@ -9,9 +9,9 @@
 
 Elija su idioma preferido para el README:
 
-- [Inglés](README.md)
-- [Español](README.es.md)
-- [Francés](README.fr.md)
+- [ <img src="https://upload.wikimedia.org/wikipedia/en/thumb/a/a4/Flag_of_the_United_States.svg/1920px-Flag_of_the_United_States.svg.png" alt="US Flag" width="20" height="15"> ] [Inglés ](README.md)
+
+- [ <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Flag_of_Mexico.svg/2560px-Flag_of_Mexico.svg.png" alt="Mexico Flag" width="20" height="15"> ] [Español (México)](README.mx.md)
 
 ## _**Antecedentes**_
 
