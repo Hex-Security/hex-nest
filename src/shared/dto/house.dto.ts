@@ -1,12 +1,10 @@
 import {
-  IsUUID,
+  IsArray,
   IsNotEmpty,
+  IsOptional,
   IsString,
   ValidateNested,
-  IsArray,
-  IsOptional,
 } from 'class-validator';
-import { Type } from 'class-transformer';
 
 export class HouseDto {
   @IsNotEmpty()
@@ -14,11 +12,11 @@ export class HouseDto {
   number: string;
 
   @IsOptional()
-  @IsUUID()
+  @IsString()
   owner?: string;
 
   @IsNotEmpty()
-  @IsUUID()
+  @IsString()
   complex: string;
 
   @IsOptional()

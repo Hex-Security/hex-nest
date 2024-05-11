@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { House } from '../entity/entities/house.entity';
 import { User } from '../entity/entities/user.entity';
 
@@ -16,11 +16,8 @@ export class UserService {
     return this.user_repo.findOne({ where: { uid } });
   }
 
-  async create(user: Partial<User>): Promise<User> {
-    const new_user: User = this.user_repo.create(user);
-    const saved_user: User = await this.user_repo.save(new_user);
-
-    return saved_user;
+  async findMany(uids: string[]): Promise<User[]> {
+    return this.user_repo.find({ where: { uid: In(uids) } });
   }
 
   async update(id: string, user: Partial<User>): Promise<User> {
@@ -64,7 +61,7 @@ export class UserService {
   }
 
   async findUserManagedHouse(user_id: string): Promise<House> {
-    // find user from 
+    // find user from
     const user: User = await this.user_repo.findOne({
       where: { uid: user_id },
       relations: ['residence'],

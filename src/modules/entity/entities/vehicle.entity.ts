@@ -1,14 +1,14 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
+  Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
-import { User } from './user.entity';
-import { House } from './house.entity';
 import { Access } from './access.entity';
+import { House } from './house.entity';
+import { User } from './user.entity';
 import { Visitor } from './visitor.entity';
 
 @Entity()
@@ -27,6 +27,9 @@ export class Vehicle {
 
   @Column()
   color: string;
+
+  @Column()
+  year: string;
 
   @Column({ default: true })
   is_visitor: boolean;

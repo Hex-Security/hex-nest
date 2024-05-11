@@ -87,19 +87,6 @@ export class ComplexService {
     return this.complex_repo.remove(complex);
   }
 
-  async getHouses(complex_id: string): Promise<House[]> {
-    const complex: Complex = await this.complex_repo.findOne({
-      where: { id: complex_id },
-      relations: ['houses'],
-    });
-
-    if (!complex) {
-      throw new BadRequestException(`Complex with id ${complex_id} not found.`);
-    }
-
-    return complex.houses;
-  }
-
   async getAdmin(complex_id: string): Promise<User> {
     const complex: Complex = await this.complex_repo.findOne({
       where: { id: complex_id },
