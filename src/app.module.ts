@@ -1,22 +1,18 @@
 import { Module } from '@nestjs/common';
+import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
+import { PassportModule } from '@nestjs/passport';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { EntityModule } from './modules/entity/entity.module';
-import { ComplexModule } from './modules/complex/complex.module';
-import { DbModule } from './modules/db/db.module';
-import { UserModule } from './modules/user/user.module';
-import { HouseModule } from './modules/house/house.module';
-import { VehicleService } from './modules/vehicle/vehicle.service';
-import { VehicleModule } from './modules/vehicle/vehicle.module';
-import { VisitorModule } from './modules/visitor/visitor.module';
+import { ResponseInterceptor } from './middleware/response/response.interceptor';
 import { AccessModule } from './modules/access/access.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { FirebaseModule } from './modules/firebase/firebase.module';
-import { PassportModule } from '@nestjs/passport';
-import { FirebaseStrategy } from './modules/auth/strategy/firebase.strategy';
-import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
-import { ResponseInterceptor } from './middleware/response/response.interceptor';
-import { SwaggerModule } from './modules/swagger/swagger.module';
+import { ComplexModule } from './modules/complex/complex.module';
+import { DbModule } from './modules/db/db.module';
+import { EntityModule } from './modules/entity/entity.module';
+import { HouseModule } from './modules/house/house.module';
+import { UserModule } from './modules/user/user.module';
+import { VehicleModule } from './modules/vehicle/vehicle.module';
+import { VisitorModule } from './modules/visitor/visitor.module';
 
 @Module({
   imports: [
@@ -30,13 +26,10 @@ import { SwaggerModule } from './modules/swagger/swagger.module';
     VisitorModule,
     AccessModule,
     AuthModule,
-    FirebaseModule,
-    SwaggerModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
-    FirebaseStrategy,
     {
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor,
