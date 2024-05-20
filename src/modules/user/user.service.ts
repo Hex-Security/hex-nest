@@ -12,20 +12,20 @@ export class UserService {
     return this.user_repo.find();
   }
 
-  async findOne(uid: string): Promise<User> {
-    return this.user_repo.findOne({ where: { uid } });
+  async findOne(user_id: string): Promise<User | null> {
+    return this.user_repo.findOne({ where: { user_id } });
   }
 
   async findMany(uids: string[]): Promise<User[]> {
-    return this.user_repo.find({ where: { uid: In(uids) } });
+    return this.user_repo.find({ where: { user_id: In(uids) } });
   }
 
   async update(id: string, user: Partial<User>): Promise<User> {
     return this.user_repo.save({ ...user, id });
   }
 
-  async remove(uid: string): Promise<User> {
-    const user: User = await this.user_repo.findOne({ where: { uid } });
+  async remove(user_id: string): Promise<User> {
+    const user: User = await this.user_repo.findOne({ where: { user_id } });
 
     return this.user_repo.remove(user);
   }
@@ -63,7 +63,7 @@ export class UserService {
   async findUserManagedHouse(user_id: string): Promise<House> {
     // find user from
     const user: User = await this.user_repo.findOne({
-      where: { uid: user_id },
+      where: { user_id },
       relations: ['residence'],
     });
 

@@ -1,4 +1,4 @@
-import { Entity, Column, OneToMany, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { Complex } from './complex.entity';
 import { House } from './house.entity';
 import { Vehicle } from './vehicle.entity';
@@ -6,7 +6,7 @@ import { Vehicle } from './vehicle.entity';
 @Entity()
 export class User {
   @PrimaryColumn()
-  uid: string;
+  user_id: string;
 
   @Column()
   username: string;

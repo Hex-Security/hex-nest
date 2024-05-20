@@ -1,15 +1,15 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
-  OneToMany,
-  ManyToOne,
-  JoinColumn,
-  UpdateDateColumn,
   CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
-import { User } from './user.entity';
 import { House } from './house.entity';
+import { User } from './user.entity';
 
 @Entity()
 export class Complex {
@@ -18,6 +18,9 @@ export class Complex {
 
   @Column()
   name: string;
+
+  @Column()
+  admin_id: string;
 
   @Column()
   address: string;

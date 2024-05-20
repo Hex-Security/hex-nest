@@ -1,6 +1,4 @@
-import { HouseDto } from './house.dto';
-import { UserDto } from './user.dto';
-import { IsString, IsOptional } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class ComplexDto {
   @IsString()
@@ -20,7 +18,7 @@ export class ComplexDto {
   zip?: string;
 
   @IsOptional()
-  admin?: string;
+  admin_id?: string;
 
   @IsOptional()
   metadata?: any;
