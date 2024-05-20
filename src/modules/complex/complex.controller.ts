@@ -11,6 +11,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { ComplexDto } from 'src/shared/dto/complex.dto';
+import { DeleteResult, UpdateResult } from 'typeorm';
 import { Complex } from '../entity/entities/complex.entity';
 import { User } from '../entity/entities/user.entity';
 import { ComplexService } from './complex.service';
@@ -53,16 +54,21 @@ export class ComplexController {
   @Put(':complex_id')
   async updateComplex(
     @Param('complex_id') complex_id: string,
-    @Body() dto: ComplexDto,
-  ): Promise<Complex> {
+    @Body() dto: Partial<ComplexDto>,
+  ): Promise<UpdateResult> {
     return this.complex_service.update(complex_id, dto);
   }
 
   @Delete(':complex_id')
   async deleteComplex(
     @Param('complex_id') complex_id: string,
-  ): Promise<Complex> {
-    return this.complex_service.remove(complex_id);
+  ): Promise<DeleteResult> {
+    return this.complex_service.delete(complex_id);
+  }
+
+  @Get(':complex_id/admin')
+  async getAdmin(@Param('complex_id') complex_id: string): Promise<User> {
+    return this.complex_service.getAdmin(complex_id);
   }
 
   @Put(':complex_id/admin')
@@ -73,33 +79,8 @@ export class ComplexController {
     return this.complex_service.setAdmin(complex_id, dto.admin);
   }
 
-  @Get(':complex_id/admin')
-  async getAdmin(@Param('complex_id') complex_id: string): Promise<User> {
-    return this.complex_service.getAdmin(complex_id);
-  }
-
   @Delete(':complex_id/admin')
   async deleteAdmin(@Param('complex_id') complex_id: string): Promise<Complex> {
-    return this.complex_service.removeAdmin(complex_id);
-  }
-
-  @Get(':complex_id/metadata')
-  async getMetadata(@Param('complex_id') complex_id: string): Promise<any> {
-    return this.complex_service.getMetadata(complex_id);
-  }
-
-  @Put(':complex_id/metadata')
-  async updateMetadata(
-    @Param('complex_id') complex_id: string,
-    @Body() metadata: any,
-  ): Promise<Complex> {
-    return this.complex_service.setMetadata(complex_id, metadata);
-  }
-
-  @Delete(':complex_id/metadata')
-  async deleteMetadata(
-    @Param('complex_id') complex_id: string,
-  ): Promise<Complex> {
-    return this.complex_service.removeMetadata(complex_id);
+    return this.complex_service.deleteAdmin(complex_id);
   }
 }
