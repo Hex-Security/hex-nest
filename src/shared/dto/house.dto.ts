@@ -1,10 +1,4 @@
-import {
-  IsArray,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class HouseDto {
   @IsNotEmpty()
@@ -13,20 +7,9 @@ export class HouseDto {
 
   @IsOptional()
   @IsString()
-  owner?: string;
+  owner_id?: string;
 
   @IsNotEmpty()
   @IsString()
-  complex: string;
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  @ValidateNested({ each: true })
-  residents: string[];
-
-  @IsOptional()
-  @IsArray()
-  @IsString({ each: true })
-  vehicles?: string[];
+  complex_id: string;
 }

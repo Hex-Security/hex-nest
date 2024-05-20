@@ -17,7 +17,7 @@ export class ComplexService {
     return this.complex_repo.find();
   }
 
-  async findOne(complex_id: string): Promise<Complex> {
+  async findOne(complex_id: string): Promise<Complex | null> {
     return this.complex_repo.findOne({ where: { id: complex_id } });
   }
 
