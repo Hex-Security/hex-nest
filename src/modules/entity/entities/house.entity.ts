@@ -1,15 +1,15 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
+  Entity,
   JoinColumn,
+  ManyToOne,
   OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Access } from './access.entity';
+import { Complex } from './complex.entity';
 import { User } from './user.entity';
 import { Vehicle } from './vehicle.entity';
-import { Complex } from './complex.entity';
-import { Access } from './access.entity';
 
 @Entity()
 export class House {
@@ -19,15 +19,15 @@ export class House {
   @Column()
   number: string;
 
+  @Column()
+  owner_id: string;
+
+  @Column()
+  complex_id: string;
+
   @ManyToOne(() => User, (user) => user.residence)
   @JoinColumn({ name: 'owner_id' })
   owner: User;
-
-  @OneToMany(() => User, (user) => user.residence)
-  residents: User[];
-
-  @OneToMany(() => Vehicle, (vehicle) => vehicle.house)
-  vehicles: Vehicle[];
 
   @ManyToOne(() => Complex, (complex) => complex.houses)
   @JoinColumn({ name: 'complex_id' })
@@ -35,4 +35,10 @@ export class House {
 
   @OneToMany(() => Access, (access) => access.house)
   accesses: Access[];
+
+  @OneToMany(() => User, (user) => user.residence)
+  residents: User[];
+
+  @OneToMany(() => Vehicle, (vehicle) => vehicle.house)
+  vehicles: Vehicle[];
 }
