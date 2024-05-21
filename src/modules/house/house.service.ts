@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  forwardRef,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HouseDto } from 'src/shared/dto/house.dto';
 import { DeleteResult, Repository, UpdateResult } from 'typeorm';
@@ -16,6 +21,7 @@ export class HouseService {
     @InjectRepository(House) private house_repo: Repository<House>,
     private readonly user_service: UserService,
     private readonly complex_service: ComplexService,
+    @Inject(forwardRef(() => VehicleService))
     private readonly vehicle_service: VehicleService,
   ) {}
 
