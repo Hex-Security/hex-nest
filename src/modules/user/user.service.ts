@@ -62,11 +62,16 @@ export class UserService {
   }
 
   async findUserManagedHouse(user_id: string): Promise<House> {
-    // find user from
+    // 1. Find related user from
     const user: User = await this.user_repo.findOne({
       where: { user_id },
       relations: ['residence'],
     });
+
+    // Residence owner_id must match user_id
+    if (user.user_id !== user.residence.owner_id) {
+      throw new Error(`User ${user.user_id} is not a residence owner.`);
+    }
 
     return user.residence;
   }
