@@ -1,6 +1,14 @@
-import { Controller, Get, NotFoundException } from '@nestjs/common';
-import { UserService } from './user.service';
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Put,
+} from '@nestjs/common';
+import { UserDto } from 'src/shared/dto/user.dto';
 import { User } from '../entity/entities/user.entity';
+import { UserService } from './user.service';
 
 @Controller('user')
 export class UserController {
@@ -17,12 +25,48 @@ export class UserController {
     return users;
   }
 
-  @Get(':uid')
-  async getUser(uid: string): Promise<User> {
-    const user: User = await this.user_service.findOne(uid);
+  @Get(':user_id')
+  async getUser(@Param('user_id') user_id: string): Promise<User> {
+    const user: User = await this.user_service.findOne(user_id);
 
     if (!user) {
-      throw new NotFoundException(`User with uid ${uid} not found.`);
+      throw new NotFoundException(`User with uid ${user_id} not found.`);
+    }
+
+    return user;
+  }
+
+  @Put(':user_id')
+  async updateUser(
+    @Param('user_id') user_id: string,
+    @Body() dto: Partial<UserDto>,
+  ): Promise<User> {
+    const user: User = await this.user_service.update(user_id, { ...dto });
+
+    if (!user) {
+      throw new NotFoundException(`User with uid ${user_id} not found.`);
+    }
+
+    return user;
+  }
+
+  @Get('search/:email')
+  async searchUserByEmail(@Param('email') email: string): Promise<User> {
+    const user: User = await this.user_service.findUserByEmail(email);
+
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} not found.`);
+    }
+
+    return user;
+  }
+
+  @Get('search/:phone')
+  async searchUserByPhone(@Param('phone') phone: string): Promise<User> {
+    const user: User = await this.user_service.findUserByPhone(phone);
+
+    if (!user) {
+      throw new NotFoundException(`User with phone ${phone} not found.`);
     }
 
     return user;

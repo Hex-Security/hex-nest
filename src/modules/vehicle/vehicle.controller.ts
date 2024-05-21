@@ -41,11 +41,6 @@ export class VehicleController {
     return this.vehicle_service.findOne(vehicle_id);
   }
 
-  @Post('plate/:plate')
-  async findVehicleByPlate(@Param('plate') plate: string): Promise<Vehicle> {
-    return this.vehicle_service.findOneByPlate(plate);
-  }
-
   @Put('/:vehicle_id')
   async updateVehicle(
     @Param('vehicle_id') vehicle_id: string,

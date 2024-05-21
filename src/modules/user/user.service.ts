@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Roles } from 'src/shared/enum/roles.enum';
 import { In, Repository } from 'typeorm';
 import { House } from '../entity/entities/house.entity';
 import { User } from '../entity/entities/user.entity';
@@ -42,7 +43,7 @@ export class UserService {
     return this.user_repo.findOne({ where: { phone } });
   }
 
-  async findUsersByRole(role: 'admin' | 'resident' | 'guard'): Promise<User[]> {
+  async findUsersByRole(role: Roles): Promise<User[]> {
     return this.user_repo.find({ where: { role } });
   }
 
