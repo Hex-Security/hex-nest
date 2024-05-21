@@ -27,13 +27,13 @@ export class VehicleDto {
   is_visitor?: boolean;
 
   @IsString()
-  house: string;
+  house_id: string;
 
   @IsOptional()
   @IsString()
-  visitor?: string;
+  visitor_id?: string;
 
   @IsOptional()
   @IsString()
-  user?: string;
+  user_id?: string;
 }

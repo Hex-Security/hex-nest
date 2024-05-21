@@ -26,11 +26,12 @@ export class ComplexService {
 
     const admin_user: User | null = await this.user_service.findOne(admin_id);
 
-    // Check admin exists if provided
+    // 1. Check admin exists if provided
     if (admin_id !== undefined && !admin_user) {
       throw new NotFoundException(`Admin with id ${admin_id} not found.`);
     }
 
+    // 2. Save new complex to database
     const new_complex: Complex = this.complex_repo.create({
       address,
       admin_id: admin_id || null,
