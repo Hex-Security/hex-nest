@@ -21,10 +21,10 @@ export class HouseController {
   constructor(private house_service: HouseService) {}
 
   @Get()
-  async findAllHouses(
+  async findAllHousesByComplex(
     @Param('complex_id') complex_id: string,
   ): Promise<House[]> {
-    return this.house_service.findAll(complex_id);
+    return this.house_service.findAllByComplex(complex_id);
   }
 
   @Post()

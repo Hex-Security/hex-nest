@@ -34,8 +34,18 @@ export class Vehicle {
   @Column({ default: true })
   is_visitor: boolean;
 
+  @Column()
+  house_id: string;
+
+  @Column({ nullable: true })
+  visitor_id: string;
+
+  @Column({ nullable: true })
+  user_id: string;
+
   @Column({ nullable: true })
   @ManyToOne(() => Visitor, (visitor) => visitor.vehicles)
+  @JoinColumn({ name: 'visitor_id' })
   visitor: Visitor;
 
   @Column({ nullable: true })

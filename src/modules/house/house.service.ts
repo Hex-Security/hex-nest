@@ -19,7 +19,7 @@ export class HouseService {
     private readonly vehicle_service: VehicleService,
   ) {}
 
-  async findAll(complex_id: string): Promise<House[]> {
+  async findAllByComplex(complex_id: string): Promise<House[]> {
     return await this.house_repo.find({
       where: { complex_id },
     });
