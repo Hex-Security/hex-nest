@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  forwardRef,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { VehicleDto } from 'src/shared/dto/vehicle.dto';
 import { In, Repository, UpdateResult } from 'typeorm';
@@ -14,6 +19,7 @@ import { VisitorService } from '../visitor/visitor.service';
 export class VehicleService {
   constructor(
     @InjectRepository(Vehicle) private vehicle_repository: Repository<Vehicle>,
+    @Inject(forwardRef(() => HouseService))
     private readonly house_service: HouseService,
     private readonly user_service: UserService,
     private readonly visitor_service: VisitorService,

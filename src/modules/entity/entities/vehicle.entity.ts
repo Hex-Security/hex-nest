@@ -43,12 +43,10 @@ export class Vehicle {
   @Column({ nullable: true })
   user_id: string;
 
-  @Column({ nullable: true })
   @ManyToOne(() => Visitor, (visitor) => visitor.vehicles)
   @JoinColumn({ name: 'visitor_id' })
   visitor: Visitor;
 
-  @Column({ nullable: true })
   @ManyToOne(() => User, (user) => user.vehicles)
   @JoinColumn({ name: 'user_id' })
   user: User;

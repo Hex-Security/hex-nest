@@ -241,4 +241,11 @@ export class AccessService {
   async findByVehicle(vehicle_id: string): Promise<Access[]> {
     return this.access_repo.find({ where: { vehicle_id } });
   }
+
+  async findByComplex(complex_id: string): Promise<Access[]> {
+    return this.access_repo.find({
+      where: { house: { complex: { id: complex_id } } },
+      relations: ['house'],
+    });
+  }
 }
