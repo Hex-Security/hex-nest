@@ -1,3 +1,4 @@
+import { Status } from 'src/shared/enum/status.enum';
 import {
   AfterUpdate,
   Column,
@@ -24,8 +25,13 @@ export class Access {
   @Column() // NOTE - The document field is a string because it can be a driver's license, passport, or other form of ID
   document: string;
 
-  @Column()
-  status: string;
+  @Column({
+    enum: Status,
+    default: Status.PENDING,
+    nullable: false,
+    type: 'enum',
+  })
+  status: Status;
 
   @ManyToOne(() => User, (user) => user.accesses)
   @JoinColumn({ name: 'approver_id' })

@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Status } from 'src/shared/enum/status.enum';
 import { DeleteResult, In, Repository, UpdateResult } from 'typeorm';
 import { Access } from '../entity/entities/access.entity';
 import { House } from '../entity/entities/house.entity';
@@ -41,7 +42,7 @@ export class AccessService {
   async create(dto: AccessDto): Promise<Access> {
     // 1. Validate that no other access request is pending for the same visitor
     const pending_access: Access | null = await this.access_repo.findOne({
-      where: { visitor_id: dto.visitor_id, status: 'pending' },
+      where: { visitor_id: dto.visitor_id, status: Status.PENDING },
       relations: ['visitor'],
     });
 
@@ -121,7 +122,7 @@ export class AccessService {
       reason,
       requested_at: requested_at || new Date(),
       requester,
-      status: owned_house ? 'approved' : 'pending',
+      status: owned_house ? Status.APPROVED : Status.PENDING,
       vehicle,
       visitor,
     });
@@ -147,35 +148,78 @@ export class AccessService {
   }
 
   async findPending(): Promise<Access[]> {
-    return this.access_repo.find({ where: { status: 'pending' } });
+    return this.access_repo.find({ where: { status: Status.PENDING } });
   }
 
   async findApproved(): Promise<Access[]> {
-    return this.access_repo.find({ where: { status: 'approved' } });
+    return this.access_repo.find({ where: { status: Status.APPROVED } });
   }
 
-  async findRejected(): Promise<Access[]> {
-    return this.access_repo.find({ where: { status: 'rejected' } });
+  async findDenied(): Promise<Access[]> {
+    return this.access_repo.find({ where: { status: Status.DENIED } });
   }
 
   async findExpired(): Promise<Access[]> {
-    return this.access_repo.find({ where: { status: 'expired' } });
+    return this.access_repo.find({ where: { status: Status.EXPIRED } });
   }
 
-  async findByStatus(status: string): Promise<Access[]> {
+  async findByStatus(status: Status): Promise<Access[]> {
     return this.access_repo.find({ where: { status } });
   }
 
-  async approveAccess(access_id: string): Promise<UpdateResult> {
-    return this.access_repo.update(access_id, { status: 'approved' });
+  async approve(access_id: string): Promise<UpdateResult> {
+    return this.access_repo.update(access_id, { status: Status.APPROVED });
   }
 
-  async rejectAccess(access_id: string): Promise<UpdateResult> {
-    return this.access_repo.update(access_id, { status: 'rejected' });
+  async deny(access_id: string): Promise<UpdateResult> {
+    return this.access_repo.update(access_id, { status: Status.DENIED });
   }
 
-  async expireAccess(access_id: string): Promise<UpdateResult> {
-    return this.access_repo.update(access_id, { status: 'expired' });
+  async complete(access_id: string): Promise<UpdateResult> {
+    return this.access_repo.update(access_id, { status: Status.COMPLETED });
+  }
+
+  async cancel(access_id: string): Promise<UpdateResult> {
+    return this.access_repo.update(access_id, { status: Status.CANCELLED });
+  }
+
+  async expire(access_id: string): Promise<UpdateResult> {
+    return this.access_repo.update(access_id, { status: Status.EXPIRED });
+  }
+
+  async findByRequesterAndStatus(
+    requester_id: string,
+    status: Status,
+  ): Promise<Access[]> {
+    return this.access_repo.find({ where: { requester_id, status } });
+  }
+
+  async findByApproverAndStatus(
+    approver_id: string,
+    status: Status,
+  ): Promise<Access[]> {
+    return this.access_repo.find({ where: { approver_id, status } });
+  }
+
+  async findByVisitorAndStatus(
+    visitor_id: string,
+    status: Status,
+  ): Promise<Access[]> {
+    return this.access_repo.find({ where: { visitor_id, status } });
+  }
+
+  async findByHouseAndStatus(
+    house_id: string,
+    status: Status,
+  ): Promise<Access[]> {
+    return this.access_repo.find({ where: { house_id, status } });
+  }
+
+  async findByVehicleAndStatus(
+    vehicle_id: string,
+    status: Status,
+  ): Promise<Access[]> {
+    return this.access_repo.find({ where: { vehicle_id, status } });
   }
 
   async findByRequester(requester_id: string): Promise<Access[]> {
