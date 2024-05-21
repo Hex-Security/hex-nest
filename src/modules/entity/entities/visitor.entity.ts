@@ -1,11 +1,12 @@
-import { Entity, Column, OneToMany, PrimaryColumn } from 'typeorm';
+import { VisitorType } from 'src/shared/enum/visitor-type.enum';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { Access } from './access.entity';
 import { Vehicle } from './vehicle.entity';
 
 @Entity()
 export class Visitor {
   @PrimaryColumn()
-  uid: string;
+  id: string;
 
   @Column()
   name: string;
@@ -16,8 +17,8 @@ export class Visitor {
   @Column()
   phone: string;
 
-  @Column()
-  type: 'visitor' | 'service' | 'delivery' | 'vendor' | 'other';
+  @Column({ enum: VisitorType, default: VisitorType.VISITOR, type: 'enum' })
+  type: VisitorType;
 
   @OneToMany(() => Vehicle, (vehicle) => vehicle.visitor)
   vehicles: Vehicle[];
