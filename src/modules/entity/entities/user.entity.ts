@@ -1,5 +1,6 @@
 import { Roles } from 'src/shared/enum/roles.enum';
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import { Access } from './access.entity';
 import { Complex } from './complex.entity';
 import { House } from './house.entity';
 import { Vehicle } from './vehicle.entity';
@@ -35,6 +36,9 @@ export class User {
 
   @OneToMany(() => Vehicle, (vehicle) => vehicle.user)
   vehicles: Vehicle[];
+
+  @OneToMany(() => Access, (access) => access.approver)
+  accesses: Access[];
 
   @Column()
   created_at: Date;

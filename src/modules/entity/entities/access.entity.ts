@@ -1,17 +1,17 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-  JoinColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
   AfterUpdate,
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
-import { Visitor } from './visitor.entity';
-import { Vehicle } from './vehicle.entity';
 import { House } from './house.entity';
 import { User } from './user.entity';
+import { Vehicle } from './vehicle.entity';
+import { Visitor } from './visitor.entity';
 
 @Entity()
 export class Access {
@@ -24,17 +24,36 @@ export class Access {
   @Column() // NOTE - The document field is a string because it can be a driver's license, passport, or other form of ID
   document: string;
 
+  @Column()
+  status: string;
+
+  @ManyToOne(() => User, (user) => user.accesses)
+  @JoinColumn({ name: 'approver_id' })
+  approver: User;
+
+  @Column({ nullable: true })
+  approver_id: string;
+
   @ManyToOne(() => Visitor, (visitor) => visitor.accesses)
   @JoinColumn({ name: 'visitor_id' })
   visitor: Visitor;
+
+  @Column()
+  visitor_id: string;
 
   @ManyToOne(() => Vehicle, (vehicle) => vehicle.accesses)
   @JoinColumn({ name: 'vehicle_id' })
   vehicle: Vehicle;
 
+  @Column({ nullable: true })
+  vehicle_id: string;
+
   @ManyToOne(() => House, (house) => house.accesses)
   @JoinColumn({ name: 'house_id' })
   house: House;
+
+  @Column()
+  house_id: string;
 
   @CreateDateColumn()
   requested_at: Date;
@@ -48,11 +67,12 @@ export class Access {
   @Column({ nullable: true })
   exit_time: Date;
 
-  @Column({ nullable: true })
-  requested_by: string;
+  @ManyToOne(() => User, (user) => user.accesses)
+  @JoinColumn({ name: 'requester_id' })
+  requester: User;
 
-  @Column({ nullable: true })
-  approved_by: string;
+  @Column()
+  requester_id: string;
 
   @Column({ nullable: true })
   duration: number;
