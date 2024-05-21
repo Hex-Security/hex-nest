@@ -14,6 +14,7 @@ import { VehicleService } from '../vehicle/vehicle.service';
 import { VisitorModule } from '../visitor/visitor.module';
 import { VisitorService } from '../visitor/visitor.service';
 import { AccessService } from './access.service';
+import { AccessController } from './access.controller';
 
 @Module({
   imports: [
@@ -31,5 +32,6 @@ import { AccessService } from './access.service';
     VehicleService,
   ],
   exports: [AccessService],
+  controllers: [AccessController],
 })
 export class AccessModule {}

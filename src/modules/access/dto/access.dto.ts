@@ -1,4 +1,5 @@
-import { IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { Status } from 'src/shared/enum/status.enum';
 
 export class AccessDto {
   @IsString()
@@ -7,8 +8,8 @@ export class AccessDto {
   @IsString()
   document: string;
 
-  @IsString()
-  status: string;
+  @IsEnum(Status)
+  status: Status;
 
   @IsOptional()
   @IsString()
