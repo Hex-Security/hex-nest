@@ -10,6 +10,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { ComplexDto } from 'src/shared/dto/complex.dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { Complex } from '../entity/entities/complex.entity';
@@ -17,6 +18,7 @@ import { User } from '../entity/entities/user.entity';
 import { ComplexService } from './complex.service';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 
+@ApiTags('Complex')
 @Controller('complex')
 export class ComplexController {
   constructor(private complex_service: ComplexService) {}

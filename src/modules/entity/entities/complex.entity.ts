@@ -47,6 +47,6 @@ export class Complex {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @Column()
+  @Column('json')
   metadata: any;
 }

@@ -8,16 +8,25 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
-    "dev": "nest start --watch",
+    "start": "yarn copy .env.local .env && nest start",
+    "dev": "yarn copy .env.local .env && nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "copy": "node copy.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "migration:generate": "npm run typeorm -- migration:generate -n",
+    "migration:run": "npm run typeorm -- migration:run",
+    "migration:revert": "npm run typeorm -- migration:revert",
+    "docker:build": "yarn copy .env.prod .env && docker build -t hex-nest .",
+    "docker:run": "docker run -p 3000:3000 hex-nest",
+    "dc:build": "yarn copy .env.prod .env && yarn docker:build && docker-compose down && docker-compose up -d",
+    "dc:run": "docker-compose down && docker-compose up -d"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

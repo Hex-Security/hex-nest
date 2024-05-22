@@ -1,7 +1,9 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AccessService } from './access.service';
 import { AccessDto } from './dto/access.dto';
 
+@ApiTags('Access')
 @Controller('access')
 export class AccessController {
   constructor(private access_service: AccessService) {}
