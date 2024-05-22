@@ -5,7 +5,7 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { Roles } from '../enum/roles.enum';
+import { RolesEnum } from '../enum/roles.enum';
 
 export class UserDto {
   @IsOptional()
@@ -29,6 +29,6 @@ export class UserDto {
   phone: string;
 
   @IsOptional()
-  @IsEnum(Roles)
-  role?: Roles;
+  @IsEnum(RolesEnum)
+  role?: RolesEnum;
 }

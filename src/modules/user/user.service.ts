@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Roles } from 'src/shared/enum/roles.enum';
+import { RolesEnum } from 'src/shared/enum/roles.enum';
 import { In, Repository } from 'typeorm';
 import { House } from '../entity/entities/house.entity';
 import { User } from '../entity/entities/user.entity';
@@ -8,6 +8,11 @@ import { User } from '../entity/entities/user.entity';
 @Injectable()
 export class UserService {
   constructor(@InjectRepository(User) private user_repo: Repository<User>) {}
+
+  async create(dto: Partial<User>): Promise<User> {
+    const new_user: User = this.user_repo.create(dto);
+    return this.user_repo.save(new_user);
+  }
 
   async findAll(): Promise<User[]> {
     return this.user_repo.find();
@@ -31,19 +36,19 @@ export class UserService {
     return this.user_repo.remove(user);
   }
 
-  async findUserByEmail(email: string): Promise<User> {
+  async findByEmail(email: string): Promise<User> {
     return this.user_repo.findOne({ where: { email } });
   }
 
-  async findUserByUsername(username: string): Promise<User> {
+  async findByUsername(username: string): Promise<User> {
     return this.user_repo.findOne({ where: { username } });
   }
 
-  async findUserByPhone(phone: string): Promise<User> {
+  async findByPhone(phone: string): Promise<User> {
     return this.user_repo.findOne({ where: { phone } });
   }
 
-  async findUsersByRole(role: Roles): Promise<User[]> {
+  async findUsersByRole(role: RolesEnum): Promise<User[]> {
     return this.user_repo.find({ where: { role } });
   }
 
