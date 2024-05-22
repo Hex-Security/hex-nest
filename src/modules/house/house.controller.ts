@@ -9,6 +9,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { HouseDto } from 'src/shared/dto/house.dto';
 import { DeleteResult, UpdateResult } from 'typeorm';
 import { House } from '../entity/entities/house.entity';
@@ -16,6 +17,7 @@ import { User } from '../entity/entities/user.entity';
 import { Vehicle } from '../entity/entities/vehicle.entity';
 import { HouseService } from './house.service';
 
+@ApiTags('House')
 @Controller('complex/:complex_id/house')
 export class HouseController {
   constructor(private house_service: HouseService) {}
