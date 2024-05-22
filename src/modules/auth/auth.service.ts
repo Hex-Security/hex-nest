@@ -1,13 +1,19 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import {
   AuthenticationClient,
   JSONApiResponse,
   ManagementClient,
   SignUpResponse,
+  TokenSet,
 } from 'auth0';
 import axios from 'axios';
 import { User } from '../entity/entities/user.entity';
 import { UserService } from '../user/user.service';
+import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { TokenDto } from './dto/token.dto';
 
@@ -80,6 +86,26 @@ export class AuthService {
     const user: User = await this.user_service.create(dto);
 
     return user;
+  }
+
+  async login(dto: LoginDto): Promise<JSONApiResponse<TokenSet>> {
+    const { email, password } = dto;
+
+    const user = await this.user_service.findByEmail(email);
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    return this.getAuthClient().oauth.passwordGrant({
+      username: email,
+      password,
+      realm: 'Username-Password-Authentication',
+      audience: process.env.AUTH0_AUDIENCE,
+      client_id: process.env.AUTH0_CLIENT_ID,
+      client_secret: process.env.AUTH0_CLIENT_SECRET,
+      scope: 'openid profile email',
+    });
   }
 
   async getSystemToken() {
