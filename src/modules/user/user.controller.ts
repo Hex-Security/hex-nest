@@ -54,7 +54,7 @@ export class UserController {
 
   @Get('search/:email')
   async searchUserByEmail(@Param('email') email: string): Promise<User> {
-    const user: User = await this.user_service.findUserByEmail(email);
+    const user: User = await this.user_service.findByEmail(email);
 
     if (!user) {
       throw new NotFoundException(`User with email ${email} not found.`);
@@ -65,7 +65,7 @@ export class UserController {
 
   @Get('search/:phone')
   async searchUserByPhone(@Param('phone') phone: string): Promise<User> {
-    const user: User = await this.user_service.findUserByPhone(phone);
+    const user: User = await this.user_service.findByPhone(phone);
 
     if (!user) {
       throw new NotFoundException(`User with phone ${phone} not found.`);

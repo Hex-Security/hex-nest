@@ -1,4 +1,4 @@
-import { Roles } from 'src/shared/enum/roles.enum';
+import { RolesEnum } from 'src/shared/enum/roles.enum';
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { Access } from './access.entity';
 import { Complex } from './complex.entity';
@@ -25,8 +25,8 @@ export class User {
   @Column()
   phone: string;
 
-  @Column({ enum: Roles, default: Roles.USER, type: 'enum' })
-  role: Roles;
+  @Column({ enum: RolesEnum, default: RolesEnum.USER, type: 'enum' })
+  role: RolesEnum;
 
   @OneToMany(() => Complex, (complex) => complex.admin)
   complexes: Complex[];
