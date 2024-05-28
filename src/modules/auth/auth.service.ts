@@ -1,7 +1,7 @@
 import {
   ConflictException,
   Injectable,
-  UnauthorizedException,
+  NotFoundException,
 } from '@nestjs/common';
 import {
   AuthenticationClient,
@@ -11,6 +11,7 @@ import {
   TokenSet,
 } from 'auth0';
 import axios from 'axios';
+import { RolesEnum } from 'src/shared/enum/roles.enum';
 import { User } from '../entity/entities/user.entity';
 import { UserService } from '../user/user.service';
 import { LoginDto } from './dto/login.dto';
@@ -62,7 +63,7 @@ export class AuthService {
   constructor(private readonly user_service: UserService) {}
 
   async signUp(dto: RegisterDto): Promise<User> {
-    const { email, password, first_name, last_name, phone, username } = dto;
+    const { email, password, first_name, last_name, username } = dto;
 
     // 1. Validate if user already exists
     if (await this.user_service.findByEmail(email)) {
@@ -83,7 +84,14 @@ export class AuthService {
     const auth0_user: SignUpResponse = auth0_res.data;
 
     // 3. Create user on our DB
-    const user: User = await this.user_service.create(dto);
+    const user: User = await this.user_service.create({
+      user_id: auth0_user.id,
+      email,
+      name: first_name,
+      lname: last_name,
+      role: RolesEnum.USER,
+      username,
+    });
 
     return user;
   }
@@ -94,7 +102,7 @@ export class AuthService {
     const user = await this.user_service.findByEmail(email);
 
     if (!user) {
-      throw new UnauthorizedException('User not found');
+      throw new NotFoundException('User not found');
     }
 
     return this.getAuthClient().oauth.passwordGrant({

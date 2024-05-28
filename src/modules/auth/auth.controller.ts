@@ -10,7 +10,7 @@ export class AuthController {
   @Post('sign-up')
   async register(@Body() dto: RegisterDto): Promise<User> {
     try {
-      const new_user: User = await this.auth_service.register(dto);
+      const new_user: User = await this.auth_service.signUp(dto);
       return new_user;
     } catch (error) {
       throw new BadRequestException(error);
