@@ -20,8 +20,4 @@ export class RegisterDto {
   @IsOptional()
   @IsString()
   last_name?: string;
-
-  @IsOptional()
-  @IsString()
-  phone?: string;
 }
