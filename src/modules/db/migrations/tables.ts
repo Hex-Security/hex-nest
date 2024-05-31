@@ -7,206 +7,139 @@ export class CreateFeedTables1714002851810 implements MigrationInterface {
     console.log('Creating tables...');
     // Creating users table
     await queryRunner.query(`
-      CREATE TYPE role AS ENUM ('admin', 'user', 'guard', 'visitor', 'service');
+      CREATE TYPE roles AS ENUM ('admin', 'user', 'guard', 'visitor', 'service');
     `);
 
     await queryRunner.query(`
-      CREATE TABLE
-        IF NOT EXISTS users (
-          user_id VARCHAR(36) PRIMARY KEY,
-          vital_id VARCHAR(36) UNIQUE NOT NULL,
-          rupa_id VARCHAR(100) UNIQUE,
-          team_id VARCHAR(36),
-          fname VARCHAR(100) NOT NULL,
-          lname VARCHAR(100) NOT NULL,
-          email VARCHAR(100) UNIQUE NOT NULL,
-          role role NOT NULL,
-          created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-          updated_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-        );
+      CREATE TYPE status AS ENUM ('pending', 'approved', 'denied');
     `);
 
-    await queryRunner.query(`
-      CREATE TABLE
-        IF NOT EXISTS enroll_metadata (
-          id SERIAL PRIMARY KEY,
-          user_id VARCHAR(36) NOT NULL REFERENCES users (user_id),
-          authenticator_type VARCHAR(100) NOT NULL,
-          binding_method VARCHAR(100) NOT NULL,
-          recovery_codes TEXT[],
-          oob_channel VARCHAR(100) NOT NULL,
-          oob_code TEXT NOT NULL,
-          mfa_token TEXT NOT NULL,
-          created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-          updated_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-        );
-    `);
-
-    // Creating providers table
-    await queryRunner.query(`
-      CREATE TABLE
-        IF NOT EXISTS providers (
-          slug VARCHAR(100) PRIMARY KEY,
-          name VARCHAR(100) NOT NULL,
-          description VARCHAR(1000),
-          logo VARCHAR(1000),
-          auth_type VARCHAR(100) NOT NULL,
-          supported_resources VARCHAR(100)[],
-          created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-          updated_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-        );
-    `);
-
-    // Creating sources table
-    await queryRunner.query(`
-      CREATE TABLE
-        IF NOT EXISTS sources (
-          user_id VARCHAR(36) REFERENCES users (user_id),
-          slug VARCHAR(100) REFERENCES providers (slug),
-          conn_metadata JSON,
-          type VARCHAR(10),
-          created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-          updated_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-          PRIMARY KEY (user_id, slug)
-        );
-    `);
-
-    // Creating vectors table
-    await queryRunner.query(`
-      CREATE TABLE
-        IF NOT EXISTS vectors (
-          id VARCHAR(36) PRIMARY KEY,
-          user_id VARCHAR(36) REFERENCES users (user_id) NOT NULL,
-          event_type VARCHAR(100) NOT NULL,
-          slug VARCHAR(100) REFERENCES providers (slug),
-          event_data JSON,
-          values FLOAT[] NOT NULL,
-          created_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-          updated_on TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-        );
-    `);
-
-    // Creating profiles table
-    await queryRunner.query(`
-      CREATE TABLE
-        IF NOT EXISTS profiles (
-          user_id VARCHAR(36) REFERENCES users (user_id) PRIMARY KEY,
-          phone VARCHAR(20),
-          goals goals[],
-          activity_level INTEGER,
-          age INTEGER,
-          weight INTEGER,
-          height INTEGER,
-          first_time BOOLEAN DEFAULT TRUE NOT NULL,
-          CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES users (user_id)
-        );
-    `);
+    await queryRunner.query(``);
 
     await queryRunner.query(`
-      CREATE TABLE
-        IF NOT EXISTS patients (
-          rupa_id VARCHAR PRIMARY KEY,
-          user_id VARCHAR(36) REFERENCES users (user_id) NOT NULL,
-          created_at TIMESTAMP NOT NULL,
-          practitioner_id VARCHAR NOT NULL,
-          clinic_id VARCHAR NOT NULL,
-          gender VARCHAR NOT NULL,
-          shipping_address VARCHAR,
-          CONSTRAINT fk_user_ID FOREIGN KEY (user_id) REFERENCES users (user_id)
-        );
-    `);
-
-    await queryRunner.query(`
-      CREATE TABLE 
-        IF NOT EXISTS practitioners (
-          id VARCHAR PRIMARY KEY,
-          first_name VARCHAR NOT NULL,
-          last_name VARCHAR NOT NULL,
-          titled_full_name VARCHAR NOT NULL,
-          primary_practitioner_type VARCHAR NOT NULL,
-          ordering_authorization_status BOOLEAN NOT NULL,
-          verification_status BOOLEAN NOT NULL,
-          address VARCHAR NOT NULL,
-          updated_at TIMESTAMP NOT NULL,
-          clinic_id VARCHAR NOT NULL
-        );
-    `);
-
-    await queryRunner.query(`
-      CREATE TABLE 
-        IF NOT EXISTS lab_companies (
-          id VARCHAR PRIMARY KEY,
-          name VARCHAR NOT NULL,
-          short_name VARCHAR,
-          key VARCHAR NOT NULL,
-          additional_fees TEXT,
-          about_url VARCHAR,
-          logo VARCHAR,
-          certifications TEXT[],
-          specialties TEXT[]
-        );
-    `);
-
-    await queryRunner.query(`
-      CREATE TABLE 
-        IF NOT EXISTS lab_tests (
-          id VARCHAR PRIMARY KEY,
-          name VARCHAR NOT NULL,
-          url VARCHAR,
-          details TEXT,
-          lab_company_id VARCHAR NOT NULL,
-          unavailable_reason VARCHAR,
-          is_addon BOOLEAN NOT NULL,
-          parent_id VARCHAR,
-          shipping_days_min INTEGER NOT NULL,
-          shipping_days_max INTEGER NOT NULL,
-          estimated_days_for_results INTEGER NOT NULL,
-          rupa_price NUMERIC NOT NULL,
-          sample_report_url VARCHAR,
-          disabled BOOLEAN NOT NULL,
-          disabled_reason VARCHAR,
-          CONSTRAINT fk_lab_company FOREIGN KEY (lab_company_id) REFERENCES lab_companies (id),
-          CONSTRAINT fk_parent_lab_test FOREIGN KEY (parent_id) REFERENCES lab_tests (id)
+      CREATE TABLE access (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        reason VARCHAR NOT NULL,
+        document VARCHAR NOT NULL,
+        status status_enum NOT NULL DEFAULT 'PENDING',
+        approver_id UUID,
+        visitor_id UUID NOT NULL,
+        vehicle_id UUID,
+        house_id UUID NOT NULL,
+        requested_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        entry_time TIMESTAMPTZ,
+        exit_time TIMESTAMPTZ,
+        requester_id UUID NOT NULL,
+        duration INT,
+        guard_id UUID,
+        FOREIGN KEY (approver_id) REFERENCES users(id),
+        FOREIGN KEY (visitor_id) REFERENCES visitors(id),
+        FOREIGN KEY (vehicle_id) REFERENCES vehicles(id),
+        FOREIGN KEY (house_id) REFERENCES houses(id),
+        FOREIGN KEY (requester_id) REFERENCES users(id),
+        FOREIGN KEY (guard_id) REFERENCES users(id)
       );
     `);
 
     await queryRunner.query(`
-      CREATE TABLE 
-        IF NOT EXISTS orders (
-          id VARCHAR PRIMARY KEY,
-          patient_id VARCHAR NOT NULL,
-          practitioner_id VARCHAR NOT NULL,
-          signing_practitioner_id VARCHAR NOT NULL,
-          total_price NUMERIC NOT NULL,
-          notes_to_patient TEXT,
-          line_items TEXT[],
-          is_demo BOOLEAN NOT NULL,
-          status VARCHAR NOT NULL,
-          date_submitted TIMESTAMP,
-          date_paid TIMESTAMP,
-          date_patient_checkout TIMESTAMP,
-          date_completed TIMESTAMP,
-          date_canceled TIMESTAMP,
-          payer VARCHAR,
-          CONSTRAINT fk_patient FOREIGN KEY (patient_id) REFERENCES users (user_id),
-          CONSTRAINT fk_practitioner FOREIGN KEY (practitioner_id) REFERENCES practitioners (id),
-          CONSTRAINT fk_signing_practitioner FOREIGN KEY (signing_practitioner_id) REFERENCES practitioners (id)
+      CREATE TABLE users (
+        user_id UUID PRIMARY KEY,
+        username VARCHAR NOT NULL,
+        name VARCHAR NOT NULL,
+        lname VARCHAR NOT NULL,
+        email VARCHAR NOT NULL,
+        phone VARCHAR NOT NULL,
+        role roles NOT NULL DEFAULT 'USER',
+        residence_id UUID,
+        complex_id UUID,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        FOREIGN KEY (residence_id) REFERENCES houses(id),
+        FOREIGN KEY (complex_id) REFERENCES complexes(id)
       );
     `);
+
     await queryRunner.query(`
-      CREATE TABLE 
-        IF NOT EXISTS ordered_tests (
-          id VARCHAR PRIMARY KEY,
-          user_id VARCHAR NOT NULL,
-          order_id VARCHAR NOT NULL,
-          lab_test_id VARCHAR NOT NULL,
-          date_results_received_from_lab TIMESTAMP NOT NULL,
-          results_h17 TEXT NOT NULL,
-          results_pdf TEXT NOT NULL,
-          CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users (user_id),
-          CONSTRAINT fk_order FOREIGN KEY (order_id) REFERENCES orders (id),
-          CONSTRAINT fk_lab_test FOREIGN KEY (lab_test_id) REFERENCES lab_tests (id)
+      CREATE TABLE visitors (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        name VARCHAR NOT NULL,
+        lname VARCHAR NOT NULL,
+        phone VARCHAR NOT NULL,
+        type visitor_type_enum NOT NULL DEFAULT 'VISITOR',
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       );
+    `);
+
+    await queryRunner.query(`
+      CREATE TABLE vehicles (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        make VARCHAR NOT NULL,
+        model VARCHAR NOT NULL,
+        plate VARCHAR NOT NULL,
+        color VARCHAR NOT NULL,
+        year VARCHAR NOT NULL,
+        is_visitor BOOLEAN NOT NULL DEFAULT TRUE,
+        house_id UUID NOT NULL,
+        visitor_id UUID,
+        user_id UUID,
+        FOREIGN KEY (house_id) REFERENCES houses(id),
+        FOREIGN KEY (visitor_id) REFERENCES visitors(id),
+        FOREIGN KEY (user_id) REFERENCES users(user_id)
+      );
+    `);
+
+    await queryRunner.query(`
+      CREATE TABLE houses (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        number VARCHAR NOT NULL,
+        owner_id UUID NOT NULL,
+        complex_id UUID NOT NULL,
+        FOREIGN KEY (owner_id) REFERENCES users(user_id),
+        FOREIGN KEY (complex_id) REFERENCES complexes(id)
+      );
+    `);
+
+    await queryRunner.query(`
+      CREATE TABLE complexes (
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+        name VARCHAR NOT NULL,
+        admin_id UUID NOT NULL,
+        address VARCHAR NOT NULL,
+        city VARCHAR NOT NULL,
+        state VARCHAR NOT NULL,
+        zip VARCHAR NOT NULL,
+        metadata JSON NOT NULL,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        FOREIGN KEY (admin_id) REFERENCES users(user_id)
+      );
+    `);
+
+    console.log('All tables: OK');
+
+    // Create Indexes for Access Table
+    await queryRunner.query(`
+      CREATE INDEX access_visitor_id_index ON access(visitor_id);
+      `);
+    await queryRunner.query(`
+      CREATE INDEX idx_approver_id ON access(approver_id);
+      `);
+    await queryRunner.query(`
+      CREATE INDEX idx_visitor_id ON access(visitor_id);
+      `);
+    await queryRunner.query(`
+      CREATE INDEX idx_vehicle_id ON access(vehicle_id);
+      `);
+    await queryRunner.query(`
+      CREATE INDEX idx_house_id ON access(house_id);
+      `);
+    await queryRunner.query(`
+      CREATE INDEX idx_requester_id ON access(requester_id);
+      `);
+    await queryRunner.query(`
+      CREATE INDEX idx_guard_id ON access(guard_id);
     `);
 
     console.log('Inserting data...');
