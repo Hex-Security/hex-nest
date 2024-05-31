@@ -41,6 +41,9 @@ export class Complex {
   @OneToMany(() => House, (house) => house.complex)
   houses: House[];
 
+  @OneToMany(() => User, (user) => user.complex)
+  guards: User[];
+
   @CreateDateColumn()
   created_at: Date;
 

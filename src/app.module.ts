@@ -11,6 +11,7 @@ import { HouseModule } from './modules/house/house.module';
 import { UserModule } from './modules/user/user.module';
 import { VehicleModule } from './modules/vehicle/vehicle.module';
 import { VisitorModule } from './modules/visitor/visitor.module';
+import { FirebaseModule } from './modules/firebase/firebase.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { VisitorModule } from './modules/visitor/visitor.module';
     UserModule,
     VehicleModule,
     VisitorModule,
+    FirebaseModule,
   ],
   controllers: [AppController],
   providers: [

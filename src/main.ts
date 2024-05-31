@@ -19,6 +19,7 @@ async function bootstrap() {
     .setTitle('Hex-Sec API')
     .setDescription('Hex-Api description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, options);

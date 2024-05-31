@@ -19,6 +19,15 @@ describe('AppController (e2e)', () => {
     nu_visitors_per_resident: 2,
   };
 
+  beforeEach(async () => {
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    }).compile();
+
+    app = moduleFixture.createNestApplication();
+    await app.init();
+  });
+
   for (let i = 0; i < test_config.nu_complexes; i++) {
     // 1. Generate complex data
     const complex_dto: ComplexDto = {
@@ -63,37 +72,15 @@ describe('AppController (e2e)', () => {
 
       houses.push(house);
     }
-  }
 
-  beforeEach(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
+    // 4. Send data to the API
+    it(`Complex ${i + 1} - ${complex_dto.name}`, () => {
+      const server = request(app.getHttpServer);
 
-    app = moduleFixture.createNestApplication();
-    await app.init();
-  });
-
-  for (let i = 0; i < test_config.nu_complexes; i++) {
-    it('should create a complex', () => {
-      return request(app.getHttpServer())
-        .post('/complex')
-        .send(complex_dto)
-        .expect(201);
-    });
-
-    it('should create users', () => {
-      return request(app.getHttpServer())
-        .post('/user')
-        .send(users)
-        .expect(201);
-    });
-
-    it('should create houses', () => {
-      return request(app.getHttpServer())
-        .post('/house')
-        .send(houses)
-        .expect(201);
+      // 4.1 Create complex
+      server.post('/complex').send(complex_dto).expect(201);
     });
   }
+
+  for (let i = 0; i < test_config.nu_complexes; i++) {}
 });

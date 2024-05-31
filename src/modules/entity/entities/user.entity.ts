@@ -1,5 +1,14 @@
 import { RolesEnum } from 'src/shared/enum/roles.enum';
-import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Access } from './access.entity';
 import { Complex } from './complex.entity';
 import { House } from './house.entity';
@@ -28,21 +37,41 @@ export class User {
   @Column({ enum: RolesEnum, default: RolesEnum.USER, type: 'enum' })
   role: RolesEnum;
 
-  @OneToMany(() => Complex, (complex) => complex.admin)
-  complexes: Complex[];
+  @OneToMany(() => Access, (access) => access.approver)
+  accesses: Access[];
+
+  // Resident fields
+  @Column()
+  residence_id: string;
+
+  @ManyToOne(() => House, (house) => house.residents)
+  @JoinColumn({ name: 'residence_id' })
+  residence: House;
 
   @OneToMany(() => House, (house) => house.owner)
-  residence: House;
+  owned_residence: House;
 
   @OneToMany(() => Vehicle, (vehicle) => vehicle.user)
   vehicles: Vehicle[];
 
-  @OneToMany(() => Access, (access) => access.approver)
-  accesses: Access[];
+  // Admin fields
+  @OneToMany(() => Complex, (complex) => complex.admin)
+  complexes: Complex[];
 
-  @Column()
+  // Guard fields
+  @OneToMany(() => Access, (access) => access.guard)
+  guard_accesses: Access[];
+
+  @Column({ nullable: true })
+  complex_id: string;
+
+  @ManyToOne(() => Complex, (complex) => complex.guards)
+  @JoinColumn({ name: 'complex_id' })
+  complex: Complex;
+
+  @CreateDateColumn()
   created_at: Date;
 
-  @Column()
+  @UpdateDateColumn()
   updated_at: Date;
 }

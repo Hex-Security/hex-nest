@@ -83,6 +83,13 @@ export class Access {
   @Column({ nullable: true })
   duration: number;
 
+  @Column({ nullable: true })
+  guard_id: string;
+
+  @ManyToOne(() => User, (user) => user.guard_accesses)
+  @JoinColumn({ name: 'guard_id' })
+  guard: User;
+
   @AfterUpdate()
   updateDuration() {
     if (this.exit_time !== undefined) {
