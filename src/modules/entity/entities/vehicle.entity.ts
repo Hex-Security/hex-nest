@@ -9,7 +9,6 @@ import {
 import { Access } from './access.entity';
 import { House } from './house.entity';
 import { User } from './user.entity';
-import { Visitor } from './visitor.entity';
 
 @Entity()
 export class Vehicle {
@@ -38,14 +37,7 @@ export class Vehicle {
   house_id: string;
 
   @Column({ nullable: true })
-  visitor_id: string;
-
-  @Column({ nullable: true })
   user_id: string;
-
-  @ManyToOne(() => Visitor, (visitor) => visitor.vehicles)
-  @JoinColumn({ name: 'visitor_id' })
-  visitor: Visitor;
 
   @ManyToOne(() => User, (user) => user.vehicles)
   @JoinColumn({ name: 'user_id' })

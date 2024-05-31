@@ -14,7 +14,11 @@ export class CreateFeedTables1714002851810 implements MigrationInterface {
       CREATE TYPE status AS ENUM ('pending', 'approved', 'denied');
     `);
 
-    await queryRunner.query(``);
+    await queryRunner.query(`
+      CREATE TYPE visitor_type AS ENUM ('visitor', 'service', 'delivery', 'vendor', 'other');
+    `);
+
+    console.log('Types: OK');
 
     await queryRunner.query(`
       CREATE TABLE access (
@@ -142,81 +146,32 @@ export class CreateFeedTables1714002851810 implements MigrationInterface {
       CREATE INDEX idx_guard_id ON access(guard_id);
     `);
 
-    console.log('Inserting data...');
+    console.log('Indexes: OK');
 
     // Ensure the UUID extension is available
     await queryRunner.query(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`);
 
-    // Inserting providers data
+    // Insert data into complexes table
     await queryRunner.query(`
-      INSERT INTO providers 
-        (name, slug, description, logo, auth_type, supported_resources) 
-      VALUES 
-        ('Apple HealthKit', 'apple_health_kit', 'HealthKit provides a central repository for health and fitness data on iPhone and Apple Watch.', 'https://storage.googleapis.com/vital-assets/apple_health.png', 'sdk', ARRAY['activity', 'blood_oxygen', 'blood_pressure', 'body', 'caffeine', 'calories_active', 'calories_basal', 'distance', 'fat', 'floors_climbed', 'glucose', 'heartrate', 'hrv', 'hypnogram', 'mindfulness_minutes', 'profile', 'respiratory_rate', 'sleep', 'sleep_stream', 'steps', 'vo2_max', 'water', 'weight', 'workouts']),
-        ('Oura', 'oura', 'Smart sleep tracking ring', 'https://storage.googleapis.com/vital-assets/oura.png', 'oauth', ARRAY['activity', 'body', 'calories_active', 'distance', 'heartrate', 'hrv', 'hypnogram', 'profile', 'respiratory_rate', 'sleep', 'sleep_stream', 'steps', 'weight', 'workouts']),
-        ('Whoop V2', 'whoop_v2', 'Smart Activity Watches', 'https://storage.googleapis.com/vital-assets/whoop.png', 'team_oauth', ARRAY['activity', 'body', 'sleep', 'workouts']),
-        ('Fitbit', 'fitbit', 'Activity Trackers', 'https://storage.googleapis.com/vital-assets/fitbit.png', 'oauth', ARRAY['activity', 'blood_oxygen', 'body', 'calories_active',  'distance', 'fat', 'heartrare', 'hrv', 'hypnogram', 'profile', 'respiratory_rate', 'sleep', 'steps', 'vo2_max', 'water', 'weight', 'workout_stream', 'workouts']),
-        ('Garmin', 'garmin', 'Smart Watches', 'https://storage.googleapis.com/vital-assets/garmin.png', 'oauth', ARRAY['activity', 'blood_oxygen', 'blood_pressure', 'body', 'calories_active', 'distance', 'fat', 'heartrate', 'hrv', 'hypnogram', 'respiratory_rate', 'sleep', 'steps', 'stress_level','vo2_max', 'weight', 'workouts']),
-        ('Baseline API', 'api', 'API incoming data', 'N/A', 'N/A', ARRAY['activity', 'body', 'sleep', 'workouts']);
+      INSERT INTO complexes (id, name, admin_id, address, city, state, zip, metadata, created_at, updated_at) VALUES
+      (uuid_generate_v4(), 'Complex 1', 'admin1', '123 Main St', 'City A', 'State A', '12345', '{}', NOW(), NOW()),
+      (uuid_generate_v4(), 'Complex 2', 'admin2', '456 Side St', 'City B', 'State B', '67890', '{}', NOW(), NOW());
     `);
 
-    console.log('Providers: OK');
-
-    // Inserting users data
+    // Insert data into users table for admins
     await queryRunner.query(`
-      INSERT INTO users (user_id, vital_id, rupa_id, fname, lname, email, role) 
-      VALUES 
-        (uuid_generate_v4(), '36e5aaba-0208-401b-8859-50b836e892e6', 'pat_abcdefg', 'John', 'Doe', 'john.doe@example.com', 'user'),
-        (uuid_generate_v4(), 'fac593ed-f371-4aea-9210-9332f1b19bec', 'pat_hijklmn', 'Jane', 'Smith', 'jane.smith@example.com', 'user')
-      ;
+      INSERT INTO users (user_id, username, name, lname, email, phone, role, residence_id, complex_id, created_at, updated_at) VALUES
+      ('admin1', 'admin1', 'Admin', 'One', 'admin1@complex.com', '1234567890', 'admin', NULL, (SELECT id FROM complexes WHERE name = 'Complex 1'), NOW(), NOW()),
+      ('admin2', 'admin2', 'Admin', 'Two', 'admin2@complex.com', '0987654321', 'admin', NULL, (SELECT id FROM complexes WHERE name = 'Complex 2'), NOW(), NOW());
     `);
 
-    // await queryRunner.query(`
-    //   INSERT INTO enroll_metadata (user_id, authenticator_type, binding_method, recovery_codes, oob_channel, oob_code, mfa_token)
-    //   SELECT user_id, 'email', 'email', ARRAY['123456'], 'email', '123456', '123
-    //   FROM users u
-    //   WHERE u.vital_id = '36e5aaba-0208-401b-8859-50b836e892e6'
-    //   UNION ALL
-    //   SELECT user_id, 'email', 'email', ARRAY['654321'], 'email', '654321', '321'
-    //   FROM users u
-    //   WHERE u.vital_id = 'fac593ed-f371-4aea-9210-9332f1b19bec';
-    // `);
+    // Insert data into users table for users
 
-    console.log('Users: OK');
+    // Insert data into users table for guards
 
-    await queryRunner.query(`
-      INSERT INTO profiles (user_id, phone, goals, activity_level, age, weight, height, first_time)
-      SELECT user_id, phone, goals, activity_level, age, weight, height, first_time
-      FROM (
-        SELECT 
-          user_id,
-          '+1234567890' AS phone,
-          ARRAY['lose_weight'::goals, 'control_stress'::goals] AS goals,
-          3 AS activity_level,
-          25 AS age,
-          150 AS weight,
-          70 AS height,
-          TRUE AS first_time
-        FROM users u
-        WHERE u. vital_id = '36e5aaba-0208-401b-8859-50b836e892e6'
-      
-        UNION ALL
-      
-        SELECT 
-          user_id,
-          '+0987654321' AS phone,
-          ARRAY['improve_recovery'::goals, 'improve_sleep'::goals] AS goals,
-          2 AS activity_level,
-          30 AS age,
-          200 AS weight,
-          80 AS height,
-          TRUE AS first_time
-        FROM users u
-        WHERE u.vital_id = 'fac593ed-f371-4aea-9210-9332f1b19bec'
-      ) AS profile_data;
-    `);
+    // Insert data into users table for visitors
 
-    console.log('Profiles: OK');
+    // Insert data into visitors table
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

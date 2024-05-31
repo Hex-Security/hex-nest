@@ -12,7 +12,6 @@ import {
 import { House } from './house.entity';
 import { User } from './user.entity';
 import { Vehicle } from './vehicle.entity';
-import { Visitor } from './visitor.entity';
 
 @Entity()
 export class Access {
@@ -33,19 +32,19 @@ export class Access {
   })
   status: Status;
 
-  @ManyToOne(() => User, (user) => user.accesses)
+  @ManyToOne(() => User, (user) => user.approved_accesses)
   @JoinColumn({ name: 'approver_id' })
   approver: User;
 
   @Column({ nullable: true })
   approver_id: string;
 
-  @ManyToOne(() => Visitor, (visitor) => visitor.accesses)
-  @JoinColumn({ name: 'visitor_id' })
-  visitor: Visitor;
-
   @Column()
   visitor_id: string;
+
+  @ManyToOne(() => User, (user) => user.visitor_accesses)
+  @JoinColumn({ name: 'visitor_id' })
+  visitor: User;
 
   @ManyToOne(() => Vehicle, (vehicle) => vehicle.accesses)
   @JoinColumn({ name: 'vehicle_id' })
@@ -73,7 +72,7 @@ export class Access {
   @Column({ nullable: true })
   exit_time: Date;
 
-  @ManyToOne(() => User, (user) => user.accesses)
+  @ManyToOne(() => User, (user) => user.requested_accesses)
   @JoinColumn({ name: 'requester_id' })
   requester: User;
 

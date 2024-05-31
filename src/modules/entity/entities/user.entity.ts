@@ -16,6 +16,7 @@ import { Vehicle } from './vehicle.entity';
 
 @Entity()
 export class User {
+  // General fields
   @PrimaryColumn()
   user_id: string;
 
@@ -37,10 +38,17 @@ export class User {
   @Column({ enum: RolesEnum, default: RolesEnum.USER, type: 'enum' })
   role: RolesEnum;
 
-  @OneToMany(() => Access, (access) => access.approver)
-  accesses: Access[];
+  // Visitor fields
+  @OneToMany(() => Access, (access) => access.visitor)
+  visitor_accesses: Access[];
 
   // Resident fields
+  @OneToMany(() => Access, (access) => access.approver)
+  approved_accesses: Access[];
+
+  @OneToMany(() => Access, (access) => access.requester)
+  requested_accesses: Access[];
+
   @Column()
   residence_id: string;
 
