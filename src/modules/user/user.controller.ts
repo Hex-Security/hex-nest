@@ -5,9 +5,15 @@ import {
   NotFoundException,
   Param,
   Put,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Roles } from 'src/shared/decorator/roles.decorator';
 import { UserDto } from 'src/shared/dto/user.dto';
+import { RolesEnum } from 'src/shared/enum/roles.enum';
+import { AuthorizationGuard } from '../auth/guard/authorization.guard';
+import { ResourceAccessGuard } from '../auth/guard/resource.guard';
+import { RolesGuard } from '../auth/guard/roles.guard';
 import { User } from '../entity/entities/user.entity';
 import { UserService } from './user.service';
 
@@ -28,6 +34,9 @@ export class UserController {
   }
 
   @Get(':user_id')
+  @ApiBearerAuth()
+  @Roles(RolesEnum.ADMIN, RolesEnum.USER, RolesEnum.GUARD)
+  @UseGuards(AuthorizationGuard, ResourceAccessGuard, RolesGuard)
   async getUser(@Param('user_id') user_id: string): Promise<User> {
     const user: User = await this.user_service.findOne(user_id);
 

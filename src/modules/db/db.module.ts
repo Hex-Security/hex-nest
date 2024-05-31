@@ -16,8 +16,8 @@ const config: DataSourceOptions = {
   password: process.env.POSTGRES_PASSWORD || 'password',
   database: process.env.POSTGRES_DB || 'hex',
   entities: [Access, Complex, House, User, Vehicle, Visitor],
-  synchronize: true,
-  migrationsRun: false,
+  synchronize: false,
+  migrationsRun: true,
   migrations: ['dist/modules/db/migrations/*.js'],
 };
 
