@@ -1,6 +1,8 @@
 import { Sex, fakerES_MX } from '@faker-js/faker';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { beforeEach, describe, it } from 'node:test';
+import request from 'supertest';
 import { House } from '../src/modules/entity/entities/house.entity';
 import { User } from '../src/modules/entity/entities/user.entity';
 import { ComplexDto } from '../src/shared/dto/complex.dto';
