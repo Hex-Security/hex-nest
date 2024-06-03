@@ -74,7 +74,6 @@ export class VehicleService {
       is_visitor: dto.is_visitor,
       house,
       user,
-      visitor,
     };
 
     const new_vehicle: Vehicle = this.vehicle_repository.create(vehicle);
@@ -105,7 +104,9 @@ export class VehicleService {
   }
 
   async findAllByVisitor(visitor_id: string): Promise<Vehicle[]> {
-    return this.vehicle_repository.find({ where: { visitor_id } });
+    return this.vehicle_repository.find({
+      where: { user_id: visitor_id, is_visitor: true },
+    });
   }
 
   async findAllByComplex(complex_id: string): Promise<Vehicle[]> {
