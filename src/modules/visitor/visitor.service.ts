@@ -15,11 +15,13 @@ export class VisitorService {
   }
 
   async findOne(visitor_id: string): Promise<Visitor> {
-    return this.visitor_repository.findOne({ where: { id: visitor_id } });
+    return this.visitor_repository.findOne({ where: { user_id: visitor_id } });
   }
 
   async findMany(visitor_ids: string[]): Promise<Visitor[]> {
-    return this.visitor_repository.find({ where: { id: In(visitor_ids) } });
+    return this.visitor_repository.find({
+      where: { user_id: In(visitor_ids) },
+    });
   }
 
   async update(
@@ -33,19 +35,8 @@ export class VisitorService {
     return this.visitor_repository.delete(user_id);
   }
 
-  async findVisitorByPhone(phone: string): Promise<Visitor> {
-    return this.visitor_repository.findOne({ where: { phone } });
-  }
-
   async findVisitorsByType(type: VisitorType): Promise<Visitor[]> {
     return this.visitor_repository.find({ where: { type } });
-  }
-
-  async findVisitorsByVehicle(vehicle_id: string): Promise<Visitor[]> {
-    return this.visitor_repository.find({
-      where: { vehicles: { id: vehicle_id } },
-      relations: ['vehicles'],
-    });
   }
 
   async findVisitorsByAccess(access_id: string): Promise<Visitor[]> {
@@ -57,14 +48,14 @@ export class VisitorService {
 
   async findVisitorsByHouse(house_id: string): Promise<Visitor[]> {
     return this.visitor_repository.find({
-      where: { accesses: { house: { id: house_id } } },
+      where: { accesses: { house_id } },
       relations: ['accesses'],
     });
   }
 
   async findVisitorsByComplex(complex_id: string): Promise<Visitor[]> {
     return this.visitor_repository.find({
-      where: { accesses: { house: { complex: { id: complex_id } } } },
+      where: { accesses: { house: { complex_id } } },
       relations: ['accesses'],
     });
   }

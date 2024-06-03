@@ -17,7 +17,7 @@ import { Vehicle } from './vehicle.entity';
 @Entity()
 export class User {
   // General fields
-  @PrimaryColumn()
+  @PrimaryColumn({ length: 128 })
   user_id: string;
 
   @Column()
