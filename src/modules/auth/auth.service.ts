@@ -32,7 +32,6 @@ export class AuthService {
 
       // 2. Create user in Firebase Auth
       const fb_user: UserToken = await this.firebase_service.signUp(dto);
-      console.log(fb_user);
 
       const { token } = fb_user;
 
