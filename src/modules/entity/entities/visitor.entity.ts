@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { Access } from './access.entity';
 
-@Entity()
+@Entity('visitor')
 export class Visitor {
   @PrimaryColumn('uuid')
   user_id: string;

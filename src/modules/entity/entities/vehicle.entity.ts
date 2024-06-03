@@ -10,7 +10,7 @@ import { Access } from './access.entity';
 import { House } from './house.entity';
 import { User } from './user.entity';
 
-@Entity()
+@Entity('vehicle')
 export class Vehicle {
   @PrimaryGeneratedColumn('uuid')
   id: string;

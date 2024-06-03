@@ -23,6 +23,9 @@ export class UserController {
   constructor(private readonly user_service: UserService) {}
 
   @Get()
+  @ApiBearerAuth()
+  @Roles(RolesEnum.ADMIN, RolesEnum.USER, RolesEnum.GUARD)
+  @UseGuards(AuthorizationGuard, RolesGuard)
   async getAllUsers(): Promise<User[]> {
     const users: User[] = await this.user_service.findAll();
 

@@ -11,7 +11,7 @@ import { Complex } from './complex.entity';
 import { User } from './user.entity';
 import { Vehicle } from './vehicle.entity';
 
-@Entity()
+@Entity('house')
 export class House {
   @PrimaryGeneratedColumn('uuid')
   id: string;

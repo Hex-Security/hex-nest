@@ -14,7 +14,7 @@ import { Complex } from './complex.entity';
 import { House } from './house.entity';
 import { Vehicle } from './vehicle.entity';
 
-@Entity()
+@Entity('úser')
 export class User {
   // General fields
   @PrimaryColumn({ length: 128 })

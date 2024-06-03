@@ -21,8 +21,6 @@ const config: DataSourceOptions = {
   migrations: ['dist/modules/db/migrations/*.js'],
 };
 
-console.log(config);
-
 @Module({
   imports: [TypeOrmModule.forRoot(config)],
   exports: [TypeOrmModule],

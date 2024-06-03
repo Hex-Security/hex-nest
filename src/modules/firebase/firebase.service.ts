@@ -22,9 +22,10 @@ export class FirebaseService implements OnModuleInit {
 
   onModuleInit() {
     if (firebaseAdmin.apps.length === 0) {
+      const serviceAccount = require('../../../hex-nest-firebase-adminsdk-avvkg-df3f7e9235.json');
       firebaseAdmin.initializeApp({
         credential: firebaseAdmin.credential.cert(
-          '../../../hex-nest-firebase-adminsdk-avvkg-49174f9ce6.json',
+          serviceAccount as firebaseAdmin.ServiceAccount,
         ),
       });
 
