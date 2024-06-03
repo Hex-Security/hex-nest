@@ -13,8 +13,8 @@ export const signup: EndpointDoc = {
         value: {
           email: 'resident@email.com',
           password: 'password123!--',
-          name: 'John',
-          lname: 'Doe',
+          first_name: 'John',
+          last_name: 'Doe',
           username: 'johndoe',
         },
       },

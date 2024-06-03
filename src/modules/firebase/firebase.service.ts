@@ -1,4 +1,6 @@
 import {
+  ConflictException,
+  HttpException,
   Injectable,
   OnModuleInit,
   UnauthorizedException,
@@ -18,28 +20,49 @@ export class FirebaseService implements OnModuleInit {
   private admin: AdminAuth;
   private auth: Auth;
 
-  private app: firebase.FirebaseApp;
+  private adminApp: firebaseAdmin.app.App;
+  private clientApp: firebase.FirebaseApp;
 
   onModuleInit() {
-    if (firebaseAdmin.apps.length === 0) {
-      const serviceAccount = require('../../../hex-nest-firebase-adminsdk-avvkg-df3f7e9235.json');
-      firebaseAdmin.initializeApp({
-        credential: firebaseAdmin.credential.cert(
-          serviceAccount as firebaseAdmin.ServiceAccount,
-        ),
-      });
+    if (!this.admin) {
+      if (firebaseAdmin.apps.length === 0) {
+        const serviceAccount = require('../../../hex-nest-firebase-adminsdk-avvkg-df3f7e9235.json');
+        this.adminApp = firebaseAdmin.initializeApp(
+          {
+            credential: firebaseAdmin.credential.cert(
+              serviceAccount as firebaseAdmin.ServiceAccount,
+            ),
+          },
+          'admin',
+        );
+        this.admin = firebaseAdmin.auth(this.adminApp);
+      } else {
+        this.admin = firebaseAdmin.auth(
+          firebaseAdmin.apps.find(
+            (app) => app.name === 'admin',
+          ) as firebaseAdmin.app.App,
+        );
+      }
+    }
 
-      this.app = firebase.initializeApp({
-        apiKey: process.env.FIREBASE_API_KEY,
-        authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-        messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
-        appId: process.env.FIREBASE_APP_ID,
-      });
+    if (!this.auth) {
+      if (firebase.getApps().length === 0) {
+        this.clientApp = firebase.initializeApp(
+          {
+            apiKey: process.env.FIREBASE_API_KEY,
+            authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+            projectId: process.env.FIREBASE_PROJECT_ID,
+            storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+            messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+            appId: process.env.FIREBASE_APP_ID,
+          },
+          'client',
+        );
 
-      this.admin = firebaseAdmin.auth();
-      this.auth = getAuth(this.app);
+        this.auth = getAuth(this.clientApp);
+      } else {
+        this.auth = getAuth(firebase.getApp('client'));
+      }
     }
   }
 
@@ -51,7 +74,7 @@ export class FirebaseService implements OnModuleInit {
     try {
       return await this.admin.verifyIdToken(idToken);
     } catch (error) {
-      throw new UnauthorizedException('Invalid token');
+      throw new UnauthorizedException(error.message);
     }
   }
 
@@ -67,7 +90,6 @@ export class FirebaseService implements OnModuleInit {
   async signUp(dto: RegisterDto): Promise<UserToken> {
     try {
       const { email, password, first_name, last_name, username } = dto;
-
       const user = await this.admin.createUser({
         email,
         password,
@@ -76,14 +98,20 @@ export class FirebaseService implements OnModuleInit {
 
       await this.admin.setCustomUserClaims(user.uid, { role: RolesEnum.USER });
 
-      const token = await this.admin.createCustomToken(user.uid);
+      const token = await this.login(email, password);
 
       return {
         user,
         token,
       };
     } catch (error) {
-      throw new UnauthorizedException(error.message);
+      console.log(error);
+      if (error.code === 'auth/email-already-exists') {
+        throw new ConflictException(
+          'Email already exists. Please login instead',
+        );
+      }
+      throw new HttpException(error.status || 500, error.message);
     }
   }
 }

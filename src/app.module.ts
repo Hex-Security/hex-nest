@@ -1,17 +1,18 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { DecodeParamMiddleware } from './middleware/decode/decode.middleware';
 import { ResponseInterceptor } from './middleware/response/response.interceptor';
 import { AccessModule } from './modules/access/access.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { ComplexModule } from './modules/complex/complex.module';
 import { DbModule } from './modules/db/db.module';
+import { FirebaseModule } from './modules/firebase/firebase.module';
 import { HouseModule } from './modules/house/house.module';
 import { UserModule } from './modules/user/user.module';
 import { VehicleModule } from './modules/vehicle/vehicle.module';
 import { VisitorModule } from './modules/visitor/visitor.module';
-import { FirebaseModule } from './modules/firebase/firebase.module';
 
 @Module({
   imports: [
@@ -35,4 +36,8 @@ import { FirebaseModule } from './modules/firebase/firebase.module';
     Reflector,
   ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(DecodeParamMiddleware).forRoutes('*');
+  }
+}
