@@ -1,28 +1,77 @@
-import { VisitorType } from 'src/shared/enum/visitor-type.enum';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  OneToMany,
-  PrimaryColumn,
-  UpdateDateColumn,
-} from 'typeorm';
-import { Access } from './access.entity';
+import { isEmail } from 'class-validator';
+import mongoose from 'mongoose';
+import { isMobilePhone } from 'validator';
 
-@Entity('visitor')
-export class Visitor {
-  @PrimaryColumn('uuid')
-  user_id: string;
+const VisitorSchema = new mongoose.Schema(
+  {
+    complex_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Complex',
+      required: true,
+    },
+    host_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    first_name: { type: String, required: true },
+    last_name: { type: String, required: true },
+    email: {
+      type: String,
+      validate: [isEmail, 'Invalid email address'],
+    },
+    phone: {
+      type: String,
+      validate: [isMobilePhone, 'Invalid phone number'],
+    },
+    id_number: { type: String },
+    vehicle_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Vehicle' },
+    requested_by: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    approved_by: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    expected_arrival: { type: Date, required: true },
+    expected_departure: { type: Date },
+    actual_arrival: { type: Date },
+    actual_departure: { type: Date },
+    status: {
+      type: String,
+      enum: ['pending', 'approved', 'denied'],
+      default: 'pending',
+    },
+  },
+  { timestamps: true },
+);
 
-  @Column({ enum: VisitorType, default: VisitorType.VISITOR, type: 'enum' })
-  type: VisitorType;
+// Indexes
+VisitorSchema.index({ complex_id: 1, host_id: 1 });
+VisitorSchema.index({ expected_arrival: 1 });
+VisitorSchema.index({ status: 1 });
+VisitorSchema.index({ vehicle_plate: 1 });
 
-  @OneToMany(() => Access, (access) => access.visitor)
-  accesses: Access[];
+VisitorSchema.index({ first_name: 'text', last_name: 'text', purpose: 'text' });
 
-  @CreateDateColumn()
-  created_at: string;
+// Virtuals
+VisitorSchema.virtual('full_name').get(function () {
+  return `${this.first_name} ${this.last_name}`;
+});
 
-  @UpdateDateColumn()
-  updated_at: string;
-}
+VisitorSchema.set('toJSON', { virtuals: true });
+VisitorSchema.set('toObject', { virtuals: true });
+
+// Methods
+VisitorSchema.methods.approve = function () {
+  this.status = 'approved';
+  return this.save();
+};
+
+VisitorSchema.methods.deny = function () {
+  this.status = 'denied';
+  return this.save();
+};
+
+export const Visitor = mongoose.model('Visitor', VisitorSchema);

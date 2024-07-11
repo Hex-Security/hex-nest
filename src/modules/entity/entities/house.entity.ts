@@ -1,44 +1,113 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { Access } from './access.entity';
-import { Complex } from './complex.entity';
-import { User } from './user.entity';
-import { Vehicle } from './vehicle.entity';
+import mongoose from 'mongoose';
 
-@Entity('house')
-export class House {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+const HouseSchema = new mongoose.Schema(
+  {
+    complex_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Complex',
+      required: true,
+    },
+    number: { type: String, required: true },
+    address: { type: String, required: true },
+    owner_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    resident_ids: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
+    vehicle_ids: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Vehicle',
+      },
+    ],
+    bedrooms: { type: Number },
+    bathrooms: { type: Number },
+    square_feet: { type: Number },
+    active: { type: Boolean, default: true },
+  },
+  { timestamps: true },
+);
 
-  @Column()
-  number: string;
+// Indexes
+HouseSchema.index({ complex_id: 1, number: 1 }, { unique: true });
+HouseSchema.index({ owner_id: 1 });
+HouseSchema.index({ resident_ids: 1 });
+HouseSchema.index({ vehicle_ids: 1 });
 
-  @Column()
-  owner_id: string;
+HouseSchema.index({ number: 'text', address: 'text' });
 
-  @Column()
-  complex_id: string;
+// Virtuals
+HouseSchema.virtual('full_address').get(function () {
+  return `${this.number} ${this.address}`;
+});
 
-  @ManyToOne(() => User, (user) => user.residence)
-  @JoinColumn({ name: 'owner_id' })
-  owner: User;
+HouseSchema.virtual('resident_count').get(function () {
+  return this.resident_ids.length;
+});
 
-  @ManyToOne(() => Complex, (complex) => complex.houses)
-  @JoinColumn({ name: 'complex_id' })
-  complex: Complex;
+HouseSchema.virtual('vehicle_count').get(function () {
+  return this.vehicle_ids.length;
+});
 
-  @OneToMany(() => Access, (access) => access.house)
-  accesses: Access[];
+HouseSchema.set('toJSON', { virtuals: true });
+HouseSchema.set('toObject', { virtuals: true });
 
-  @OneToMany(() => User, (user) => user.residence)
-  residents: User[];
+// Methods
+HouseSchema.methods.addResident = function (resident_id) {
+  if (!this.resident_ids.includes(resident_id)) {
+    this.resident_ids.push(resident_id);
+    return this.save();
+  }
+  return Promise.resolve(this);
+};
 
-  @OneToMany(() => Vehicle, (vehicle) => vehicle.house)
-  vehicles: Vehicle[];
-}
+HouseSchema.methods.removeResident = function (resident_id) {
+  this.resident_ids = this.resident_ids.filter((r) => !r.equals(resident_id));
+  return this.save();
+};
+
+HouseSchema.methods.addOwner = function (owner_id) {
+  this.owner_id = owner_id;
+  return this.save();
+};
+
+HouseSchema.methods.removeOwner = function () {
+  this.owner_id = null;
+  return this.save();
+};
+
+HouseSchema.methods.addVehicle = function (vehicle_id) {
+  if (!this.vehicle_ids.includes(vehicle_id)) {
+    this.vehicle_ids.push(vehicle_id);
+    return this.save();
+  }
+  return Promise.resolve(this);
+};
+
+HouseSchema.methods.removeVehicle = function (vehicle_id) {
+  this.vehicle_ids = this.vehicle_ids.filter((v) => !v.equals(vehicle_id));
+  return this.save();
+};
+
+HouseSchema.methods.setOwner = function (owner_id) {
+  this.owner_id = owner_id;
+  return this.save();
+};
+
+HouseSchema.methods.setActive = function () {
+  this.active = true;
+  return this.save();
+};
+
+HouseSchema.methods.setInactive = function () {
+  this.active = false;
+  return this.save();
+};
+
+export const House = mongoose.model('House', HouseSchema);

@@ -1,28 +1,25 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Access } from 'src/modules/entity/entities/access.entity';
-import { Complex } from 'src/modules/entity/entities/complex.entity';
-import { House } from 'src/modules/entity/entities/house.entity';
-import { User } from 'src/modules/entity/entities/user.entity';
-import { Vehicle } from 'src/modules/entity/entities/vehicle.entity';
-import { Visitor } from 'src/modules/entity/entities/visitor.entity';
-import { DataSourceOptions } from 'typeorm';
+import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
 
-const config: DataSourceOptions = {
-  type: 'postgres',
-  host: process.env.POSTGRES_HOST || 'localhost',
-  port: parseInt(process.env.POSTGRES_PORT) || 15432,
-  username: process.env.POSTGRES_USER || 'postgres',
-  password: process.env.POSTGRES_PASSWORD || 'password',
-  database: process.env.POSTGRES_DB || 'hex',
-  entities: [Access, Complex, House, User, Vehicle, Visitor],
-  synchronize: false,
-  migrationsRun: true,
-  migrations: ['dist/modules/db/migrations/*.js'],
+const config: MongooseModuleOptions = {
+  retryWrites: true,
+  writeConcern: { w: 'majority' },
+  authSource: 'admin',
+  appName: 'Hex',
 };
 
 @Module({
-  imports: [TypeOrmModule.forRoot(config)],
-  exports: [TypeOrmModule],
+  imports: [
+    MongooseModule.forRootAsync({
+      useFactory: () => {
+        const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@hex.mpkmuix.mongodb.net/`;
+        return {
+          uri,
+          ...config,
+        };
+      },
+    }),
+  ],
+  exports: [MongooseModule],
 })
 export class DbModule {}

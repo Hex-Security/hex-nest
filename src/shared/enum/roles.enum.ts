@@ -4,4 +4,5 @@ export enum RolesEnum {
   GUARD = 'guard',
   VISITOR = 'visitor',
   SERVICE = 'service',
+  DEV = 'dev',
 }

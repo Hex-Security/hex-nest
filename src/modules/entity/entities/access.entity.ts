@@ -1,100 +1,69 @@
-import { Status } from 'src/shared/enum/status.enum';
-import {
-  AfterUpdate,
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
-import { House } from './house.entity';
-import { User } from './user.entity';
-import { Vehicle } from './vehicle.entity';
+import mongoose from 'mongoose';
 
-@Entity('access')
-export class Access {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+const AccessSchema = new mongoose.Schema(
+  {
+    visitor_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Visitor',
+      required: true,
+    },
+    house_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'House',
+      required: true,
+    },
+    complex_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Complex',
+      required: true,
+    },
+    vehicle_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Vehicle',
+    },
+    requested_by: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    approved_by: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    assigned_guard_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    expected_arrival: { type: Date, required: true },
+    expected_departure: { type: Date },
+    actual_arrival: { type: Date },
+    actual_departure: { type: Date },
+    status: {
+      type: String,
+      enum: ['pending', 'approved', 'denied'],
+      default: 'pending',
+    },
+    purpose: { type: String, required: true },
+    notes: { type: String },
+  },
+  { timestamps: true },
+);
 
-  @Column()
-  reason: string;
+// Indexes
+AccessSchema.index({ visitor_id: 1, house_id: 1, complex_id: 1 });
+AccessSchema.index({ expected_arrival: 1 });
+AccessSchema.index({ status: 1 });
 
-  @Column() // NOTE - The document field is a string because it can be a driver's license, passport, or other form of ID
-  document: string;
+AccessSchema.index({ purpose: 'text', notes: 'text' });
 
-  @Column({
-    enum: Status,
-    default: Status.PENDING,
-    nullable: false,
-    type: 'enum',
-  })
-  status: Status;
-
-  @ManyToOne(() => User, (user) => user.approved_accesses)
-  @JoinColumn({ name: 'approver_id' })
-  approver: User;
-
-  @Column({ nullable: true })
-  approver_id: string;
-
-  @Column()
-  visitor_id: string;
-
-  @ManyToOne(() => User, (user) => user.visitor_accesses)
-  @JoinColumn({ name: 'visitor_id' })
-  visitor: User;
-
-  @ManyToOne(() => Vehicle, (vehicle) => vehicle.accesses)
-  @JoinColumn({ name: 'vehicle_id' })
-  vehicle: Vehicle;
-
-  @Column({ nullable: true })
-  vehicle_id: string;
-
-  @ManyToOne(() => House, (house) => house.accesses)
-  @JoinColumn({ name: 'house_id' })
-  house: House;
-
-  @Column()
-  house_id: string;
-
-  @CreateDateColumn()
-  requested_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
-
-  @Column({ nullable: true })
-  entry_time: Date;
-
-  @Column({ nullable: true })
-  exit_time: Date;
-
-  @ManyToOne(() => User, (user) => user.requested_accesses)
-  @JoinColumn({ name: 'requester_id' })
-  requester: User;
-
-  @Column()
-  requester_id: string;
-
-  @Column({ nullable: true })
-  duration: number;
-
-  @Column({ nullable: true })
-  guard_id: string;
-
-  @ManyToOne(() => User, (user) => user.guard_accesses)
-  @JoinColumn({ name: 'guard_id' })
-  guard: User;
-
-  @AfterUpdate()
-  updateDuration() {
-    if (this.exit_time !== undefined) {
-      const entry = this.entry_time.getTime();
-      const exit = this.exit_time.getTime();
-      this.duration = exit - entry;
-    }
+// Virtuals
+AccessSchema.virtual('visit_duration').get(function () {
+  if (this.actual_arrival && this.actual_departure) {
+    return this.actual_departure.getTime() - this.actual_arrival.getTime();
   }
-}
+  return null;
+});
+
+AccessSchema.set('toJSON', { virtuals: true });
+AccessSchema.set('toObject', { virtuals: true });
+
+export default mongoose.model('Access', AccessSchema);

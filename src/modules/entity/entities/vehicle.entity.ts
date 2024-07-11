@@ -1,52 +1,38 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { Access } from './access.entity';
-import { House } from './house.entity';
-import { User } from './user.entity';
+import mongoose from 'mongoose';
 
-@Entity('vehicle')
-export class Vehicle {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+const VehicleSchema = new mongoose.Schema(
+  {
+    owner_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    plate: { type: String, required: true, unique: true },
+    make: { type: String },
+    model: { type: String },
+    year: { type: Number },
+    color: { type: String, required: true },
+    active: { type: Boolean, default: true },
+  },
+  { timestamps: true },
+);
 
-  @Column()
-  make: string;
+// Indexes
+VehicleSchema.index({ owner_id: 1 });
+VehicleSchema.index({ plate: 1 });
+VehicleSchema.index({ make: 1 });
+VehicleSchema.index({ model: 1 });
+VehicleSchema.index({ year: 1 });
+VehicleSchema.index({ color: 1 });
 
-  @Column()
-  model: string;
+VehicleSchema.index({ plate: 'text', make: 'text', model: 'text' });
 
-  @Column()
-  plate: string;
+// Virtuals
+VehicleSchema.virtual('full_name').get(function () {
+  return `${this.make} ${this.model} ${this.year} ${this.color}`;
+});
 
-  @Column()
-  color: string;
+VehicleSchema.set('toJSON', { virtuals: true });
+VehicleSchema.set('toObject', { virtuals: true });
 
-  @Column()
-  year: string;
-
-  @Column({ default: true })
-  is_visitor: boolean;
-
-  @Column()
-  house_id: string;
-
-  @Column({ nullable: true })
-  user_id: string;
-
-  @ManyToOne(() => User, (user) => user.vehicles)
-  @JoinColumn({ name: 'user_id' })
-  user: User;
-
-  @ManyToOne(() => House, (house) => house.vehicles)
-  @JoinColumn({ name: 'house_id' })
-  house: House;
-
-  @OneToMany(() => Access, (access) => access.vehicle)
-  accesses: Access[];
-}
+export default mongoose.model('Vehicle', VehicleSchema);
