@@ -1,15 +1,54 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { PartialType } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import mongoose from 'mongoose';
 
-export class HouseDto {
+export class CreateHouseDto {
+  @IsNotEmpty()
+  @Type(() => mongoose.Schema.Types.ObjectId)
+  complex_id: mongoose.Schema.Types.ObjectId;
+
   @IsNotEmpty()
   @IsString()
   number: string;
 
-  @IsOptional()
-  @IsString()
-  owner_id?: string;
-
   @IsNotEmpty()
   @IsString()
-  complex_id: string;
+  address: string;
+
+  @IsNotEmpty()
+  @Type(() => mongoose.Schema.Types.ObjectId)
+  owner_id: mongoose.Schema.Types.ObjectId;
+
+  @IsNotEmpty()
+  @Type(() => mongoose.Schema.Types.ObjectId)
+  resident_ids: mongoose.Schema.Types.ObjectId[];
+
+  @IsNotEmpty()
+  @Type(() => mongoose.Schema.Types.ObjectId)
+  vehicle_ids: mongoose.Schema.Types.ObjectId[];
+
+  @IsNotEmpty()
+  @IsNumber()
+  bedrooms: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  bathrooms: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  square_m: number;
+
+  @IsOptional()
+  @IsBoolean()
+  active: boolean;
 }
+
+export class UpdateHouseDto extends PartialType(CreateHouseDto) {}

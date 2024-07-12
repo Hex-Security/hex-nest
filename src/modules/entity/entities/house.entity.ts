@@ -28,7 +28,7 @@ export const HouseSchema = new mongoose.Schema(
     ],
     bedrooms: { type: Number },
     bathrooms: { type: Number },
-    square_feet: { type: Number },
+    square_m: { type: Number },
     active: { type: Boolean, default: true },
   },
   { timestamps: true },

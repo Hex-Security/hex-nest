@@ -12,7 +12,7 @@ import mongoose from 'mongoose';
 import { VisitorStatus } from '../enum/visitor.enum';
 import { PartialType } from '@nestjs/swagger';
 
-export class createVisitorDto {
+export class CreateVisitorDto {
   @IsNotEmpty()
   @Type(() => mongoose.Schema.Types.ObjectId)
   complex_id: mongoose.Schema.Types.ObjectId;
@@ -74,4 +74,4 @@ export class createVisitorDto {
   status: VisitorStatus;
 }
 
-export class UpdateVisitorDto extends PartialType(createVisitorDto) {}
+export class UpdateVisitorDto extends PartialType(CreateVisitorDto) {}

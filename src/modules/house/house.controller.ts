@@ -1,122 +1,47 @@
 import {
-  Body,
   Controller,
-  Delete,
   Get,
-  HttpCode,
-  HttpStatus,
-  Param,
   Post,
+  Body,
+  Param,
   Put,
+  Delete,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { HouseDto } from 'src/shared/dto/house.dto';
-import { DeleteResult, UpdateResult } from 'typeorm';
-import { House } from '../entity/entities/house.entity';
-import { User } from '../entity/entities/user.entity';
-import { Vehicle } from '../entity/entities/vehicle.entity';
 import { HouseService } from './house.service';
+import { HouseDocument } from 'src/shared/types/house.type';
+import { CreateHouseDto, UpdateHouseDto } from 'src/shared/dto/house.dto';
+import { ApiTags } from '@nestjs/swagger';
 
-@ApiTags('House')
-@Controller('complex/:complex_id/house')
+@ApiTags('Houses')
+@Controller('houses')
 export class HouseController {
-  constructor(private house_service: HouseService) {}
-
-  @Get()
-  async findAllHousesByComplex(
-    @Param('complex_id') complex_id: string,
-  ): Promise<House[]> {
-    return this.house_service.findAllByComplex(complex_id);
-  }
+  constructor(private readonly house_service: HouseService) {}
 
   @Post()
-  @HttpCode(HttpStatus.CREATED)
-  async createHouse(@Body() dto: HouseDto): Promise<House> {
+  async create(@Body() dto: CreateHouseDto): Promise<HouseDocument> {
     return this.house_service.create(dto);
   }
 
-  @Put(':house_id')
-  async updateHouse(
-    @Param('house_id') house_id: string,
-    @Body() dto: Partial<HouseDto>,
-  ): Promise<UpdateResult> {
-    return this.house_service.update(house_id, dto);
+  @Get()
+  async findAll(): Promise<HouseDocument[]> {
+    return this.house_service.findAll();
   }
 
-  @Delete(':house_id')
-  async deleteHouse(
-    @Param('house_id') house_id: string,
-  ): Promise<DeleteResult> {
-    return this.house_service.delete(house_id);
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<HouseDocument> {
+    return this.house_service.findOne(id);
   }
 
-  @Get(':house_id')
-  async findOneHouse(@Param('house_id') house_id: string): Promise<House> {
-    return this.house_service.findOne(house_id);
-  }
-
-  @Get(':house_id/residents')
-  async findAllResidents(
+  @Put(':id')
+  async update(
     @Param('id') id: string,
-    @Param('house_id') house_id: string,
-  ): Promise<User[]> {
-    return this.house_service.findAllResidents(house_id);
+    @Body() dto: UpdateHouseDto,
+  ): Promise<HouseDocument> {
+    return this.house_service.update(id, dto);
   }
 
-  @Post(':house_id/residents')
-  @HttpCode(HttpStatus.CREATED)
-  async addResident(
-    @Param('house_id') house_id: string,
-    @Body() dto: { resident_id: string },
-  ): Promise<House> {
-    return this.house_service.addResident(house_id, dto.resident_id);
-  }
-
-  @Get(':house_id/residents/:resident_id')
-  async findOneResident(
-    @Param('house_id') house_id: string,
-    @Param('resident_id') resident_id: string,
-  ): Promise<User> {
-    return this.house_service.findOneResident(house_id, resident_id);
-  }
-
-  @Delete(':house_id/residents/:resident_id')
-  async removeResident(
-    @Param('house_id') house_id: string,
-    @Param('resident_id') resident_id: string,
-  ): Promise<House> {
-    return this.house_service.removeResident(house_id, resident_id);
-  }
-
-  @Get(':house_id/vehicles')
-  async findAllVehicles(
-    @Param('house_id') house_id: string,
-  ): Promise<Vehicle[]> {
-    return this.house_service.findAllVehicles(house_id);
-  }
-
-  @Post(':house_id/vehicles')
-  @HttpCode(HttpStatus.CREATED)
-  async addVehicle(
-    @Param('house_id') house_id: string,
-    @Body() dto: { vehicle_id: string },
-  ): Promise<House> {
-    return this.house_service.addVehicle(house_id, dto.vehicle_id);
-  }
-
-  @Get(':house_id/vehicles/:vehicle_id')
-  async findOneVehicle(
-    @Param('house_id') house_id: string,
-    @Param('vehicle_id') vehicle_id: string,
-  ): Promise<Vehicle> {
-    return this.house_service.findOneVehicle(house_id, vehicle_id);
-  }
-
-  @Delete(':house_id/vehicles/:vehicle_id')
-  async removeVehicle(
-    @Param('house_id') house_id: string,
-    @Param('vehicle_id') vehicle_id: string,
-  ): Promise<House> {
-    return this.house_service.removeVehicle(house_id, vehicle_id);
+  @Delete(':id')
+  async remove(@Param('id') id: string): Promise<HouseDocument> {
+    return this.house_service.delete(id);
   }
 }

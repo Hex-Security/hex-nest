@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { createVisitorDto, UpdateVisitorDto } from 'src/shared/dto/visitor.dto';
+import { CreateVisitorDto, UpdateVisitorDto } from 'src/shared/dto/visitor.dto';
 import { VisitorDocument } from 'src/shared/types/visitor.type';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class VisitorService {
     private readonly visitor_model: Model<VisitorDocument>,
   ) {}
 
-  async create(dto: createVisitorDto): Promise<VisitorDocument> {
+  async create(dto: CreateVisitorDto): Promise<VisitorDocument> {
     const createdVisitor = new this.visitor_model(dto);
     return createdVisitor.save();
   }
