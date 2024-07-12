@@ -1,25 +1,75 @@
-import { IsOptional, IsString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  ValidateNested,
+  ArrayNotEmpty,
+  IsArray,
+  IsOptional,
+  IsBoolean,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+import { PartialType } from '@nestjs/swagger';
 
-export class ComplexDto {
+class AccessPointDto {
+  @IsNotEmpty()
   @IsString()
   name: string;
 
+  @IsNotEmpty()
+  @IsString()
+  location: string;
+}
+
+export class CreateComplexDto {
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
+  @IsNotEmpty()
   @IsString()
   address: string;
 
+  @IsNotEmpty()
   @IsString()
   city: string;
 
+  @IsNotEmpty()
   @IsString()
   state: string;
 
+  @IsNotEmpty()
   @IsString()
-  @IsOptional()
-  zip?: string;
+  zip_code: string;
+
+  @ValidateNested({ each: true })
+  @Type(() => AccessPointDto)
+  @ArrayNotEmpty()
+  @IsArray()
+  access_points: AccessPointDto[];
+
+  @IsNotEmpty()
+  @IsString()
+  contact_number: string;
+
+  @IsNotEmpty()
+  @IsString()
+  email: string;
 
   @IsOptional()
-  admin_id?: string;
+  @IsArray()
+  admin_ids: string[];
 
   @IsOptional()
-  metadata?: any;
+  @IsArray()
+  guard_ids: string[];
+
+  @IsOptional()
+  @IsArray()
+  house_ids: string[];
+
+  @IsNotEmpty()
+  @IsBoolean()
+  active: boolean;
 }
+
+export class UpdateComplexDto extends PartialType(CreateComplexDto) {}

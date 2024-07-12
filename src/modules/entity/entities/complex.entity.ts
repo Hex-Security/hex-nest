@@ -1,7 +1,8 @@
 import { isEmail } from 'class-validator';
 import mongoose from 'mongoose';
+import { ComplexDocument } from 'src/shared/types/complex.type';
 
-export const ComplexSchema = new mongoose.Schema(
+export const ComplexSchema = new mongoose.Schema<ComplexDocument>(
   {
     name: { type: String, required: true },
     address: { type: String, required: true },
@@ -61,7 +62,7 @@ ComplexSchema.index({ zip_code: 1 });
 ComplexSchema.index({ admin_ids: 1 });
 ComplexSchema.index({ guard_ids: 1 });
 ComplexSchema.index({ house_ids: 1 });
-ComplexSchema.index({ access_points: 1 });
+ComplexSchema.index({ 'access_points.name': 1 });
 
 ComplexSchema.index({ name: 'text', address: 'text', city: 'text' });
 
