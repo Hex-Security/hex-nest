@@ -8,7 +8,7 @@ import { FirebaseService } from 'src/modules/firebase/firebase.service';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
-  constructor(private readonly firebaseService: FirebaseService) {}
+  constructor(private readonly firebase_service: FirebaseService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
@@ -19,7 +19,7 @@ export class AuthenticationGuard implements CanActivate {
         return false;
       }
 
-      const user = await this.firebaseService.verifyToken(token);
+      const user = await this.firebase_service.verifyToken(token);
 
       if (!user) {
         throw new UnauthorizedException(

@@ -8,7 +8,15 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiOperation,
+  ApiParam,
+  ApiResetContentResponse,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Roles } from 'src/shared/decorator/roles.decorator';
 import { UpdateUserDto } from 'src/shared/dto/entities/user.dto';
 import { RolesEnum } from 'src/shared/enum/roles.enum';
@@ -18,6 +26,8 @@ import { AuthorizationGuard } from '../auth/guard/authorization.guard';
 import { UserService } from './user.service';
 import { UserDocument } from 'src/schemas/user.schema';
 import { SearchUserDto } from 'src/shared/dto/user/search-user.dto';
+import { find_one } from './swagger/find-one.swagger';
+import { update_one } from './swagger/update-one.swagger';
 
 @ApiTags('User')
 @Controller('user')
@@ -40,6 +50,9 @@ export class UserController {
 
   @Get(':_id')
   @ApiBearerAuth()
+  @ApiOperation(find_one.operation)
+  @ApiParam(find_one.param)
+  @ApiResponse(find_one.ok_response)
   @Roles(RolesEnum.ADMIN, RolesEnum.USER, RolesEnum.GUARD)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
   async getUser(@Param('_id') _id: string): Promise<UserDocument> {
@@ -53,6 +66,13 @@ export class UserController {
   }
 
   @Put(':_id')
+  @ApiBearerAuth()
+  @ApiOperation(update_one.operation)
+  @ApiParam(update_one.param)
+  @ApiBody(update_one.body)
+  @ApiResponse(update_one.ok_response)
+  @Roles(RolesEnum.ADMIN, RolesEnum.USER)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
   async updateUser(
     @Param('_id') _id: string,
     @Body() dto: UpdateUserDto,
@@ -67,11 +87,14 @@ export class UserController {
   }
 
   @Post('search')
+  @ApiBearerAuth()
+  @Roles(RolesEnum.ADMIN, RolesEnum.GUARD)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
   async searchUserByEmail(@Body() dto: SearchUserDto): Promise<UserDocument> {
     const user: UserDocument = await this.user_service.search(dto);
 
     if (!user) {
-      throw new NotFoundException(`User with email ${email} not found.`);
+      throw new NotFoundException(`User with email ${dto.email} not found.`);
     }
 
     return user;

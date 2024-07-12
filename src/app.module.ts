@@ -26,7 +26,6 @@ import { EntityModule } from './modules/entity/entity.module';
     UserModule,
     // VehicleModule,
     // VisitorModule,
-    // FirebaseModule,
   ],
   controllers: [AppController],
   providers: [

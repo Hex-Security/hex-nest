@@ -8,6 +8,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
 import { ROLES_KEY } from 'src/shared/decorator/roles.decorator';
+import { Env } from 'src/shared/enum/env.enum';
 import { RolesEnum } from 'src/shared/enum/roles.enum';
 
 @Injectable()
@@ -31,6 +32,10 @@ export class AuthorizationGuard implements CanActivate {
 
     const req = context.switchToHttp().getRequest();
     const user = req.user as DecodedIdToken;
+
+    if (process.env.NODE_ENV === Env.DEV && user.role === RolesEnum.DEV) {
+      return true;
+    }
 
     if (!requiredRoles.some((role: RolesEnum) => user.role === role)) {
       throw new ForbiddenException(

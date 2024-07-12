@@ -47,4 +47,16 @@ export class CreateUserDto {
   phone?: string;
 }
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {}
+export class UpdateUserDto {
+  @IsOptional()
+  @IsString()
+  username?: string;
+
+  @IsOptional()
+  @IsDate()
+  birth_date?: Date;
+
+  @IsOptional()
+  @IsString()
+  phone?: string;
+}
