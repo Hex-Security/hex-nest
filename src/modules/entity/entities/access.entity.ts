@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const AccessSchema = new mongoose.Schema(
+export const AccessSchema = new mongoose.Schema(
   {
     visitor_id: {
       type: mongoose.Schema.Types.ObjectId,
@@ -66,4 +66,4 @@ AccessSchema.virtual('visit_duration').get(function () {
 AccessSchema.set('toJSON', { virtuals: true });
 AccessSchema.set('toObject', { virtuals: true });
 
-export default mongoose.model('Access', AccessSchema);
+export const Access = mongoose.model('Access', AccessSchema);

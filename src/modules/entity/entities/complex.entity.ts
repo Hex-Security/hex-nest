@@ -1,7 +1,7 @@
 import { isEmail } from 'class-validator';
 import mongoose from 'mongoose';
 
-const ComplexSchema = new mongoose.Schema(
+export const ComplexSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     address: { type: String, required: true },

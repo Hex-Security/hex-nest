@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const HouseSchema = new mongoose.Schema(
+export const HouseSchema = new mongoose.Schema(
   {
     complex_id: {
       type: mongoose.Schema.Types.ObjectId,

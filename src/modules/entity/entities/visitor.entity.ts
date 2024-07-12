@@ -2,7 +2,7 @@ import { isEmail } from 'class-validator';
 import mongoose from 'mongoose';
 import { isMobilePhone } from 'validator';
 
-const VisitorSchema = new mongoose.Schema(
+export const VisitorSchema = new mongoose.Schema(
   {
     complex_id: {
       type: mongoose.Schema.Types.ObjectId,

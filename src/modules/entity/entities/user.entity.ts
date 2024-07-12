@@ -1,8 +1,9 @@
 import { isEmail, isMobilePhone } from 'class-validator';
 import mongoose from 'mongoose';
 import { RolesEnum } from 'src/shared/enum/roles.enum';
+import { UserDocument } from 'src/shared/types/user.type';
 
-const UserSchema = new mongoose.Schema(
+export const UserSchema = new mongoose.Schema<UserDocument>(
   {
     uid: { type: String, required: true, unique: true },
     email: {
@@ -54,30 +55,28 @@ const UserSchema = new mongoose.Schema(
           },
         ],
         schedule: [
-          [
-            {
-              day: {
-                type: String,
-                required: true,
-              },
-              start: {
-                type: Date,
-                required: true,
-              },
-              end: {
-                type: Date,
-                required: true,
-              },
-              complex_id: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Complex',
-              },
-              access_point: {
-                type: String,
-                ref: 'Complex.access_points.name',
-              },
+          {
+            day: {
+              type: String,
+              required: true,
             },
-          ],
+            start: {
+              type: Date,
+              required: true,
+            },
+            end: {
+              type: Date,
+              required: true,
+            },
+            complex_id: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: 'Complex',
+            },
+            access_point: {
+              type: String,
+              ref: 'Complex.access_points.name',
+            },
+          },
         ],
       },
       admin: {

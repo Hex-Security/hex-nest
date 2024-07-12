@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const VehicleSchema = new mongoose.Schema(
+export const VehicleSchema = new mongoose.Schema(
   {
     owner_id: {
       type: mongoose.Schema.Types.ObjectId,
@@ -35,4 +35,4 @@ VehicleSchema.virtual('full_name').get(function () {
 VehicleSchema.set('toJSON', { virtuals: true });
 VehicleSchema.set('toObject', { virtuals: true });
 
-export default mongoose.model('Vehicle', VehicleSchema);
+export const Vehicle = mongoose.model('Vehicle', VehicleSchema);
