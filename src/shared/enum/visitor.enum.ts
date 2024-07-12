@@ -5,3 +5,9 @@ export enum VisitorType {
   VENDOR = 'vendor',
   OTHER = 'other',
 }
+
+export enum VisitorStatus {
+  PENDING = 'pending',
+  APPROVED = 'approved',
+  DENIED = 'denied',
+}
