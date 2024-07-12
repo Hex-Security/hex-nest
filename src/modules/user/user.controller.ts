@@ -12,9 +12,9 @@ import { Roles } from 'src/shared/decorator/roles.decorator';
 import { UpdateUserDto } from 'src/shared/dto/entities/user.dto';
 import { RolesEnum } from 'src/shared/enum/roles.enum';
 import { UserDocument } from 'src/shared/types/user.type';
-import { AuthorizationGuard } from '../auth/guard/authorization.guard';
+import { AuthorizationGuard } from '../auth/guard/authentication.guard';
 import { ResourceAccessGuard } from '../auth/guard/resource.guard';
-import { RolesGuard } from '../auth/guard/roles.guard';
+import { RolesGuard } from '../auth/guard/authorization.guard';
 import { UserService } from './user.service';
 
 @ApiTags('User')

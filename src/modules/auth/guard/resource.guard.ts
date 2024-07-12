@@ -4,20 +4,21 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
 import { User } from 'src/modules/entity/entities/user.entity';
 
 @Injectable()
 export class ResourceAccessGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const req = context.switchToHttp().getRequest();
-    const user: User = req.user as User; // Assuming user object is attached by AuthGuard
+    const user = req.user as DecodedIdToken; // Assuming user object is attached by AuthGuard
     const { user_id } = req.params;
 
     if (!user) {
       throw new UnauthorizedException('Unauthorized access');
     }
 
-    if (user_id && user.user_id === user_id) {
+    if (user_id && user.uid === user_id) {
       return true;
     }
 
