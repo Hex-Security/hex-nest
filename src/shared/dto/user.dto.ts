@@ -1,34 +1,42 @@
+import { PartialType } from '@nestjs/swagger';
 import {
+  IsDate,
   IsEmail,
   IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
 } from 'class-validator';
-import { RolesEnum } from '../enum/roles.enum';
+import { RolesEnum } from 'src/shared/enum/roles.enum';
 
-export class UserDto {
-  @IsOptional()
-  @IsString()
-  username: string;
-
-  @IsString()
+export class CreateUserDto {
   @IsNotEmpty()
-  name: string;
-
-  @IsOptional()
   @IsString()
-  lname: string;
+  uid: string;
 
   @IsNotEmpty()
   @IsEmail()
   email: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
-  phone: string;
+  first_name: string;
+
+  @IsNotEmpty()
+  @IsString()
+  last_name: string;
 
   @IsOptional()
+  @IsDate()
+  birth_date?: Date;
+
+  @IsNotEmpty()
   @IsEnum(RolesEnum)
-  role?: RolesEnum;
+  role: RolesEnum;
+
+  @IsOptional()
+  @IsString()
+  phone?: string;
 }
+
+export class UpdateUserDto extends PartialType(CreateUserDto) {}

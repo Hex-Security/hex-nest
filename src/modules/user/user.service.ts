@@ -1,83 +1,79 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { RolesEnum } from 'src/shared/enum/roles.enum';
-import { In, Repository } from 'typeorm';
-import { House } from '../entity/entities/house.entity';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { CreateUserDto, UpdateUserDto } from 'src/shared/dto/user.dto';
+import { UserDocument } from 'src/shared/types/user.type';
 import { User } from '../entity/entities/user.entity';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectRepository(User) private user_repo: Repository<User>) {}
+  constructor(
+    @InjectModel(User.name) private readonly user_model: Model<UserDocument>,
+  ) {}
 
-  async create(dto: Partial<User>): Promise<User> {
-    const new_user: User = this.user_repo.create(dto);
-    return this.user_repo.save(new_user);
+  async create(dto: CreateUserDto): Promise<UserDocument> {
+    const created_user = new this.user_model(dto);
+    return created_user.save();
   }
 
-  async findAll(): Promise<User[]> {
-    return this.user_repo.find();
+  async findAll(): Promise<UserDocument[]> {
+    return this.user_model.find().exec();
   }
 
-  async findOne(user_id: string): Promise<User | null> {
-    return this.user_repo.findOne({ where: { user_id } });
-  }
+  async findOne(id: string): Promise<UserDocument> {
+    const user = await this.user_model.findById(id).exec();
 
-  async findMany(uids: string[]): Promise<User[]> {
-    return this.user_repo.find({ where: { user_id: In(uids) } });
-  }
-
-  async update(id: string, user: Partial<User>): Promise<User> {
-    return this.user_repo.save({ ...user, id });
-  }
-
-  async remove(user_id: string): Promise<User> {
-    const user: User = await this.user_repo.findOne({ where: { user_id } });
-
-    return this.user_repo.remove(user);
-  }
-
-  async findByEmail(email: string): Promise<User> {
-    return this.user_repo.findOne({ where: { email } });
-  }
-
-  async findByUsername(username: string): Promise<User> {
-    return this.user_repo.findOne({ where: { username } });
-  }
-
-  async findByPhone(phone: string): Promise<User> {
-    return this.user_repo.findOne({ where: { phone } });
-  }
-
-  async findUsersByRole(role: RolesEnum): Promise<User[]> {
-    return this.user_repo.find({ where: { role } });
-  }
-
-  async findUsersByComplex(complex_id: string): Promise<User[]> {
-    return this.user_repo.find({
-      where: { complexes: { id: complex_id } },
-      relations: ['complexes'],
-    });
-  }
-
-  async findUsersByHouse(house_id: string): Promise<User[]> {
-    return this.user_repo.find({
-      where: { residence: { id: house_id } },
-      relations: ['residence'],
-    });
-  }
-
-  async findUserManagedHouse(user_id: string): Promise<House> {
-    // 1. Find related user from
-    const user: User = await this.user_repo.findOne({
-      where: { user_id },
-      relations: ['residence'],
-    });
-
-    // Residence owner_id must match user_id
-    if (user.user_id !== user.residence.owner_id) {
-      throw new Error(`User ${user.user_id} is not a residence owner.`);
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} not found`);
     }
 
-    return user.residence;
+    return user;
+  }
+
+  async update(
+    id: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserDocument> {
+    const updatedUser = await this.user_model
+      .findByIdAndUpdate(id, updateUserDto, { new: true })
+      .exec();
+
+    if (!updatedUser) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    return updatedUser;
+  }
+
+  async remove(id: string): Promise<void> {
+    const result = await this.user_model
+      .findOneAndDelete({
+        _id: id,
+      })
+      .exec();
+
+    if (!result) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+  }
+
+  async findByEmail(email: string): Promise<UserDocument> {
+    const user: UserDocument = await this.user_model.findOne({ email }).exec();
+
+    if (!user) {
+      throw new NotFoundException(`User with email ${email} not found`);
+    }
+
+    return user;
+  }
+
+  async findByPhone(phone: string): Promise<UserDocument> {
+    const user: UserDocument = await this.user_model.findOne({ phone }).exec();
+
+    if (!user) {
+      throw new NotFoundException(`User with phone ${phone} not found`);
+    }
+
+    return user;
   }
 }
