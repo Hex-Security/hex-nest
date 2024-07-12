@@ -12,6 +12,7 @@ export const UserSchema = new mongoose.Schema<UserDocument>(
       unique: true,
       validate: [isEmail, 'Invalid email address'],
     },
+    username: { type: String, unique: true },
     first_name: { type: String, required: true },
     last_name: { type: String, required: true },
     birth_date: { type: Date },

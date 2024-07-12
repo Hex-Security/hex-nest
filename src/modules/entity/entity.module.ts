@@ -1,21 +1,21 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Access } from './entities/access.entity';
-import { Complex } from './entities/complex.entity';
-import { House } from './entities/house.entity';
-import { User } from './entities/user.entity';
-import { Vehicle } from './entities/vehicle.entity';
-import { Visitor } from './entities/visitor.entity';
+import { Access, AccessSchema } from './entities/access.entity';
+import { ComplexSchema } from './entities/complex.entity';
+import { HouseSchema } from './entities/house.entity';
+import { UserSchema } from './entities/user.entity';
+import { VehicleSchema } from './entities/vehicle.entity';
+import { VisitorSchema } from './entities/visitor.entity';
 
 @Module({
   imports: [
     MongooseModule.forFeature([
-      { name: 'Access', schema: Access },
-      { name: 'Complex', schema: Complex },
-      { name: 'House', schema: House },
-      { name: 'User', schema: User },
-      { name: 'Vehicle', schema: Vehicle },
-      { name: 'Visitor', schema: Visitor },
+      { name: Access.modelName, schema: AccessSchema },
+      // { name: 'Complex', schema: ComplexSchema },
+      // { name: 'House', schema: HouseSchema },
+      // { name: 'User', schema: UserSchema },
+      // { name: 'Vehicle', schema: VehicleSchema },
+      // { name: 'Visitor', schema: VisitorSchema },
     ]),
   ],
   exports: [MongooseModule],

@@ -13,18 +13,20 @@ import { HouseModule } from './modules/house/house.module';
 import { UserModule } from './modules/user/user.module';
 import { VehicleModule } from './modules/vehicle/vehicle.module';
 import { VisitorModule } from './modules/visitor/visitor.module';
+import { EntityModule } from './modules/entity/entity.module';
 
 @Module({
   imports: [
-    AuthModule,
     DbModule,
-    AccessModule,
-    ComplexModule,
-    HouseModule,
-    UserModule,
-    VehicleModule,
-    VisitorModule,
-    FirebaseModule,
+    EntityModule,
+    // AuthModule,
+    // AccessModule,
+    // ComplexModule,
+    // HouseModule,
+    // UserModule,
+    // VehicleModule,
+    // VisitorModule,
+    // FirebaseModule,
   ],
   controllers: [AppController],
   providers: [

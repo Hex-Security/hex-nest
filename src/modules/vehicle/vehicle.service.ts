@@ -5,13 +5,13 @@ import {
   CreateVehicleDto,
   UpdateVehicleDto,
 } from 'src/shared/dto/entities/vehicle.dto';
-import { VehicleInterface } from 'src/shared/interfaces/vehicle.interface';
 import { VehicleDocument } from 'src/shared/types/vehicle.type';
+import { Vehicle } from '../entity/entities/vehicle.entity';
 
 @Injectable()
 export class VehicleService {
   constructor(
-    @InjectModel('Vehicle')
+    @InjectModel(Vehicle.modelName)
     private readonly vehicle_model: Model<VehicleDocument>,
   ) {}
 

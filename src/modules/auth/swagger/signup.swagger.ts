@@ -1,4 +1,4 @@
-import { EndpointDoc } from 'src/shared/dto/endpoint-doc.dto';
+import { EndpointDoc } from 'src/shared/dto/swagger/endpoint-doc.dto';
 
 export const signup: EndpointDoc = {
   operation: {

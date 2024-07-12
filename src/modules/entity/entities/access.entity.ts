@@ -70,3 +70,4 @@ AccessSchema.set('toJSON', { virtuals: true });
 AccessSchema.set('toObject', { virtuals: true });
 
 export const Access = mongoose.model<AccessDocument>('Access', AccessSchema);
+

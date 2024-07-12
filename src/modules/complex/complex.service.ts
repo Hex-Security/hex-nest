@@ -11,7 +11,7 @@ import {
 @Injectable()
 export class ComplexService {
   constructor(
-    @InjectModel(Complex.name)
+    @InjectModel(Complex.modelName)
     private readonly complex_model: Model<ComplexDocument>,
   ) {}
 

@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AccessService } from './access.service';
-import { AccessDto } from './dto/access.dto';
+import { CreateAccessDto } from 'src/shared/dto/entities/access.dto';
 
 @ApiTags('Access')
 @Controller('access')
@@ -14,7 +14,7 @@ export class AccessController {
   }
 
   @Post()
-  async createAccess(@Body() dto: AccessDto) {
+  async createAccess(@Body() dto: CreateAccessDto) {
     return this.access_service.create(dto);
   }
 

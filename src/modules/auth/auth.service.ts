@@ -13,6 +13,7 @@ import { UserService } from '../user/user.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { SignupResponseDto } from './dto/signup-response.dto';
+import { UserDocument } from 'src/shared/types/user.type';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +24,7 @@ export class AuthService {
 
   async signUp(dto: RegisterDto): Promise<SignupResponseDto> {
     try {
-      const { email, first_name, last_name, username } = dto;
+      const { email, first_name, last_name, username, dob } = dto;
 
       // 1. Validate if user already exists
       if (await this.user_service.findByEmail(email)) {
@@ -36,13 +37,15 @@ export class AuthService {
       const { token } = fb_user;
 
       // 3. Create user on our DB
-      const user: User = await this.user_service.create({
-        user_id: fb_user.user.uid,
+      const user: UserDocument = await this.user_service.create({
+        uid: fb_user.user.uid,
         email,
-        name: first_name,
-        lname: last_name,
-        role: RolesEnum.USER,
         username,
+        first_name,
+        last_name,
+        role: RolesEnum.USER,
+        birth_date: dob,
+        
       });
 
       return { user, token };

@@ -1,7 +1,7 @@
-import { User } from 'src/modules/entity/entities/user.entity';
 import { FirebaseToken } from 'src/shared/dto/firebase/token.dto';
+import { UserDocument } from 'src/shared/types/user.type';
 
 export class SignupResponseDto {
-  user: User;
+  user: UserDocument;
   token: FirebaseToken;
 }

@@ -1,4 +1,10 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsDate,
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class RegisterDto {
   @IsEmail()
@@ -20,4 +26,8 @@ export class RegisterDto {
   @IsOptional()
   @IsString()
   last_name?: string;
+
+  @IsOptional()
+  @IsDate()
+  dob?: Date;
 }

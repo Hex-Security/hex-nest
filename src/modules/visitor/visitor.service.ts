@@ -6,11 +6,12 @@ import {
   UpdateVisitorDto,
 } from 'src/shared/dto/entities/visitor.dto';
 import { VisitorDocument } from 'src/shared/types/visitor.type';
+import { Visitor } from '../entity/entities/visitor.entity';
 
 @Injectable()
 export class VisitorService {
   constructor(
-    @InjectModel('Visitor')
+    @InjectModel(Visitor.modelName)
     private readonly visitor_model: Model<VisitorDocument>,
   ) {}
 

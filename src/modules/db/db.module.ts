@@ -1,24 +1,35 @@
 import { Module } from '@nestjs/common';
-import { MongooseModule, MongooseModuleOptions } from '@nestjs/mongoose';
-
-const config: MongooseModuleOptions = {
-  retryWrites: true,
-  writeConcern: { w: 'majority' },
-  authSource: 'admin',
-  appName: 'Hex',
-};
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
-    MongooseModule.forRootAsync({
-      useFactory: () => {
-        const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@hex.mpkmuix.mongodb.net/`;
-        return {
-          uri,
-          ...config,
-        };
+    MongooseModule.forRoot('mongodb://hex.mpkmuix.mongodb.net', {
+      appName: 'Hex',
+      auth: {
+        username: process.env.MONGO_USER,
+        password: process.env.MONGO_PASS,
       },
+      connectionName: 'hex',
+      retryWrites: true,
+      writeConcern: { w: 'majority' },
     }),
+    // MongooseModule.forRootAsync({
+    //   useFactory: () => {
+    //     const uri = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@hex.mpkmuix.mongodb.net/`;
+    //     console.log(uri);
+    //     return {
+    //       uri,
+    //       retryWrites: true,
+    //       writeConcern: { w: 'majority' },
+    //       appName: 'Hex',
+    //       auth: {
+    //         username: process.env.MONGO_USER,
+    //         password: process.env.MONGO_PASS,
+    //       },
+    //     };
+    //   },
+    //   connectionName: 'hex',
+    // }),
   ],
   exports: [MongooseModule],
 })
