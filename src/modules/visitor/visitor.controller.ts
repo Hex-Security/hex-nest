@@ -8,12 +8,12 @@ import {
   Delete,
 } from '@nestjs/common';
 import { VisitorService } from './visitor.service';
-import { VisitorDocument } from 'src/shared/types/visitor.type';
 import { ApiTags } from '@nestjs/swagger';
 import {
   CreateVisitorDto,
   UpdateVisitorDto,
 } from 'src/shared/dto/entities/visitor.dto';
+import { VisitorDocument } from 'src/schemas/visitor.schema';
 
 @ApiTags('Visitors')
 @Controller('visitors')

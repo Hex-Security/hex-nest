@@ -8,12 +8,12 @@ import {
   Delete,
 } from '@nestjs/common';
 import { HouseService } from './house.service';
-import { HouseDocument } from 'src/shared/types/house.type';
 import {
   CreateHouseDto,
   UpdateHouseDto,
 } from 'src/shared/dto/entities/house.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { HouseDocument } from 'src/schemas/house.schema';
 
 @ApiTags('Houses')
 @Controller('houses')

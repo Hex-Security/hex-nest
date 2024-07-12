@@ -1,8 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Complex } from '../entity/entities/complex.entity';
-import { ComplexDocument } from 'src/shared/types/complex.type';
+import { Complex, ComplexDocument } from 'src/schemas/complex.schema';
 import {
   CreateComplexDto,
   UpdateComplexDto,
@@ -11,7 +10,7 @@ import {
 @Injectable()
 export class ComplexService {
   constructor(
-    @InjectModel(Complex.modelName)
+    @InjectModel(Complex.name)
     private readonly complex_model: Model<ComplexDocument>,
   ) {}
 

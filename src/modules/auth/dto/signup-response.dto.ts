@@ -1,5 +1,5 @@
+import { UserDocument } from 'src/schemas/user.schema';
 import { FirebaseToken } from 'src/shared/dto/firebase/token.dto';
-import { UserDocument } from 'src/shared/types/user.type';
 
 export class SignupResponseDto {
   user: UserDocument;

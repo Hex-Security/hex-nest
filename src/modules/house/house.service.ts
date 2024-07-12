@@ -1,17 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { House, HouseDocument } from 'src/schemas/house.schema';
 import {
   CreateHouseDto,
   UpdateHouseDto,
 } from 'src/shared/dto/entities/house.dto';
-import { HouseDocument } from 'src/shared/types/house.type';
-import { House } from '../entity/entities/house.entity';
 
 @Injectable()
 export class HouseService {
   constructor(
-    @InjectModel(House.modelName)
+    @InjectModel(House.name)
     private readonly house_model: Model<HouseDocument>,
   ) {}
 

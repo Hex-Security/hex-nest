@@ -1,17 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Vehicle, VehicleDocument } from 'src/schemas/vehicle.schema';
 import {
   CreateVehicleDto,
   UpdateVehicleDto,
 } from 'src/shared/dto/entities/vehicle.dto';
-import { VehicleDocument } from 'src/shared/types/vehicle.type';
-import { Vehicle } from '../entity/entities/vehicle.entity';
 
 @Injectable()
 export class VehicleService {
   constructor(
-    @InjectModel(Vehicle.modelName)
+    @InjectModel(Vehicle.name)
     private readonly vehicle_model: Model<VehicleDocument>,
   ) {}
 

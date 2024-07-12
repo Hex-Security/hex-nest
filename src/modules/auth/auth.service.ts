@@ -7,13 +7,12 @@ import {
 import { FirebaseToken } from 'src/shared/dto/firebase/token.dto';
 import { UserToken } from 'src/shared/dto/firebase/user-token.dto';
 import { RolesEnum } from 'src/shared/enum/roles.enum';
-import { User } from '../entity/entities/user.entity';
 import { FirebaseService } from '../firebase/firebase.service';
 import { UserService } from '../user/user.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { SignupResponseDto } from './dto/signup-response.dto';
-import { UserDocument } from 'src/shared/types/user.type';
+import { UserDocument } from 'src/schemas/user.schema';
 
 @Injectable()
 export class AuthService {
@@ -45,7 +44,6 @@ export class AuthService {
         last_name,
         role: RolesEnum.USER,
         birth_date: dob,
-        
       });
 
       return { user, token };

@@ -1,17 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Access, AccessDocument } from 'src/schemas/access.schema';
 import {
   CreateAccessDto,
   UpdateAccessDto,
 } from 'src/shared/dto/entities/access.dto';
-import { AccessDocument } from 'src/shared/types/access.type';
-import { Access } from '../entity/entities/access.entity';
-
 @Injectable()
 export class AccessService {
   constructor(
-    @InjectModel('Access')
+    @InjectModel(Access.name)
     private readonly access_model: Model<AccessDocument>,
   ) {}
 

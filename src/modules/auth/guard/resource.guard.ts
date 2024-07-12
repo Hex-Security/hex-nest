@@ -5,7 +5,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
-import { User } from 'src/modules/entity/entities/user.entity';
 
 @Injectable()
 export class ResourceAccessGuard implements CanActivate {

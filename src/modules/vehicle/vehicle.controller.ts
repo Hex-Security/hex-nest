@@ -8,12 +8,12 @@ import {
   Delete,
 } from '@nestjs/common';
 import { VehicleService } from './vehicle.service';
-import { VehicleDocument } from 'src/shared/types/vehicle.type';
 import {
   CreateVehicleDto,
   UpdateVehicleDto,
 } from 'src/shared/dto/entities/vehicle.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { VehicleDocument } from 'src/schemas/vehicle.schema';
 
 @ApiTags('Vehicles')
 @Controller('vehicles')
