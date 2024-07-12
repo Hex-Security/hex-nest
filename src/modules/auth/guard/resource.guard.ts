@@ -11,13 +11,13 @@ export class ResourceAccessGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const req = context.switchToHttp().getRequest();
     const user = req.user as DecodedIdToken; // Assuming user object is attached by AuthGuard
-    const { user_id } = req.params;
+    const { _id } = req.params;
 
     if (!user) {
       throw new UnauthorizedException('Unauthorized access');
     }
 
-    if (user_id && user.uid === user_id) {
+    if (_id && user._id === _id) {
       return true;
     }
 

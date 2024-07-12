@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/schemas/user.schema';
 import { CreateUserDto, UpdateUserDto } from 'src/shared/dto/entities/user.dto';
+import { SearchUserDto } from 'src/shared/dto/user/search-user.dto';
 @Injectable()
 export class UserService {
   constructor(
@@ -19,11 +20,11 @@ export class UserService {
     return this.user_model.find().exec();
   }
 
-  async findOne(id: string): Promise<UserDocument> {
-    const user = await this.user_model.findById(id).exec();
+  async findOne(_id: string): Promise<UserDocument> {
+    const user = await this.user_model.findById(_id).exec();
 
     if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException(`User with ID ${_id} not found`);
     }
 
     return user;
@@ -71,6 +72,54 @@ export class UserService {
 
     if (!user) {
       throw new NotFoundException(`User with phone ${phone} not found`);
+    }
+
+    return user;
+  }
+
+  async exists(id: string): Promise<boolean> {
+    const result = await this.user_model.exists({ _id: id }).exec();
+    return result !== null;
+  }
+
+  async existsEmail(email: string): Promise<boolean> {
+    const result = await this.user_model.exists({ email }).exec();
+    return result !== null;
+  }
+
+  async search(dto: SearchUserDto): Promise<UserDocument> {
+    const query: any = {};
+
+    // Build the query dynamically based on DTO fields
+    if (dto._id) {
+      query._id = dto._id;
+    }
+    if (dto.uid) {
+      query.uid = dto.uid;
+    }
+    if (dto.email) {
+      query.email = dto.email;
+    }
+    if (dto.username) {
+      query.username = dto.username;
+    }
+    if (dto.first_name) {
+      query.first_name = dto.first_name;
+    }
+    if (dto.last_name) {
+      query.last_name = dto.last_name;
+    }
+    if (dto.phone) {
+      query.phone = dto.phone;
+    }
+    if (dto.role) {
+      query.role = dto.role;
+    }
+
+    const user: UserDocument = await this.user_model.findOne(query).exec();
+
+    if (!user) {
+      throw new NotFoundException('User not found');
     }
 
     return user;

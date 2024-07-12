@@ -2,8 +2,6 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { isMobilePhone } from 'class-validator';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { RolesEnum } from 'src/shared/enum/roles.enum';
-import { Complex } from './complex.schema';
-import { House } from './house.schema';
 import { Vehicle } from './vehicle.schema';
 import { UserData, UserDataSchema } from './user-data.schema';
 
@@ -39,7 +37,7 @@ export class User {
   active: boolean;
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Vehicle' }] })
-  vehicles: mongoose.Schema.Types.ObjectId[];
+  vehicles: Vehicle[];
 
   @Prop({ type: UserDataSchema })
   data: UserData;

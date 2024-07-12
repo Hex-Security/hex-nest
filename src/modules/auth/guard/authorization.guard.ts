@@ -11,7 +11,7 @@ import { ROLES_KEY } from 'src/shared/decorator/roles.decorator';
 import { RolesEnum } from 'src/shared/enum/roles.enum';
 
 @Injectable()
-export class RolesGuard implements CanActivate {
+export class AuthorizationGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   /**

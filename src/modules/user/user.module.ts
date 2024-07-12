@@ -4,10 +4,11 @@ import { FirebaseClientService } from '../firebase/firebase-client.service';
 import { FirebaseService } from '../firebase/firebase.service';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
+import { FirebaseModule } from '../firebase/firebase.module';
 
 @Module({
-  imports: [EntityModule],
-  providers: [UserService],
+  imports: [EntityModule, FirebaseModule],
+  providers: [UserService, FirebaseService, FirebaseClientService],
   exports: [UserService],
   controllers: [UserController],
 })

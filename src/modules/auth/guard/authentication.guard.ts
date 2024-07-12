@@ -7,7 +7,7 @@ import {
 import { FirebaseService } from 'src/modules/firebase/firebase.service';
 
 @Injectable()
-export class AuthorizationGuard implements CanActivate {
+export class AuthenticationGuard implements CanActivate {
   constructor(private readonly firebaseService: FirebaseService) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

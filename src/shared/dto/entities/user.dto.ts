@@ -12,6 +12,10 @@ import { RolesEnum } from 'src/shared/enum/roles.enum';
 export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
+  _id: string;
+
+  @IsNotEmpty()
+  @IsString()
   uid: string;
 
   @IsNotEmpty()

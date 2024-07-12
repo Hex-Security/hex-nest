@@ -5,6 +5,9 @@ import { MongooseModule } from '@nestjs/mongoose';
   imports: [
     MongooseModule.forRoot(
       'mongodb+srv://hex:put0s1m3h4ck34s@hex.mpkmuix.mongodb.net/?retryWrites=true&w=majority&appName=Hex',
+      {
+        dbName: 'hex',
+      },
     ),
     // MongooseModule.forRoot('mongodb://hex.mpkmuix.mongodb.net', {
     //   appName: 'Hex',

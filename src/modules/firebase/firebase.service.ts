@@ -87,7 +87,7 @@ export class FirebaseService implements OnModuleInit {
     }
   }
 
-  async signUp(dto: RegisterDto): Promise<UserToken> {
+  async signUp(dto: RegisterDto, _id: string): Promise<UserToken> {
     try {
       const { email, password, first_name, last_name, username } = dto;
       const user = await this.admin.createUser({
@@ -96,7 +96,10 @@ export class FirebaseService implements OnModuleInit {
         displayName: username || `${first_name} ${last_name}`,
       });
 
-      await this.admin.setCustomUserClaims(user.uid, { role: RolesEnum.USER });
+      await this.admin.setCustomUserClaims(user.uid, {
+        role: RolesEnum.USER,
+        _id,
+      });
 
       const token = await this.login(email, password);
 
@@ -113,5 +116,13 @@ export class FirebaseService implements OnModuleInit {
       }
       throw new HttpException(error.status || 500, error.message);
     }
+  }
+
+  async deleteUser(email: string): Promise<void> {
+    // find by email
+    const user = await this.admin.getUserByEmail(email);
+
+    // delete user
+    this.admin.deleteUser(user.uid);
   }
 }

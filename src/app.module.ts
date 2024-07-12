@@ -19,11 +19,11 @@ import { EntityModule } from './modules/entity/entity.module';
   imports: [
     DbModule,
     EntityModule,
-    // AuthModule,
+    AuthModule,
     // AccessModule,
     // ComplexModule,
     // HouseModule,
-    // UserModule,
+    UserModule,
     // VehicleModule,
     // VisitorModule,
     // FirebaseModule,
