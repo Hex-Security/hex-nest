@@ -1,53 +1,45 @@
 import {
-  Body,
   Controller,
   Get,
-  HttpCode,
-  HttpStatus,
-  Param,
   Post,
+  Body,
+  Param,
   Put,
+  Delete,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
-import { VehicleDto } from 'src/shared/dto/vehicle.dto';
-import { UpdateResult } from 'typeorm';
-import { Vehicle } from '../entity/entities/vehicle.entity';
 import { VehicleService } from './vehicle.service';
+import { VehicleDocument } from 'src/shared/types/vehicle.type';
+import { CreateVehicleDto, UpdateVehicleDto } from 'src/shared/dto/vehicle.dto';
 
-@ApiTags('Vehicle')
-@Controller('complex/:complex_id/house/:house_id/vehicle')
+@Controller('vehicles')
 export class VehicleController {
-  constructor(private vehicle_service: VehicleService) {}
-
-  @Get()
-  async findAllVehiclesByComplexAndHouse(
-    @Param('complex_id') complex_id: string,
-    @Param('house_id') house_id: string,
-  ): Promise<Vehicle[]> {
-    return this.vehicle_service.findAllByComplexAndHouse(complex_id, house_id);
-  }
+  constructor(private readonly vehicleService: VehicleService) {}
 
   @Post()
-  @HttpCode(HttpStatus.CREATED)
-  async createVehicle(
-    @Param('house_id') house_id: string,
-    @Body() dto: VehicleDto,
-  ): Promise<Vehicle> {
-    return this.vehicle_service.create(house_id, dto);
+  async create(@Body() dto: CreateVehicleDto): Promise<VehicleDocument> {
+    return this.vehicleService.create(dto);
   }
 
-  @Get(':vehicle_id')
-  async findVehicleById(
-    @Param('vehicle_id') vehicle_id: string,
-  ): Promise<Vehicle> {
-    return this.vehicle_service.findOne(vehicle_id);
+  @Get()
+  async findAll(): Promise<VehicleDocument[]> {
+    return this.vehicleService.findAll();
   }
 
-  @Put('/:vehicle_id')
-  async updateVehicle(
-    @Param('vehicle_id') vehicle_id: string,
-    @Body() dto: VehicleDto,
-  ): Promise<UpdateResult> {
-    return this.vehicle_service.update(vehicle_id, dto);
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<VehicleDocument> {
+    return this.vehicleService.findOne(id);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() dto: UpdateVehicleDto,
+  ): Promise<VehicleDocument> {
+    return this.vehicleService.update(id, dto);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: string): Promise<VehicleDocument> {
+    return this.vehicleService.delete(id);
   }
 }

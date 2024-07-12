@@ -7,7 +7,7 @@ import { UserService } from './user.service';
 
 @Module({
   imports: [EntityModule],
-  providers: [UserService, FirebaseService, FirebaseClientService],
+  providers: [UserService],
   exports: [UserService],
   controllers: [UserController],
 })

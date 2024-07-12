@@ -1,39 +1,42 @@
-import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import { PartialType } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import mongoose from 'mongoose';
 
-export class VehicleDto {
-  @IsString()
-  make: string;
+export class CreateVehicleDto {
+  @IsNotEmpty()
+  @Type(() => mongoose.Schema.Types.ObjectId)
+  owner_id: mongoose.Schema.Types.ObjectId;
 
-  @IsOptional()
-  @IsString()
-  model?: string;
-
+  @IsNotEmpty()
   @IsString()
   plate: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
-  year?: string;
+  make: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsString()
-  color?: string;
+  v_model: string;
 
-  @IsOptional()
-  metadata?: any;
+  @IsNotEmpty()
+  @IsNumber()
+  year: number;
+
+  @IsNotEmpty()
+  @IsString()
+  color: string;
 
   @IsOptional()
   @IsBoolean()
-  is_visitor?: boolean;
-
-  @IsString()
-  house_id: string;
-
-  @IsOptional()
-  @IsString()
-  visitor_id?: string;
-
-  @IsOptional()
-  @IsString()
-  user_id?: string;
+  active?: boolean;
 }
+
+export class UpdateVehicleDto extends PartialType(CreateVehicleDto) {}

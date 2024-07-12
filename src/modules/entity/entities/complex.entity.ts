@@ -226,4 +226,7 @@ ComplexSchema.methods.setAccessPointInactive = function (access_point_id) {
   return Promise.resolve(this);
 };
 
-export const Complex = mongoose.model('Complex', ComplexSchema);
+export const Complex = mongoose.model<ComplexDocument>(
+  'Complex',
+  ComplexSchema,
+);

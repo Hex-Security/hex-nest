@@ -29,7 +29,6 @@ export const UserSchema = new mongoose.Schema<UserDocument>(
         ref: 'Vehicle',
       },
     ],
-
     data: {
       user: {
         // User specific data
@@ -195,4 +194,4 @@ UserSchema.methods.removeHouse = function (house_id) {
   return this.save();
 };
 
-export const User = mongoose.model('User', UserSchema);
+export const User = mongoose.model<UserDocument>('User', UserSchema);

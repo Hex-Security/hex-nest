@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import { VehicleDocument } from 'src/shared/types/vehicle.type';
 
-export const VehicleSchema = new mongoose.Schema(
+export const VehicleSchema = new mongoose.Schema<VehicleDocument>(
   {
     owner_id: {
       type: mongoose.Schema.Types.ObjectId,
@@ -9,9 +10,9 @@ export const VehicleSchema = new mongoose.Schema(
     },
     plate: { type: String, required: true, unique: true },
     make: { type: String },
-    model: { type: String },
+    v_model: { type: String },
     year: { type: Number },
-    color: { type: String, required: true },
+    color: { type: String },
     active: { type: Boolean, default: true },
   },
   { timestamps: true },
@@ -35,4 +36,7 @@ VehicleSchema.virtual('full_name').get(function () {
 VehicleSchema.set('toJSON', { virtuals: true });
 VehicleSchema.set('toObject', { virtuals: true });
 
-export const Vehicle = mongoose.model('Vehicle', VehicleSchema);
+export const Vehicle = mongoose.model<VehicleDocument>(
+  'Vehicle',
+  VehicleSchema,
+);
