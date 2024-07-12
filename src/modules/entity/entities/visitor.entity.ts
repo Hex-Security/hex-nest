@@ -1,8 +1,10 @@
 import { isEmail } from 'class-validator';
 import mongoose from 'mongoose';
+import { VisitorStatus } from 'src/shared/enum/visitor.enum';
+import { VisitorDocument } from 'src/shared/types/visitor.type';
 import { isMobilePhone } from 'validator';
 
-export const VisitorSchema = new mongoose.Schema(
+export const VisitorSchema = new mongoose.Schema<VisitorDocument>(
   {
     complex_id: {
       type: mongoose.Schema.Types.ObjectId,
@@ -40,8 +42,8 @@ export const VisitorSchema = new mongoose.Schema(
     actual_departure: { type: Date },
     status: {
       type: String,
-      enum: ['pending', 'approved', 'denied'],
-      default: 'pending',
+      enum: VisitorStatus,
+      default: VisitorStatus.PENDING,
     },
   },
   { timestamps: true },
@@ -74,4 +76,7 @@ VisitorSchema.methods.deny = function () {
   return this.save();
 };
 
-export const Visitor = mongoose.model('Visitor', VisitorSchema);
+export const Visitor = mongoose.model<VisitorDocument>(
+  'Visitor',
+  VisitorSchema,
+);

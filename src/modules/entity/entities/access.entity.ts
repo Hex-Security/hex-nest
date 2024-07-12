@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
+import { AccessStatus } from 'src/shared/enum/access.enum';
+import { VisitorStatus } from 'src/shared/enum/visitor.enum';
+import { AccessDocument } from 'src/shared/types/access.type';
 
-export const AccessSchema = new mongoose.Schema(
+export const AccessSchema = new mongoose.Schema<AccessDocument>(
   {
     visitor_id: {
       type: mongoose.Schema.Types.ObjectId,
@@ -39,8 +42,8 @@ export const AccessSchema = new mongoose.Schema(
     actual_departure: { type: Date },
     status: {
       type: String,
-      enum: ['pending', 'approved', 'denied'],
-      default: 'pending',
+      enum: AccessStatus,
+      default: AccessStatus.PENDING,
     },
     purpose: { type: String, required: true },
     notes: { type: String },
@@ -66,4 +69,4 @@ AccessSchema.virtual('visit_duration').get(function () {
 AccessSchema.set('toJSON', { virtuals: true });
 AccessSchema.set('toObject', { virtuals: true });
 
-export const Access = mongoose.model('Access', AccessSchema);
+export const Access = mongoose.model<AccessDocument>('Access', AccessSchema);

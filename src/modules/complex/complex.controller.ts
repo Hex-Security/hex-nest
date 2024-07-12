@@ -8,7 +8,10 @@ import {
   Delete,
 } from '@nestjs/common';
 import { ComplexService } from './complex.service';
-import { CreateComplexDto, UpdateComplexDto } from 'src/shared/dto/complex.dto';
+import {
+  CreateComplexDto,
+  UpdateComplexDto,
+} from 'src/shared/dto/entities/complex.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Complex')

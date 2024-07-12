@@ -9,7 +9,10 @@ import {
 } from '@nestjs/common';
 import { VehicleService } from './vehicle.service';
 import { VehicleDocument } from 'src/shared/types/vehicle.type';
-import { CreateVehicleDto, UpdateVehicleDto } from 'src/shared/dto/vehicle.dto';
+import {
+  CreateVehicleDto,
+  UpdateVehicleDto,
+} from 'src/shared/dto/entities/vehicle.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Vehicles')

@@ -10,7 +10,10 @@ import {
 import { VisitorService } from './visitor.service';
 import { VisitorDocument } from 'src/shared/types/visitor.type';
 import { ApiTags } from '@nestjs/swagger';
-import { CreateVisitorDto, UpdateVisitorDto } from 'src/shared/dto/visitor.dto';
+import {
+  CreateVisitorDto,
+  UpdateVisitorDto,
+} from 'src/shared/dto/entities/visitor.dto';
 
 @ApiTags('Visitors')
 @Controller('visitors')

@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateUserDto, UpdateUserDto } from 'src/shared/dto/user.dto';
+import { CreateUserDto, UpdateUserDto } from 'src/shared/dto/entities/user.dto';
 import { UserDocument } from 'src/shared/types/user.type';
 import { User } from '../entity/entities/user.entity';
 

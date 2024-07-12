@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateVehicleDto, UpdateVehicleDto } from 'src/shared/dto/vehicle.dto';
+import {
+  CreateVehicleDto,
+  UpdateVehicleDto,
+} from 'src/shared/dto/entities/vehicle.dto';
 import { VehicleInterface } from 'src/shared/interfaces/vehicle.interface';
 import { VehicleDocument } from 'src/shared/types/vehicle.type';
 

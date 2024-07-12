@@ -1,57 +1,43 @@
 import { Type } from 'class-transformer';
 import {
   IsDate,
-  IsEmail,
   IsEnum,
-  IsMobilePhone,
   IsNotEmpty,
   IsOptional,
   IsString,
 } from 'class-validator';
 import mongoose from 'mongoose';
-import { VisitorStatus } from '../enum/visitor.enum';
+import { AccessStatus } from '../../enum/access.enum';
 import { PartialType } from '@nestjs/swagger';
 
-export class CreateVisitorDto {
+export class CreateAccessDto {
+  @IsNotEmpty()
+  @Type(() => mongoose.Schema.Types.ObjectId)
+  visitor_id: mongoose.Schema.Types.ObjectId;
+
+  @IsNotEmpty()
+  @Type(() => mongoose.Schema.Types.ObjectId)
+  house_id: mongoose.Schema.Types.ObjectId;
+
   @IsNotEmpty()
   @Type(() => mongoose.Schema.Types.ObjectId)
   complex_id: mongoose.Schema.Types.ObjectId;
 
-  @IsNotEmpty()
+  @IsOptional()
   @Type(() => mongoose.Schema.Types.ObjectId)
-  host_id: mongoose.Schema.Types.ObjectId;
-
-  @IsNotEmpty()
-  @IsString()
-  first_name: string;
-
-  @IsNotEmpty()
-  @IsString()
-  last_name: string;
-
-  @IsNotEmpty()
-  @IsEmail()
-  email: string;
-
-  @IsNotEmpty()
-  @IsMobilePhone()
-  phone: string;
-
-  @IsNotEmpty()
-  @IsString()
-  id_number: string;
-
-  @IsNotEmpty()
-  @Type(() => mongoose.Schema.Types.ObjectId)
-  vehicle_id: mongoose.Schema.Types.ObjectId;
+  vehicle_id?: mongoose.Schema.Types.ObjectId;
 
   @IsNotEmpty()
   @Type(() => mongoose.Schema.Types.ObjectId)
   requested_by: mongoose.Schema.Types.ObjectId;
 
-  @IsNotEmpty()
+  @IsOptional()
   @Type(() => mongoose.Schema.Types.ObjectId)
-  approved_by: mongoose.Schema.Types.ObjectId;
+  approved_by?: mongoose.Schema.Types.ObjectId;
+
+  @IsOptional()
+  @Type(() => mongoose.Schema.Types.ObjectId)
+  assigned_guard_id?: mongoose.Schema.Types.ObjectId;
 
   @IsNotEmpty()
   @IsDate()
@@ -70,8 +56,16 @@ export class CreateVisitorDto {
   actual_departure?: Date;
 
   @IsNotEmpty()
-  @IsEnum({ type: 'enum', enum: VisitorStatus })
-  status: VisitorStatus;
+  @IsEnum(AccessStatus)
+  status: AccessStatus;
+
+  @IsNotEmpty()
+  @IsString()
+  purpose: string;
+
+  @IsOptional()
+  @IsString()
+  notes?: string;
 }
 
-export class UpdateVisitorDto extends PartialType(CreateVisitorDto) {}
+export class UpdateAccessDto extends PartialType(CreateAccessDto) {}

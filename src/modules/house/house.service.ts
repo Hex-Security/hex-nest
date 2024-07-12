@@ -1,7 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateHouseDto, UpdateHouseDto } from 'src/shared/dto/house.dto';
+import {
+  CreateHouseDto,
+  UpdateHouseDto,
+} from 'src/shared/dto/entities/house.dto';
 import { HouseDocument } from 'src/shared/types/house.type';
 
 @Injectable()

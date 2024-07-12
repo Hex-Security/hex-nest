@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
+import { HouseDocument } from 'src/shared/types/house.type';
 
-export const HouseSchema = new mongoose.Schema(
+export const HouseSchema = new mongoose.Schema<HouseDocument>(
   {
     complex_id: {
       type: mongoose.Schema.Types.ObjectId,
@@ -110,4 +111,4 @@ HouseSchema.methods.setInactive = function () {
   return this.save();
 };
 
-export const House = mongoose.model('House', HouseSchema);
+export const House = mongoose.model<HouseDocument>('House', HouseSchema);

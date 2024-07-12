@@ -1,4 +1,4 @@
-export enum Status {
+export enum AccessStatus {
   PENDING = 'pending',
   APPROVED = 'approved',
   DENIED = 'denied',
