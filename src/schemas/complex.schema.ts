@@ -9,6 +9,9 @@ export type ComplexDocument = HydratedDocument<Complex>;
 
 @Schema({ timestamps: true })
 export class Complex {
+  @Prop({ type: mongoose.Schema.Types.ObjectId })
+  _id: mongoose.Types.ObjectId;
+
   @Prop({ required: true, unique: true })
   name: string;
 

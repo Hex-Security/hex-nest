@@ -14,6 +14,7 @@ import { UserModule } from './modules/user/user.module';
 import { VehicleModule } from './modules/vehicle/vehicle.module';
 import { VisitorModule } from './modules/visitor/visitor.module';
 import { EntityModule } from './modules/entity/entity.module';
+import { RegistrationCodeModule } from './modules/registration-code/registration-code.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { EntityModule } from './modules/entity/entity.module';
     // ComplexModule,
     // HouseModule,
     UserModule,
+    RegistrationCodeModule,
     // VehicleModule,
     // VisitorModule,
   ],

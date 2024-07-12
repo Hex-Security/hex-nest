@@ -8,6 +8,9 @@ export type HouseDocument = HydratedDocument<House>;
 
 @Schema({ timestamps: true })
 export class House {
+  @Prop({ type: mongoose.Schema.Types.ObjectId })
+  _id: mongoose.Types.ObjectId;
+
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Complex' })
   complex: Complex;
 

@@ -18,7 +18,6 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Roles } from 'src/shared/decorator/roles.decorator';
-import { UpdateUserDto } from 'src/shared/dto/entities/user.dto';
 import { RolesEnum } from 'src/shared/enum/roles.enum';
 import { AuthenticationGuard } from '../auth/guard/authentication.guard';
 import { ResourceAccessGuard } from '../auth/guard/resource.guard';
@@ -28,6 +27,7 @@ import { UserDocument } from 'src/schemas/user.schema';
 import { SearchUserDto } from 'src/shared/dto/user/search-user.dto';
 import { find_one } from './swagger/find-one.swagger';
 import { update_one } from './swagger/update-one.swagger';
+import { UpdateUserDto } from 'src/shared/dto/user/update-user.dto';
 
 @ApiTags('User')
 @Controller('user')

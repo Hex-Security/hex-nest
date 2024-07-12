@@ -11,6 +11,9 @@ export type AccessDocument = HydratedDocument<Access>;
 
 @Schema({ timestamps: true })
 export class Access {
+  @Prop({ type: mongoose.Schema.Types.ObjectId })
+  _id: mongoose.Types.ObjectId;
+
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   visitor: Visitor;
 

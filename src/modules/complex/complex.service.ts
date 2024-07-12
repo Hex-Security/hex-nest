@@ -6,6 +6,8 @@ import {
   CreateComplexDto,
   UpdateComplexDto,
 } from 'src/shared/dto/entities/complex.dto';
+import { User } from 'src/schemas/user.schema';
+import { House } from 'src/schemas/house.schema';
 
 @Injectable()
 export class ComplexService {
@@ -51,5 +53,92 @@ export class ComplexService {
     if (!result) {
       throw new NotFoundException(`Complex with ID ${id} not found`);
     }
+  }
+
+  async addGuard(_id: string, guard: User): Promise<ComplexDocument> {
+    // 1. Find the complex
+    const complex = await this.findOne(_id);
+
+    // 2. Check if the guard is already in the complex
+    if (complex.guards.some((g) => g._id === guard._id)) {
+      return complex;
+    }
+
+    // 3. Add the guard to the complex
+    complex.guards.push(guard);
+
+    // 4. Save the complex
+    return complex.save();
+  }
+
+  async removeGuard(_id: string, guard_id: string): Promise<ComplexDocument> {
+    // 1. Find the complex
+    const complex = await this.findOne(_id);
+
+    // 2. Remove the guard from the complex
+    complex.guards = complex.guards.filter(
+      (g) => g._id.toString() !== guard_id,
+    );
+
+    // 3. Save the complex
+    return complex.save();
+  }
+
+  async addAdmin(_id: string, admin: User): Promise<ComplexDocument> {
+    // 1. Find the complex
+    const complex = await this.findOne(_id);
+
+    // 2. Check if the admin is already in the complex
+    if (complex.admins.some((a) => a._id === admin._id)) {
+      return complex;
+    }
+
+    // 3. Add the admin to the complex
+    complex.admins.push(admin);
+
+    // 4. Save the complex
+    return complex.save();
+  }
+
+  async removeAdmin(_id: string, admin_id: string): Promise<ComplexDocument> {
+    // 1. Find the complex
+    const complex = await this.findOne(_id);
+
+    // 2. Remove the admin from the complex
+    complex.admins = complex.admins.filter(
+      (a) => a._id.toString() !== admin_id,
+    );
+
+    // 3. Save the complex
+    return complex.save();
+  }
+
+  async addHouse(_id: string, house: House): Promise<ComplexDocument> {
+    // 1. Find the complex
+    const complex = await this.findOne(_id);
+
+    // 2. Check if the house is already in the complex
+    if (complex.houses.some((h) => h._id === house._id)) {
+      return complex;
+    }
+
+    // 3. Add the house to the complex
+    complex.houses.push(house);
+
+    // 4. Save the complex
+    return complex.save();
+  }
+
+  async removeHouse(_id: string, house_id: string): Promise<ComplexDocument> {
+    // 1. Find the complex
+    const complex = await this.findOne(_id);
+
+    // 2. Remove the house from the complex
+    complex.houses = complex.houses.filter(
+      (h) => h._id.toString() !== house_id,
+    );
+
+    // 3. Save the complex
+    return complex.save();
   }
 }

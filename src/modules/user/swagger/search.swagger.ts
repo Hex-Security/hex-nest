@@ -1,3 +1,5 @@
+import { UserDto } from 'src/shared/dto/entities/user.dto';
+import { SearchUserDto } from 'src/shared/dto/user/search-user.dto';
 import { SwaggerOptions } from 'src/shared/interfaces/swagger-options.interface';
 
 export const search: SwaggerOptions = {
@@ -9,30 +11,10 @@ export const search: SwaggerOptions = {
   body: {
     description: 'The search criteria.',
     required: true,
-    examples: {
-      search: {
-        value: {
-          email: 'email',
-          username: 'username',
-          first_name: 'first_name',
-          last_name: 'last_name',
-          phone: 'phone',
-          birth_date: 'birth_date',
-        },
-      },
-    },
+    type: SearchUserDto,
   },
   ok_response: {
     description: 'User found',
-    example: {
-      _id: 'mongo_id',
-      uid: 'firebase_uid',
-      email: 'email',
-      username: 'username',
-      first_name: 'first_name',
-      last_name: 'last_name',
-      phone: 'phone',
-      birth_date: 'birth_date',
-    },
+    type: UserDto,
   },
 };

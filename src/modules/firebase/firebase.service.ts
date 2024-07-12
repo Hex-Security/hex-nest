@@ -12,8 +12,8 @@ import { Auth, getAuth } from 'firebase/auth';
 import { FirebaseToken } from 'src/shared/dto/firebase/token.dto';
 import { UserToken } from 'src/shared/dto/firebase/user-token.dto';
 import { RolesEnum } from 'src/shared/enum/roles.enum';
-import { RegisterDto } from '../auth/dto/register.dto';
 import { FirebaseClientService } from './firebase-client.service';
+import { RegisterDto } from 'src/shared/dto/auth/register-base.dto';
 
 @Injectable()
 export class FirebaseService implements OnModuleInit {
@@ -87,7 +87,11 @@ export class FirebaseService implements OnModuleInit {
     }
   }
 
-  async signUp(dto: RegisterDto, _id: string): Promise<UserToken> {
+  async signUp(
+    dto: RegisterDto,
+    _id: string,
+    role: RolesEnum,
+  ): Promise<UserToken> {
     try {
       const { email, password, first_name, last_name, username } = dto;
       const user = await this.admin.createUser({
@@ -97,7 +101,7 @@ export class FirebaseService implements OnModuleInit {
       });
 
       await this.admin.setCustomUserClaims(user.uid, {
-        role: RolesEnum.USER,
+        role,
         _id,
       });
 

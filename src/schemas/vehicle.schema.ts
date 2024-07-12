@@ -6,6 +6,9 @@ export type VehicleDocument = HydratedDocument<Vehicle>;
 
 @Schema({ timestamps: true })
 export class Vehicle {
+  @Prop({ type: mongoose.Schema.Types.ObjectId })
+  _id: mongoose.Types.ObjectId;
+
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   owner: User;
 

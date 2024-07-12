@@ -38,14 +38,14 @@ export class AdminData {
 
 @Schema({ timestamps: true })
 export class GuardSchedule {
-  @Prop()
-  day: string;
+  @Prop({ type: Date })
+  date: Date;
 
-  @Prop()
-  start: string;
+  @Prop({ type: Date })
+  start: Date;
 
-  @Prop()
-  end: string;
+  @Prop({ type: Date })
+  end: Date;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Complex' })
   complex: Complex;

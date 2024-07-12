@@ -10,6 +10,9 @@ export type VisitorDocument = HydratedDocument<Visitor>;
 
 @Schema({ timestamps: true })
 export class Visitor {
+  @Prop({ type: mongoose.Schema.Types.ObjectId })
+  _id: mongoose.Types.ObjectId;
+
   @Prop({
     required: true,
     type: mongoose.Schema.Types.ObjectId,

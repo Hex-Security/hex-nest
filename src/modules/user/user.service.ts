@@ -1,9 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Complex } from 'src/schemas/complex.schema';
 import { User, UserDocument } from 'src/schemas/user.schema';
-import { CreateUserDto, UpdateUserDto } from 'src/shared/dto/entities/user.dto';
+import { CreateUserDto } from 'src/shared/dto/user/create-user.dto';
 import { SearchUserDto } from 'src/shared/dto/user/search-user.dto';
+import { UpdateUserDto } from 'src/shared/dto/user/update-user.dto';
 @Injectable()
 export class UserService {
   constructor(
@@ -25,6 +27,20 @@ export class UserService {
 
     if (!user) {
       throw new NotFoundException(`User with ID ${_id} not found`);
+    }
+
+    return user;
+  }
+
+  async findByUsername(username: string): Promise<UserDocument> {
+    const user: UserDocument = await this.user_model
+      .findOne({
+        username,
+      })
+      .exec();
+
+    if (!user) {
+      throw new NotFoundException(`User with username ${username} not found`);
     }
 
     return user;
@@ -120,5 +136,43 @@ export class UserService {
     }
 
     return user;
+  }
+
+  async addGuardComplex(_id: string, complex: Complex): Promise<UserDocument> {
+    // 1. Find the user
+    const user = await this.findOne(_id);
+
+    // 2. Check if the complex is already in the list
+    if (
+      user.data.guard.complexes.some(
+        (complex) => complex._id.toString() === complex._id.toString(),
+      )
+    ) {
+      return user; // Complex already exists
+    }
+
+    // 3. Add the complex to the list
+    user.data.guard.complexes.push(complex);
+
+    return user.save();
+  }
+
+  async addAdminComplex(_id: string, complex: Complex): Promise<UserDocument> {
+    // 1. Find the user
+    const user = await this.findOne(_id);
+
+    // 2. Check if the complex is already in the list
+    if (
+      user.data.admin.complexes.some(
+        (complex) => complex._id.toString() === complex._id.toString(),
+      )
+    ) {
+      return user; // Complex already exists
+    }
+
+    // 3. Add the complex to the list
+    user.data.admin.complexes.push(complex);
+
+    return user.save();
   }
 }
