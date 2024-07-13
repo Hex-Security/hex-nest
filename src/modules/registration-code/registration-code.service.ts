@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import {
   RegistrationCode,
   RegistrationCodeDocument,
@@ -33,7 +33,14 @@ export class RegistrationCodeService {
     });
 
     // 3. Create the document
-    const created_code = new this.reg_code_model({ ...dto, hash });
+    const created_code = new this.reg_code_model({
+      _id: new mongoose.Types.ObjectId(),
+      code,
+      hash,
+      ...dto,
+    });
+
+    console.log('Created_Code', created_code);
 
     // 4. Save the document
     return created_code.save();
@@ -73,9 +80,6 @@ export class RegistrationCodeService {
 
     // 2. Calculate the hash of the payload
     const expected_hash = hashCodePayload(dto);
-
-    console.log('Expected hash:', expected_hash);
-    console.log('Actual hash:', code_doc.hash);
 
     // 3. Compare the hashes
     if (code_doc.hash !== expected_hash) {

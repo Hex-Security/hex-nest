@@ -13,7 +13,8 @@ import { FirebaseToken } from 'src/shared/dto/firebase/token.dto';
 import { UserToken } from 'src/shared/dto/firebase/user-token.dto';
 import { RolesEnum } from 'src/shared/enum/roles.enum';
 import { FirebaseClientService } from './firebase-client.service';
-import { RegisterDto } from 'src/shared/dto/auth/register-base.dto';
+import { RegisterUserDto } from 'src/shared/dto/auth/register-user.dto';
+import { RegisterBaseDto } from 'src/shared/dto/auth/register-base.dto';
 
 @Injectable()
 export class FirebaseService implements OnModuleInit {
@@ -88,7 +89,7 @@ export class FirebaseService implements OnModuleInit {
   }
 
   async signUp(
-    dto: RegisterDto,
+    dto: RegisterBaseDto,
     _id: string,
     role: RolesEnum,
   ): Promise<UserToken> {

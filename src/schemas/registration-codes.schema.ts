@@ -11,7 +11,6 @@ export class RegistrationCode {
   @Prop({ type: mongoose.Schema.Types.ObjectId })
   _id: mongoose.Types.ObjectId;
 
-  
   @Prop({ required: true })
   code: string;
 
@@ -25,7 +24,7 @@ export class RegistrationCode {
   active: boolean;
 
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'User' })
-  admin: User;
+  emitter: User;
 
   @Prop({ type: { type: mongoose.Schema.Types.ObjectId, ref: 'User' } })
   account: User;

@@ -2,13 +2,13 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { RegisterCodeDto } from './register-code.dto';
 
-export class RegisterGuardDto extends RegisterCodeDto {
-  @IsNotEmpty()
+export class RegisterUserDto extends RegisterCodeDto {
   @IsEmail()
+  @IsNotEmpty()
   @ApiProperty({
     type: String,
-    description: "Guard's email",
-    example: 'guard@email.com',
+    description: "User's email",
+    example: 'resident@email.com',
   })
   email: string;
 
@@ -16,8 +16,8 @@ export class RegisterGuardDto extends RegisterCodeDto {
   @IsString()
   @ApiProperty({
     type: String,
-    description: "Guard's username",
-    example: 'JohnDoe Guard',
+    description: "User's username",
+    example: 'JohnDoe Resident',
   })
   username?: string;
 
@@ -26,7 +26,7 @@ export class RegisterGuardDto extends RegisterCodeDto {
   @ApiProperty({
     type: String,
     description:
-      "Guard's registration code. Needed to register as a guard (must be provided by the admin)",
+      "User's registration code. Needed to register as an user (must be provided by the admin)",
     example: 'registration_code',
   })
   code: string;

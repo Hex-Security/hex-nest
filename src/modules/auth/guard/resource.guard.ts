@@ -17,7 +17,9 @@ export class ResourceAccessGuard implements CanActivate {
       throw new UnauthorizedException('Unauthorized access');
     }
 
-    if (_id && user._id === _id) {
+    console.log('_id ', _id);
+
+    if ((_id !== undefined && user._id === _id) || _id === undefined) {
       return true;
     }
 

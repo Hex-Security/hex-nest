@@ -1,19 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsDate,
+  IsDateString,
   IsEmail,
   IsNotEmpty,
   IsOptional,
   IsString,
 } from 'class-validator';
 
-export class RegisterDto {
+export class RegisterBaseDto {
   @IsEmail()
   @IsNotEmpty()
   @ApiProperty({
     type: String,
-    description: "User's email",
-    example: 'resident@email.com',
+    description: "Dev's email",
+    example: 'dev@email.com',
   })
   email: string;
 
@@ -21,7 +21,7 @@ export class RegisterDto {
   @IsNotEmpty()
   @ApiProperty({
     type: String,
-    description: "User's password",
+    description: "Dev's password",
     example: 'password123!--',
   })
   password: string;
@@ -30,8 +30,8 @@ export class RegisterDto {
   @IsString()
   @ApiProperty({
     type: String,
-    description: "User's username",
-    example: 'JohnDoe@email.com',
+    description: "Dev's username",
+    example: 'JohnDoe Dev',
   })
   username?: string;
 
@@ -39,7 +39,7 @@ export class RegisterDto {
   @IsString()
   @ApiProperty({
     type: String,
-    description: "User's first name",
+    description: "Dev's first name",
     example: 'John',
   })
   first_name?: string;
@@ -48,17 +48,19 @@ export class RegisterDto {
   @IsString()
   @ApiProperty({
     type: String,
-    description: "User's last name",
+    description: "Dev's last name",
     example: 'Doe',
   })
   last_name?: string;
 
   @IsOptional()
-  @IsDate()
+  @IsDateString()
   @ApiProperty({
-    type: Date,
-    description: "User's date of birth",
-    example: new Date().toISOString(),
+    type: String,
+    description: "Dev's date of birth",
+    example: new Date(
+      Date.now() - 18 * 365 * 24 * 60 * 60 * 1000,
+    ).toISOString(),
   })
-  dob?: Date;
+  dob?: string;
 }
