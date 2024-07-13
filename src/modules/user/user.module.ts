@@ -1,14 +1,21 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { EntityModule } from '../entity/entity.module';
 import { FirebaseClientService } from '../firebase/firebase-client.service';
 import { FirebaseService } from '../firebase/firebase.service';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { FirebaseModule } from '../firebase/firebase.module';
+import { ComplexService } from '../complex/complex.service';
+import { ComplexModule } from '../complex/complex.module';
 
 @Module({
-  imports: [EntityModule, FirebaseModule],
-  providers: [UserService, FirebaseService, FirebaseClientService],
+  imports: [EntityModule, FirebaseModule, forwardRef(() => ComplexModule)],
+  providers: [
+    UserService,
+    FirebaseService,
+    FirebaseClientService,
+    ComplexService,
+  ],
   exports: [UserService],
   controllers: [UserController],
 })

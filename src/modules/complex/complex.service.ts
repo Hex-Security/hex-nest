@@ -1,23 +1,32 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Complex, ComplexDocument } from 'src/schemas/complex.schema';
-import {
-  CreateComplexDto,
-  UpdateComplexDto,
-} from 'src/shared/dto/entities/complex.dto';
-import { User } from 'src/schemas/user.schema';
 import { House } from 'src/schemas/house.schema';
+import { CreateComplexDto } from 'src/shared/dto/complex/create-complex.dto';
+import { UpdateComplexDto } from 'src/shared/dto/complex/update-complex.dto';
+import mongoose from 'mongoose';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class ComplexService {
   constructor(
     @InjectModel(Complex.name)
     private readonly complex_model: Model<ComplexDocument>,
+    @Inject(forwardRef(() => UserService))
+    private readonly user_service: UserService,
   ) {}
 
   async create(dto: CreateComplexDto): Promise<ComplexDocument> {
-    const createdComplex = new this.complex_model(dto);
+    const createdComplex = new this.complex_model({
+      _id: new mongoose.Types.ObjectId(),
+      ...dto,
+    });
     return createdComplex.save();
   }
 
@@ -55,19 +64,22 @@ export class ComplexService {
     }
   }
 
-  async addGuard(_id: string, guard: User): Promise<ComplexDocument> {
+  async addGuard(_id: string, guard_id: string): Promise<ComplexDocument> {
     // 1. Find the complex
     const complex = await this.findOne(_id);
 
-    // 2. Check if the guard is already in the complex
+    // 2. Find the guard
+    const guard = await this.user_service.findOne(guard_id);
+
+    // 3. Check if the guard is already in the complex
     if (complex.guards.some((g) => g._id === guard._id)) {
       return complex;
     }
 
-    // 3. Add the guard to the complex
+    // 4. Add the guard to the complex
     complex.guards.push(guard);
 
-    // 4. Save the complex
+    // 5. Save the complex
     return complex.save();
   }
 
@@ -84,9 +96,12 @@ export class ComplexService {
     return complex.save();
   }
 
-  async addAdmin(_id: string, admin: User): Promise<ComplexDocument> {
+  async addAdmin(_id: string, admin_id: string): Promise<ComplexDocument> {
     // 1. Find the complex
     const complex = await this.findOne(_id);
+
+    // 2. Find the admin
+    const admin = await this.user_service.findOne(admin_id);
 
     // 2. Check if the admin is already in the complex
     if (complex.admins.some((a) => a._id === admin._id)) {

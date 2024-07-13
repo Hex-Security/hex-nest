@@ -1,16 +1,23 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Complex } from 'src/schemas/complex.schema';
 import { User, UserDocument } from 'src/schemas/user.schema';
 import { CreateUserDto } from 'src/shared/dto/user/create-user.dto';
 import { SearchUserDto } from 'src/shared/dto/user/search-user.dto';
 import { UpdateUserDto } from 'src/shared/dto/user/update-user.dto';
+import { ComplexService } from '../complex/complex.service';
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name)
     private readonly user_model: Model<UserDocument>,
+    @Inject(forwardRef(() => ComplexService))
+    private readonly complex_service: ComplexService,
   ) {}
 
   async create(dto: CreateUserDto): Promise<UserDocument> {
@@ -138,9 +145,15 @@ export class UserService {
     return user;
   }
 
-  async addGuardComplex(_id: string, complex: Complex): Promise<UserDocument> {
+  async addGuardComplex(
+    _id: string,
+    complex_id: string,
+  ): Promise<UserDocument> {
     // 1. Find the user
     const user = await this.findOne(_id);
+
+    // 2. Find the complex
+    const complex = await this.complex_service.findOne(complex_id);
 
     // 2. Check if the complex is already in the list
     if (
@@ -157,9 +170,15 @@ export class UserService {
     return user.save();
   }
 
-  async addAdminComplex(_id: string, complex: Complex): Promise<UserDocument> {
+  async addAdminComplex(
+    _id: string,
+    complex_id: string,
+  ): Promise<UserDocument> {
     // 1. Find the user
     const user = await this.findOne(_id);
+
+    // 2. Find the complex
+    const complex = await this.complex_service.findOne(complex_id);
 
     // 2. Check if the complex is already in the list
     if (

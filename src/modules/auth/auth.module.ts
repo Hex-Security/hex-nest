@@ -10,9 +10,16 @@ import { UserModule } from '../user/user.module';
 import { RegistrationCodeService } from '../registration-code/registration-code.service';
 import { RegistrationCodeModule } from '../registration-code/registration-code.module';
 import { ComplexService } from '../complex/complex.service';
+import { ComplexModule } from '../complex/complex.module';
 
 @Module({
-  imports: [EntityModule, UserModule, FirebaseModule, RegistrationCodeModule],
+  imports: [
+    EntityModule,
+    UserModule,
+    FirebaseModule,
+    RegistrationCodeModule,
+    ComplexModule,
+  ],
   providers: [
     AuthService,
     UserService,

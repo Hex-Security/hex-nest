@@ -28,6 +28,7 @@ import { SearchUserDto } from 'src/shared/dto/user/search-user.dto';
 import { find_one } from './swagger/find-one.swagger';
 import { update_one } from './swagger/update-one.swagger';
 import { UpdateUserDto } from 'src/shared/dto/user/update-user.dto';
+import { search_user } from './swagger/search.swagger';
 
 @ApiTags('User')
 @Controller('user')
@@ -88,6 +89,9 @@ export class UserController {
 
   @Post('search')
   @ApiBearerAuth()
+  @ApiOperation(search_user.operation)
+  @ApiBody(search_user.body)
+  @ApiResponse(search_user.ok_response)
   @Roles(RolesEnum.ADMIN, RolesEnum.GUARD)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
   async searchUserByEmail(@Body() dto: SearchUserDto): Promise<UserDocument> {

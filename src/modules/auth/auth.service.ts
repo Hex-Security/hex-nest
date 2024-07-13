@@ -120,38 +120,26 @@ export class AuthService {
           complex !== undefined &&
           complex._id !== undefined
         ) {
-          // 6.1.a.1 Get admin and complex entities
-          const adminToAdd = await this.user_service.findOne(_id);
-          const complexToAdd = await this.complex_service.findOne(
+          // 6.1.a.1 Add admin to complex entity
+          await this.complex_service.addAdmin(complex._id.toString(), _id);
+          // 6.1.a.2 Add complex to admin entity
+          user_doc = await this.user_service.addAdminComplex(
+            _id,
             complex._id.toString(),
           );
-
-          // 6.1.a.2 Add admin to complex entity
-          await this.complex_service.addAdmin(
-            complex._id.toString(),
-            adminToAdd,
-          );
-          // 6.1.a.3 Add complex to admin entity
-          user_doc = await this.user_service.addAdminComplex(_id, complexToAdd);
           // 6.1.b Update guard related entities
         } else if (
           role === RolesEnum.GUARD &&
           complex !== undefined &&
           complex._id !== undefined
         ) {
-          // 6.1.b.1 Get guard and complex entities
-          const guardToAdd = await this.user_service.findOne(_id);
-          const complexToAdd = await this.complex_service.findOne(
+          // 6.1.b.1 Add guard to complex entity
+          await this.complex_service.addGuard(complex._id.toString(), _id);
+          // 6.1.b.2 Add complex to guard entity
+          user_doc = await this.user_service.addGuardComplex(
+            _id,
             complex._id.toString(),
           );
-
-          // 6.1.b.2 Add guard to complex entity
-          await this.complex_service.addGuard(
-            complex._id.toString(),
-            guardToAdd,
-          );
-          // 6.1.b.3 Add complex to guard entity
-          user_doc = await this.user_service.addGuardComplex(_id, complexToAdd);
         }
       }
 

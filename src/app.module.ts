@@ -22,7 +22,7 @@ import { RegistrationCodeModule } from './modules/registration-code/registration
     EntityModule,
     AuthModule,
     // AccessModule,
-    // ComplexModule,
+    ComplexModule,
     // HouseModule,
     UserModule,
     RegistrationCodeModule,
