@@ -65,14 +65,17 @@ export class AuthService {
         // 1.1 Get registration code for admin
         reg_code = await this.registration_code_service.findByCode(code);
 
+        console.log('reg_code', reg_code);
+
         // 1.2 Check if registration code is valid
         const is_valid_code =
           reg_code &&
           (await this.registration_code_service.validate({
-            code: code,
+            code,
             email: dto.email,
             role,
             emitter: reg_code.emitter._id.toString(),
+            complex: reg_code.complex?._id.toString(),
           }));
 
         if (!is_valid_code) {

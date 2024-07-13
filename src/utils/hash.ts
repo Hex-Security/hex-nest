@@ -4,6 +4,7 @@ import { ValidateRegistrationCodeDto } from 'src/shared/dto/registration-code/va
 
 export const hashCodePayload = (dto: ValidateRegistrationCodeDto): string => {
   // Convert DTO to a string (you may need to serialize it based on your DTO structure)
+  console.log('dto', dto);
   const dataString = JSON.stringify(dto);
 
   // Create a hash object

@@ -37,7 +37,10 @@ export class RegistrationCodeService {
       _id: new mongoose.Types.ObjectId(),
       code,
       hash,
-      ...dto,
+      email: dto.email,
+      role: dto.role,
+      emitter: dto.emitter,
+      complex: dto.complex,
     });
 
     console.log('Created_Code', created_code);
@@ -80,6 +83,9 @@ export class RegistrationCodeService {
 
     // 2. Calculate the hash of the payload
     const expected_hash = hashCodePayload(dto);
+
+    console.log('Expected_Hash', expected_hash);
+    console.log('DB Hash', code_doc.hash);
 
     // 3. Compare the hashes
     if (code_doc.hash !== expected_hash) {
