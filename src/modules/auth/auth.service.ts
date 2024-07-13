@@ -45,7 +45,9 @@ export class AuthService {
       throw new NotFoundException('User not found');
     }
 
-    return this.firebase_service.login(user.email, password);
+    const token = await this.firebase_service.login(user.email, password);
+
+    return token;
   }
 
   async signUp(

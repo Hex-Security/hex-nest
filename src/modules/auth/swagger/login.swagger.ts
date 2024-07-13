@@ -1,4 +1,5 @@
 import { EndpointDoc } from 'src/shared/dto/swagger/endpoint-doc.dto';
+import { LoginDto } from '../dto/login.dto';
 
 export const login: EndpointDoc = {
   operation: {
@@ -8,13 +9,10 @@ export const login: EndpointDoc = {
   body: {
     description: 'User data for login',
     required: true,
-    examples: {
-      'User Login': {
-        value: {
-          email: 'resident@email.com',
-          password: 'password123!--',
-        },
-      },
-    },
+    type: LoginDto,
+  },
+  ok_response: {
+    description: 'User logged in successfully',
+    type: 'string',
   },
 };
