@@ -1,25 +1,19 @@
 import {
   BadRequestException,
-  ConflictException,
   HttpException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { FirebaseToken } from 'src/shared/dto/firebase/token.dto';
-import { UserToken } from 'src/shared/dto/firebase/user-token.dto';
 import { RolesEnum } from 'src/shared/enum/roles.enum';
 import { FirebaseService } from '../firebase/firebase.service';
 import { UserService } from '../user/user.service';
 import { LoginDto } from './dto/login.dto';
 import { SignupResponseDto } from './dto/signup-response.dto';
-import { UserDocument } from 'src/schemas/user.schema';
 import mongoose from 'mongoose';
-import { RegisterGuardDto } from 'src/shared/dto/auth/register-guard.dto';
 import { isEmail } from 'class-validator';
 import { RegistrationCodeService } from '../registration-code/registration-code.service';
 import { ComplexService } from '../complex/complex.service';
-import { RegisterAdminDto } from 'src/shared/dto/auth/register-admin.dto';
-import { RegisterUserDto } from 'src/shared/dto/auth/register-user.dto';
 import { RegisterBaseDto } from 'src/shared/dto/auth/register-base.dto';
 import { RegistrationCodeDocument } from 'src/schemas/registration-codes.schema';
 import { RegisterCodeDto } from 'src/shared/dto/auth/register-code.dto';
@@ -65,11 +59,10 @@ export class AuthService {
         // 1.1 Get registration code for admin
         reg_code = await this.registration_code_service.findByCode(code);
 
-        console.log('reg_code', reg_code);
-
         // 1.2 Check if registration code is valid
         const is_valid_code =
           reg_code &&
+          reg_code.active &&
           (await this.registration_code_service.validate({
             code,
             email: dto.email,
@@ -108,42 +101,53 @@ export class AuthService {
       stage++;
 
       if (role !== RolesEnum.DEV) {
-        // 5. Deactivate registration code
-        await this.registration_code_service.deactivate(
-          reg_code._id.toString(),
-        );
-
-        // 6. Update related entities
-        // 6.1 Get complex from registration code
+        // 5. Update related entities
+        // 5.1 Get complex from registration code
         const complex = reg_code.complex;
 
-        // 6.1.a Update admin related entities
+        // 5.1.a Update admin related entities
         if (
           role === RolesEnum.ADMIN &&
           complex !== undefined &&
           complex._id !== undefined
         ) {
-          // 6.1.a.1 Add admin to complex entity
+          // 5.1.a.1 Add admin to complex entity
           await this.complex_service.addAdmin(complex._id.toString(), _id);
-          // 6.1.a.2 Add complex to admin entity
+          console.log('Admin added to complex entity');
+          // 5.1.a.2 Add complex to admin entity
           user_doc = await this.user_service.addAdminComplex(
             _id,
             complex._id.toString(),
           );
-          // 6.1.b Update guard related entities
+          console.log('Complex added to admin entity');
+          // 5.1.b Update guard related entities
         } else if (
           role === RolesEnum.GUARD &&
           complex !== undefined &&
           complex._id !== undefined
         ) {
-          // 6.1.b.1 Add guard to complex entity
+          // 5.1.b.1 Add guard to complex entity
           await this.complex_service.addGuard(complex._id.toString(), _id);
-          // 6.1.b.2 Add complex to guard entity
+          console.log('Guard added to complex entity');
+          // 5.1.b.2 Add complex to guard entity
           user_doc = await this.user_service.addGuardComplex(
             _id,
             complex._id.toString(),
           );
+          console.log('Complex added to guard entity');
         }
+
+        // 6. Update registration code data
+        // 6.1 Deactivate registration code
+        await this.registration_code_service.deactivate(
+          reg_code._id.toString(),
+        );
+
+        // 6.2 Add account reference to registration code
+        await this.registration_code_service.addAccount(
+          reg_code._id.toString(),
+          user_doc._id.toString(),
+        );
       }
 
       stage++;
@@ -157,7 +161,7 @@ export class AuthService {
     } catch (error) {
       throw new HttpException(error.message, error.status || 500);
     } finally {
-      if (stage > 0) {
+      if (stage > 0 && stage < 4) {
         try {
           // Rollback
           console.log('Rollback for stage', stage);

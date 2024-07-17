@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { RegistrationCodeService } from './registration-code.service';
 import { CreateRegistrationCodeDto } from 'src/shared/dto/registration-code/create-registration-code.dto';
 import {
@@ -14,6 +14,7 @@ import { AuthenticationGuard } from '../auth/guard/authentication.guard';
 import { AuthorizationGuard } from '../auth/guard/authorization.guard';
 import { ResourceAccessGuard } from '../auth/guard/resource.guard';
 import { create_code } from './swagger/create-code.swagger';
+import { ReqWithUser } from 'src/shared/interfaces/req-with-user.interface';
 
 @ApiTags('Registration Code')
 @Controller('auth/registration-code')
@@ -27,7 +28,10 @@ export class RegistrationCodeController {
   @ApiResponse(create_code.ok_response)
   @Roles(RolesEnum.ADMIN)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
-  async create(@Body() dto: CreateRegistrationCodeDto) {
-    return this.code_service.create(dto);
+  async create(
+    @Body() dto: CreateRegistrationCodeDto,
+    @Req() req: ReqWithUser,
+  ) {
+    return this.code_service.create(dto, req.user);
   }
 }

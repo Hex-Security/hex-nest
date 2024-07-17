@@ -11,6 +11,7 @@ import { CreateUserDto } from 'src/shared/dto/user/create-user.dto';
 import { SearchUserDto } from 'src/shared/dto/user/search-user.dto';
 import { UpdateUserDto } from 'src/shared/dto/user/update-user.dto';
 import { ComplexService } from '../complex/complex.service';
+import { RolesEnum } from 'src/shared/enum/roles.enum';
 @Injectable()
 export class UserService {
   constructor(
@@ -21,7 +22,19 @@ export class UserService {
   ) {}
 
   async create(dto: CreateUserDto): Promise<UserDocument> {
-    const created_user = new this.user_model(dto);
+    const data =
+      dto.role === RolesEnum.USER
+        ? { user: { houses: [] } }
+        : dto.role === RolesEnum.GUARD
+          ? { guard: { complexes: [], schedule: [] } }
+          : dto.role === RolesEnum.ADMIN
+            ? { admin: { complexes: [] } }
+            : {};
+
+    const created_user = new this.user_model({
+      ...dto,
+      data,
+    });
     return created_user.save();
   }
 
@@ -155,7 +168,7 @@ export class UserService {
     // 2. Find the complex
     const complex = await this.complex_service.findOne(complex_id);
 
-    // 2. Check if the complex is already in the list
+    // 3. Check if the complex is already in the list
     if (
       user.data.guard.complexes.some(
         (complex) => complex._id.toString() === complex._id.toString(),

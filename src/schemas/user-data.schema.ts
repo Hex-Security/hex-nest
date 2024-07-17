@@ -12,16 +12,13 @@ export type AdminDataDocument = HydratedDocument<AdminData>;
 
 export type GuardScheduleDocument = HydratedDocument<GuardSchedule>;
 
-@Schema({ timestamps: true })
+@Schema({ _id: false })
 export class ResidentData {
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'House' }] })
   houses: House[];
-
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Vehicle' }] })
-  vehicles: Vehicle[];
 }
 
-@Schema({ timestamps: true })
+@Schema({ _id: false })
 export class GuardData {
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'House' }] })
   complexes: Complex[];
@@ -30,13 +27,13 @@ export class GuardData {
   schedule: GuardSchedule[];
 }
 
-@Schema({ timestamps: true })
+@Schema({ _id: false })
 export class AdminData {
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'House' }] })
   complexes: Complex[];
 }
 
-@Schema({ timestamps: true })
+@Schema({ _id: false })
 export class GuardSchedule {
   @Prop({ type: Date })
   date: Date;
@@ -59,16 +56,16 @@ export const GuardDataSchema = SchemaFactory.createForClass(GuardData);
 export const AdminDataSchema = SchemaFactory.createForClass(AdminData);
 export const GuardScheduleSchema = SchemaFactory.createForClass(GuardSchedule);
 
-@Schema({ timestamps: true })
+@Schema({ _id: false })
 export class UserData {
   @Prop({ type: ResidentDataSchema })
-  user: ResidentData;
+  user?: ResidentData;
 
   @Prop({ type: GuardDataSchema })
-  guard: GuardData;
+  guard?: GuardData;
 
   @Prop({ type: AdminDataSchema })
-  admin: AdminData;
+  admin?: AdminData;
 }
 
 export const UserDataSchema = SchemaFactory.createForClass(UserData);

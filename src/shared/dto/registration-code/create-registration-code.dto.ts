@@ -27,15 +27,6 @@ export class CreateRegistrationCodeDto {
   })
   role: RolesEnum;
 
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty({
-    type: String,
-    description: 'Emitter ID',
-    example: 'admin_or_dev_account_id',
-  })
-  emitter: string;
-
   @IsOptional()
   @IsString()
   @ApiProperty({

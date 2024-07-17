@@ -5,10 +5,18 @@ import { EntityModule } from '../entity/entity.module';
 import { FirebaseService } from '../firebase/firebase.service';
 import { FirebaseClientService } from '../firebase/firebase-client.service';
 import { FirebaseModule } from '../firebase/firebase.module';
+import { ComplexService } from '../complex/complex.service';
+import { UserService } from '../user/user.service';
 
 @Module({
   imports: [EntityModule, FirebaseModule],
-  providers: [RegistrationCodeService, FirebaseService, FirebaseClientService],
+  providers: [
+    RegistrationCodeService,
+    FirebaseService,
+    FirebaseClientService,
+    ComplexService,
+    UserService,
+  ],
   controllers: [RegistrationCodeController],
   exports: [RegistrationCodeService],
 })
