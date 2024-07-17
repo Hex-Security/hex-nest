@@ -27,6 +27,12 @@ export class ComplexService {
     const createdComplex = new this.complex_model({
       _id: new mongoose.Types.ObjectId(),
       ...dto,
+      houses: dto.house_ids.map((id) => new mongoose.Schema.Types.ObjectId(id)),
+      admins: dto.admin_ids.map((id) => new mongoose.Schema.Types.ObjectId(id)),
+      guards: dto.guard_ids.map((id) => new mongoose.Schema.Types.ObjectId(id)),
+      residents: dto.resident_ids.map(
+        (id) => new mongoose.Schema.Types.ObjectId(id),
+      ),
     });
     return createdComplex.save();
   }
@@ -133,6 +139,44 @@ export class ComplexService {
     // 2. Remove the admin from the complex
     complex.admins = complex.admins.filter(
       (a) => a._id.toString() !== admin_id,
+    );
+
+    // 3. Save the complex
+    return complex.save();
+  }
+
+  async addResident(
+    _id: string,
+    resident_id: string,
+  ): Promise<ComplexDocument> {
+    // 1. Find the complex
+    const complex = await this.findOne(_id);
+
+    // 2. Find the resident
+    const resident = await this.user_service.findOne(resident_id);
+
+    // 2. Check if the resident is already in the complex
+    if (complex.residents.some((r) => r._id === resident._id)) {
+      return complex;
+    }
+
+    // 3. Add the resident to the complex
+    complex.residents.push(resident);
+
+    // 4. Save the complex
+    return complex.save();
+  }
+
+  async removeResident(
+    _id: string,
+    resident_id: string,
+  ): Promise<ComplexDocument> {
+    // 1. Find the complex
+    const complex = await this.findOne(_id);
+
+    // 2. Remove the resident from the complex
+    complex.residents = complex.residents.filter(
+      (r) => r._id.toString() !== resident_id,
     );
 
     // 3. Save the complex

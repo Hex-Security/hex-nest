@@ -120,6 +120,10 @@ export class CreateComplexDto {
 
   @IsOptional()
   @IsArray()
+  resident_ids?: string[];
+
+  @IsOptional()
+  @IsArray()
   house_ids?: string[];
 
   @IsOptional()

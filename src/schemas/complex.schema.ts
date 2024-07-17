@@ -50,6 +50,12 @@ export class Complex {
 
   @Prop({
     required: true,
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  })
+  residents: User[];
+
+  @Prop({
+    required: true,
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'House' }],
   })
   houses: House[];

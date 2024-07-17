@@ -121,12 +121,13 @@ export class AuthService {
           );
           console.log('Complex added to admin entity');
           // 5.1.b Update guard related entities
-        } else if (
+        }
+        // 5.1.b Update guard related entities
+        else if (
           role === RolesEnum.GUARD &&
           complex !== undefined &&
           complex._id !== undefined
         ) {
-          // 5.1.b.1 Add guard to complex entity
           await this.complex_service.addGuard(complex._id.toString(), _id);
           console.log('Guard added to complex entity');
           // 5.1.b.2 Add complex to guard entity
@@ -135,6 +136,16 @@ export class AuthService {
             complex._id.toString(),
           );
           console.log('Complex added to guard entity');
+        }
+        // 5.1.c Update resident related entities
+        else if (
+          role === RolesEnum.USER &&
+          complex !== undefined &&
+          complex._id !== undefined
+        ) {
+          // 5.1.c.1 Add resident to complex entity
+          await this.complex_service.addResident(complex._id.toString(), _id);
+          console.log('Resident added to complex entity');
         }
 
         // 6. Update registration code data
