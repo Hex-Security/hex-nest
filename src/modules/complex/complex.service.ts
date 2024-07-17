@@ -12,6 +12,7 @@ import { CreateComplexDto } from 'src/shared/dto/complex/create-complex.dto';
 import { UpdateComplexDto } from 'src/shared/dto/complex/update-complex.dto';
 import mongoose from 'mongoose';
 import { UserService } from '../user/user.service';
+import { User, UserDocument } from 'src/schemas/user.schema';
 
 @Injectable()
 export class ComplexService {
@@ -92,6 +93,16 @@ export class ComplexService {
       (g) => g._id.toString() !== guard_id,
     );
 
+    // 3. Remove the complex from the guard
+    const guard = await this.user_service.findOne(guard_id);
+
+    guard.data.guard.complexes = guard.data.guard.complexes.filter(
+      (c) => c._id.toString() !== complex._id.toString(),
+    );
+
+    // 4. Save the guard
+    await guard.save();
+
     // 3. Save the complex
     return complex.save();
   }
@@ -155,5 +166,23 @@ export class ComplexService {
 
     // 3. Save the complex
     return complex.save();
+  }
+
+  async findGuards(_id: string): Promise<User[]> {
+    const complex = await this.complex_model
+      .findById(_id)
+      .populate('guards')
+      .exec();
+
+    return complex.guards;
+  }
+
+  async findAdmins(_id: string): Promise<User[]> {
+    const complex = await this.complex_model
+      .findById(_id)
+      .populate('admins')
+      .exec();
+
+    return complex.admins;
   }
 }

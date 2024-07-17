@@ -3,7 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   UseGuards,
@@ -29,8 +28,9 @@ import { ComplexDocument } from 'src/schemas/complex.schema';
 import { ResourceAccessGuard } from '../auth/guard/resource.guard';
 import { find_complex } from './swagger/find-complex.swagger';
 import { update_complex } from './swagger/update-complex.swagger';
-import { GuardDataDto } from 'src/shared/dto/user/guard-data.dto';
 import { AddGuardDto } from 'src/shared/dto/complex/add-guard.dto';
+import { User } from 'src/schemas/user.schema';
+import { AddAdminDto } from 'src/shared/dto/complex/add-admin.dto';
 
 @ApiTags('Complex')
 @Controller('complex')
@@ -94,5 +94,45 @@ export class ComplexController {
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
   addGuard(@Param('_id') _id: string, @Body() dto: AddGuardDto) {
     return this.complex_service.addGuard(_id, dto._id);
+  }
+
+  @Get(':_id/guard')
+  @ApiBearerAuth()
+  @Roles(RolesEnum.ADMIN)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
+  findGuards(@Param('_id') _id: string): Promise<User[]> {
+    return this.complex_service.findGuards(_id);
+  }
+
+  @Delete(':_id/guard/:guard_id')
+  @ApiBearerAuth()
+  @Roles(RolesEnum.ADMIN)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
+  removeGuard(@Param('_id') _id: string, @Param('guard_id') guard_id: string) {
+    return this.complex_service.removeGuard(_id, guard_id);
+  }
+
+  @Post(':_id/admin')
+  @ApiBearerAuth()
+  @Roles(RolesEnum.ADMIN)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
+  addAdmin(@Param('_id') _id: string, @Body() dto: AddAdminDto) {
+    return this.complex_service.addAdmin(_id, dto._id);
+  }
+
+  @Get(':_id/admin')
+  @ApiBearerAuth()
+  @Roles(RolesEnum.ADMIN)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
+  findAdmins(@Param('_id') _id: string): Promise<User[]> {
+    return this.complex_service.findAdmins(_id);
+  }
+
+  @Delete(':_id/admin/:admin_id')
+  @ApiBearerAuth()
+  @Roles(RolesEnum.ADMIN)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
+  removeAdmin(@Param('_id') _id: string, @Param('admin_id') admin_id: string) {
+    return this.complex_service.removeAdmin(_id, admin_id);
   }
 }

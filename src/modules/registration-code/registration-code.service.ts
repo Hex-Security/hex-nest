@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import {
@@ -105,7 +105,7 @@ export class RegistrationCodeService {
 
     // 3. Compare the hashes
     if (code_doc.hash !== expected_hash) {
-      return false;
+      throw new BadRequestException('The registration payload is not valid');
     }
 
     return true;

@@ -130,4 +130,9 @@ export class FirebaseService implements OnModuleInit {
     // delete user
     this.admin.deleteUser(user.uid);
   }
+
+  async checkHealth(): Promise<void> {
+    await this.admin.listUsers(1);
+    return;
+  }
 }
