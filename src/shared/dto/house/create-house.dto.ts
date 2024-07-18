@@ -35,7 +35,7 @@ export class CreateHouseDto {
   owner_id?: string;
 
   @IsOptional()
-  @IsString()
+  @IsString({ each: true })
   @ApiPropertyOptional({
     description: 'Complex id',
     example: ['60d5ec9a6a2c1f001f8b4b6b'],
@@ -43,7 +43,7 @@ export class CreateHouseDto {
   resident_ids?: string[];
 
   @IsOptional()
-  @IsString()
+  @IsString({ each: true })
   @ApiPropertyOptional({
     description: 'Complex id',
     example: ['60d5ec9a6a2c1f001f8b4b6b'],

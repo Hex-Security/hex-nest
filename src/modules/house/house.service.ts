@@ -38,20 +38,20 @@ export class HouseService {
     // 3. Generate new ObjectId
     const _id = new mongoose.Types.ObjectId();
 
-    // 4. Update complex entity
-    await this.complex_service.addHouse(complex_id, _id.toString());
-
-    // 5. Update user owner entity
-    await this.user_service.addHouse(dto.owner_id, _id.toString());
-
     // 4. Create the house
     const created_house = new this.house_model({
       _id,
       ...dto,
       complex,
-    });
+    }).save();
 
-    return created_house.save();
+    // 5. Update complex entity
+    await this.complex_service.addHouse(complex_id, _id.toString());
+
+    // 6. Update user owner entity
+    await this.user_service.addHouse(dto.owner_id, _id.toString());
+
+    return created_house;
   }
 
   async findAll(): Promise<HouseDocument[]> {
@@ -70,8 +70,37 @@ export class HouseService {
     return this.house_model.findByIdAndUpdate(id, dto, { new: true }).exec();
   }
 
-  async delete(id: string): Promise<HouseDocument> {
-    return this.house_model.findByIdAndDelete(id).exec();
+  async delete(id: string): Promise<void> {
+    // 1. Find the house
+    const house = await this.findOne(id);
+
+    // 2. Check if the house exists
+    if (!house) {
+      throw new NotFoundException(`House with ID ${id} not found`);
+    }
+
+    // 3. Delete the house
+    // 3.1 Remove the house from the complex entity
+    await this.complex_service.removeHouse(house.complex._id.toString(), id);
+
+    // 3.2 Remove the house from the owner entity
+    await this.user_service.removeHouse(house.owner._id.toString(), id);
+
+    // 3.3 Remove the house from the residents entity
+    for (const resident of house.residents) {
+      await this.user_service.removeResidentHouse(resident._id.toString(), id);
+    }
+
+    await this.house_model
+      .deleteOne(
+        { id },
+        {
+          new: true,
+        },
+      )
+      .exec();
+
+    return;
   }
 
   async activate(id: string): Promise<HouseDocument> {

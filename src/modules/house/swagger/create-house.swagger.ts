@@ -8,7 +8,7 @@ export const create_house: SwaggerOptions = {
     summary: 'Create house',
   },
   param: {
-    name: '_cid',
+    name: 'complex_id',
     description: 'Complex id',
     required: true,
     type: 'string',

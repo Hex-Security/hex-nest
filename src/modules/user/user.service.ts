@@ -242,4 +242,61 @@ export class UserService {
 
     return user.save();
   }
+
+  async removeHouse(_id: string, house_id: string): Promise<UserDocument> {
+    // 1. Find the user
+    const user = await this.findOne(_id);
+
+    // 2. Remove the house from the list
+    user.data.user.houses = user.data.user.houses.filter(
+      (house) => house._id.toString() !== house_id.toString(),
+    );
+
+    return user.save();
+  }
+
+  async removeGuardComplex(
+    _id: string,
+    complex_id: string,
+  ): Promise<UserDocument> {
+    // 1. Find the user
+    const user = await this.findOne(_id);
+
+    // 2. Remove the complex from the list
+    user.data.guard.complexes = user.data.guard.complexes.filter(
+      (complex) => complex._id.toString() !== complex_id.toString(),
+    );
+
+    return user.save();
+  }
+
+  async removeAdminComplex(
+    _id: string,
+    complex_id: string,
+  ): Promise<UserDocument> {
+    // 1. Find the user
+    const user = await this.findOne(_id);
+
+    // 2. Remove the complex from the list
+    user.data.admin.complexes = user.data.admin.complexes.filter(
+      (complex) => complex._id.toString() !== complex_id.toString(),
+    );
+
+    return user.save();
+  }
+
+  async removeResidentHouse(
+    _id: string,
+    house_id: string,
+  ): Promise<UserDocument> {
+    // 1. Find the user
+    const user = await this.findOne(_id);
+
+    // 2. Remove the house from the list
+    user.data.user.houses = user.data.user.houses.filter(
+      (house) => house._id.toString() !== house_id.toString(),
+    );
+
+    return user.save();
+  }
 }

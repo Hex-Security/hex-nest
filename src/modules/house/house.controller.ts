@@ -66,7 +66,7 @@ export class HouseController {
   }
 
   @Delete(':house_id')
-  async remove(@Param('house_id') house_id: string): Promise<HouseDocument> {
+  async remove(@Param('house_id') house_id: string): Promise<void> {
     return this.house_service.delete(house_id);
   }
 }
