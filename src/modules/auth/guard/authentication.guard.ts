@@ -5,10 +5,14 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { FirebaseService } from 'src/modules/firebase/firebase.service';
+import { UserService } from 'src/modules/user/user.service';
 
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
-  constructor(private readonly firebase_service: FirebaseService) {}
+  constructor(
+    private readonly firebase_service: FirebaseService,
+    private readonly user_service: UserService,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
@@ -19,13 +23,15 @@ export class AuthenticationGuard implements CanActivate {
         return false;
       }
 
-      const user = await this.firebase_service.verifyToken(token);
+      const fb_user = await this.firebase_service.verifyToken(token);
 
-      if (!user) {
+      if (!fb_user) {
         throw new UnauthorizedException(
           'Unauthorized access. Invalid token data.',
         );
       }
+
+      const user = await this.user_service.findByUid(fb_user.uid);
 
       request.user = user;
       return true;

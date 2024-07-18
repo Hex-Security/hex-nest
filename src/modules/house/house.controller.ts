@@ -16,18 +16,23 @@ import { ApiTags } from '@nestjs/swagger';
 import { HouseDocument } from 'src/schemas/house.schema';
 
 @ApiTags('Houses')
-@Controller('houses')
+@Controller('complex/:_cid/houses')
 export class HouseController {
   constructor(private readonly house_service: HouseService) {}
 
   @Post()
-  async create(@Body() dto: CreateHouseDto): Promise<HouseDocument> {
-    return this.house_service.create(dto);
+  async create(
+    @Param('_cid') complex_id: string,
+    @Body() dto: CreateHouseDto,
+  ): Promise<HouseDocument> {
+    return this.house_service.create(complex_id, dto);
   }
 
   @Get()
-  async findAll(): Promise<HouseDocument[]> {
-    return this.house_service.findAll();
+  async findAllByComplex(
+    @Param('_cid') complex_id: string,
+  ): Promise<HouseDocument[]> {
+    return this.house_service.findAllByComplex(complex_id);
   }
 
   @Get(':id')

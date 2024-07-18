@@ -11,10 +11,6 @@ import mongoose from 'mongoose';
 
 export class CreateHouseDto {
   @IsNotEmpty()
-  @Type(() => mongoose.Schema.Types.ObjectId)
-  complex_id: mongoose.Schema.Types.ObjectId;
-
-  @IsNotEmpty()
   @IsString()
   number: string;
 
@@ -22,17 +18,17 @@ export class CreateHouseDto {
   @IsString()
   address: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @Type(() => mongoose.Schema.Types.ObjectId)
-  owner_id: mongoose.Schema.Types.ObjectId;
+  owner_id?: mongoose.Schema.Types.ObjectId;
 
-  @IsNotEmpty()
+  @IsOptional()
   @Type(() => mongoose.Schema.Types.ObjectId)
-  resident_ids: mongoose.Schema.Types.ObjectId[];
+  resident_ids?: mongoose.Schema.Types.ObjectId[];
 
-  @IsNotEmpty()
+  @IsOptional()
   @Type(() => mongoose.Schema.Types.ObjectId)
-  vehicle_ids: mongoose.Schema.Types.ObjectId[];
+  vehicle_ids?: mongoose.Schema.Types.ObjectId[];
 
   @IsNotEmpty()
   @IsNumber()
@@ -48,7 +44,27 @@ export class CreateHouseDto {
 
   @IsOptional()
   @IsBoolean()
-  active: boolean;
+  active?: boolean;
 }
 
-export class UpdateHouseDto extends PartialType(CreateHouseDto) {}
+export class UpdateHouseDto {
+  @IsOptional()
+  @Type(() => mongoose.Schema.Types.ObjectId)
+  owner_id?: mongoose.Schema.Types.ObjectId;
+
+  @IsOptional()
+  @IsNumber()
+  bedrooms?: number;
+
+  @IsOptional()
+  @IsNumber()
+  bathrooms?: number;
+
+  @IsOptional()
+  @IsNumber()
+  square_m?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  active?: boolean;
+}
