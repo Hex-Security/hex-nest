@@ -8,6 +8,7 @@ import { FirebaseClientService } from '../firebase/firebase-client.service';
 import { UserService } from '../user/user.service';
 import { UserModule } from '../user/user.module';
 import { HouseService } from '../house/house.service';
+import { VehicleService } from '../vehicle/vehicle.service';
 @Module({
   imports: [EntityModule, forwardRef(() => UserModule), FirebaseModule],
   controllers: [ComplexController],
@@ -17,6 +18,7 @@ import { HouseService } from '../house/house.service';
     FirebaseService,
     FirebaseClientService,
     HouseService,
+    VehicleService,
   ],
   exports: [ComplexService],
 })

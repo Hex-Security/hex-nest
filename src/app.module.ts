@@ -26,7 +26,7 @@ import { HealthModule } from './modules/health/health.module';
     UserModule,
     RegistrationCodeModule,
     HealthModule,
-    // VehicleModule,
+    VehicleModule,
     // VisitorModule,
   ],
   providers: [

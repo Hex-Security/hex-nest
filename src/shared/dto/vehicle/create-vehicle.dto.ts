@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsBoolean,
   IsNotEmpty,
@@ -7,16 +7,7 @@ import {
   IsString,
 } from 'class-validator';
 
-export class VehicleDto {
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty({
-    type: String,
-    description: 'Vehicle Id',
-    example: '60f1b0b3b3f3b3b3b3f3b3b3',
-  })
-  _id: string;
-
+export class CreateVehicleDto {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({
@@ -53,14 +44,14 @@ export class VehicleDto {
   })
   model: string;
 
-  @IsOptional()
+  @IsNotEmpty()
   @IsNumber()
-  @ApiPropertyOptional({
+  @ApiProperty({
     type: Number,
     description: 'Vehicle Year',
     example: 2021,
   })
-  year?: number;
+  year: number;
 
   @IsNotEmpty()
   @IsString()
@@ -69,14 +60,14 @@ export class VehicleDto {
     description: 'Vehicle Color',
     example: 'Red',
   })
-  color?: string;
+  color: string;
 
   @IsOptional()
   @IsBoolean()
-  @ApiPropertyOptional({
+  @ApiProperty({
     type: Boolean,
     description: 'Vehicle Active',
-    default: true,
+    example: true,
   })
-  active: boolean;
+  active?: boolean;
 }

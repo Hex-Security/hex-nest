@@ -12,6 +12,7 @@ import { RegistrationCodeModule } from '../registration-code/registration-code.m
 import { ComplexService } from '../complex/complex.service';
 import { ComplexModule } from '../complex/complex.module';
 import { HouseService } from '../house/house.service';
+import { VehicleService } from '../vehicle/vehicle.service';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { HouseService } from '../house/house.service';
     RegistrationCodeService,
     ComplexService,
     HouseService,
+    VehicleService,
   ],
   controllers: [AuthController],
 })

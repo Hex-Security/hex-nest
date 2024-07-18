@@ -13,6 +13,7 @@ import { UpdateUserDto } from 'src/shared/dto/user/update-user.dto';
 import { ComplexService } from '../complex/complex.service';
 import { RolesEnum } from 'src/shared/enum/roles.enum';
 import { HouseService } from '../house/house.service';
+import { VehicleService } from '../vehicle/vehicle.service';
 @Injectable()
 export class UserService {
   constructor(
@@ -22,6 +23,8 @@ export class UserService {
     private readonly complex_service: ComplexService,
     @Inject(forwardRef(() => HouseService))
     private readonly house_service: HouseService,
+    @Inject(forwardRef(() => VehicleService))
+    private readonly vehicle_service: VehicleService,
   ) {}
 
   async create(dto: CreateUserDto): Promise<UserDocument> {
@@ -300,6 +303,25 @@ export class UserService {
     user.data.user.houses = user.data.user.houses.filter(
       (house) => house._id.toString() !== house_id.toString(),
     );
+
+    return user.save();
+  }
+
+  async addVehicle(_id: string, vehicle_id: string): Promise<UserDocument> {
+    // 1. Find the user
+    const user = await this.findOne(_id);
+
+    // 2. Check if the vehicle is already in the list
+    if (
+      user.vehicles.some(
+        (vehicle) => vehicle._id.toString() === vehicle_id.toString(),
+      )
+    ) {
+      return user; // Vehicle already exists
+    }
+
+    // 3. Add the vehicle to the list
+    user.vehicles.push(await this.vehicle_service.findOne(vehicle_id));
 
     return user.save();
   }
