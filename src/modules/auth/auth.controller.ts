@@ -9,7 +9,7 @@ import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FirebaseToken } from 'src/shared/dto/firebase/token.dto';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
-import { SignupResponseDto } from './dto/signup-response.dto';
+import { UserTokenDto } from './dto/signup-response.dto';
 import { login } from './swagger/login.swagger';
 import { signup_user } from './swagger/signup-user.swagger';
 import { RegisterGuardDto } from 'src/shared/dto/auth/register-guard.dto';
@@ -30,7 +30,7 @@ export class AuthController {
   @ApiOperation(signup_user.operation)
   @ApiBody(signup_user.body)
   @ApiResponse(signup_user.ok_response)
-  async register(@Body() dto: RegisterUserDto): Promise<SignupResponseDto> {
+  async register(@Body() dto: RegisterUserDto): Promise<UserTokenDto> {
     try {
       const user_token = await this.auth_service.signUp(dto, RolesEnum.USER);
       return user_token;
@@ -43,9 +43,7 @@ export class AuthController {
   @ApiOperation(signup_guard.operation)
   @ApiBody(signup_guard.body)
   @ApiResponse(signup_guard.ok_response)
-  async registerGuard(
-    @Body() dto: RegisterGuardDto,
-  ): Promise<SignupResponseDto> {
+  async registerGuard(@Body() dto: RegisterGuardDto): Promise<UserTokenDto> {
     try {
       const user_token = await this.auth_service.signUp(dto, RolesEnum.GUARD);
       return user_token;
@@ -58,9 +56,7 @@ export class AuthController {
   @ApiOperation(signup_admin.operation)
   @ApiBody(signup_admin.body)
   @ApiResponse(signup_admin.ok_response)
-  async registerAdmin(
-    @Body() dto: RegisterAdminDto,
-  ): Promise<SignupResponseDto> {
+  async registerAdmin(@Body() dto: RegisterAdminDto): Promise<UserTokenDto> {
     try {
       const user_token = await this.auth_service.signUp(dto, RolesEnum.ADMIN);
       return user_token;
@@ -73,7 +69,7 @@ export class AuthController {
   @ApiOperation(signup_dev.operation)
   @ApiBody(signup_dev.body)
   @ApiResponse(signup_dev.ok_response)
-  async registerDev(@Body() dto: RegisterBaseDto): Promise<SignupResponseDto> {
+  async registerDev(@Body() dto: RegisterBaseDto): Promise<UserTokenDto> {
     try {
       const user_token = await this.auth_service.signUp(dto, RolesEnum.DEV);
       return user_token;
@@ -85,7 +81,8 @@ export class AuthController {
   @Post('login')
   @ApiOperation(login.operation)
   @ApiBody(login.body)
-  async login(@Body() dto: LoginDto): Promise<FirebaseToken> {
+  @ApiResponse(login.ok_response)
+  async login(@Body() dto: LoginDto): Promise<UserTokenDto> {
     try {
       const user_token = await this.auth_service.login(dto);
       return user_token;

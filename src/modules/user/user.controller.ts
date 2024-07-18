@@ -48,24 +48,24 @@ export class UserController {
     return users;
   }
 
-  @Get(':_id')
+  @Get(':user_id')
   @ApiBearerAuth()
   @ApiOperation(find_one.operation)
   @ApiParam(find_one.param)
   @ApiResponse(find_one.ok_response)
   @Roles(RolesEnum.ADMIN, RolesEnum.USER, RolesEnum.GUARD)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
-  async getUser(@Param('_id') _id: string): Promise<UserDocument> {
-    const user: UserDocument = await this.user_service.findOne(_id);
+  async getUser(@Param('user_id') user_id: string): Promise<UserDocument> {
+    const user: UserDocument = await this.user_service.findOne(user_id);
 
     if (!user) {
-      throw new NotFoundException(`User with uid ${_id} not found.`);
+      throw new NotFoundException(`User with uid ${user_id} not found.`);
     }
 
     return user;
   }
 
-  @Put(':_id')
+  @Put(':user_id')
   @ApiBearerAuth()
   @ApiOperation(update_one.operation)
   @ApiParam(update_one.param)
@@ -74,13 +74,13 @@ export class UserController {
   @Roles(RolesEnum.ADMIN, RolesEnum.USER)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
   async updateUser(
-    @Param('_id') _id: string,
+    @Param('user_id') user_id: string,
     @Body() dto: UpdateUserDto,
   ): Promise<UserDocument> {
-    const user: UserDocument = await this.user_service.update(_id, dto);
+    const user: UserDocument = await this.user_service.update(user_id, dto);
 
     if (!user) {
-      throw new NotFoundException(`User with uid ${_id} not found.`);
+      throw new NotFoundException(`User with uid ${user_id} not found.`);
     }
 
     return user;

@@ -79,6 +79,10 @@ export class UserService {
     return user;
   }
 
+  async findMany(ids: string[]) {
+    return this.user_model.find({ _id: { $in: ids } }).exec();
+  }
+
   async update(id: string, dto: UpdateUserDto): Promise<UserDocument> {
     const updatedUser = await this.user_model
       .findByIdAndUpdate(id, dto, { new: true })

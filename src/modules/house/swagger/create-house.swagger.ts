@@ -7,12 +7,6 @@ export const create_house: SwaggerOptions = {
     description: 'Create a new house',
     summary: 'Create house',
   },
-  param: {
-    name: 'complex_id',
-    description: 'Complex id',
-    required: true,
-    type: 'string',
-  },
   body: {
     description: 'House data',
     required: true,

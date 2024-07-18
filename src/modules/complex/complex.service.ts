@@ -14,6 +14,7 @@ import mongoose from 'mongoose';
 import { UserService } from '../user/user.service';
 import { User, UserDocument } from 'src/schemas/user.schema';
 import { HouseService } from '../house/house.service';
+import { RolesEnum } from 'src/shared/enum/roles.enum';
 
 @Injectable()
 export class ComplexService {
@@ -44,6 +45,24 @@ export class ComplexService {
     return this.complex_model.find().exec();
   }
 
+  async findAllManaged(user_id: string) {
+    // 1. Find the user
+    const user = await this.user_service.findOne(user_id);
+
+    // 2. Get the ids of the complexes the user manages or is part of
+    const complex_ids =
+      user.role === RolesEnum.ADMIN
+        ? user.data.admin.complexes.map((c) => c._id)
+        : user.role === RolesEnum.GUARD
+          ? user.data.guard.complexes.map((c) => c._id)
+          : user.role === RolesEnum.USER
+            ? user.data.user.houses.map((h) => h.complex._id)
+            : [];
+
+    // 3. Find the complexes
+    return this.complex_model.find({ _id: { $in: complex_ids } }).exec();
+  }
+
   async findOne(id: string): Promise<ComplexDocument> {
     const complex = await this.complex_model.findById(id).exec();
 
@@ -52,6 +71,15 @@ export class ComplexService {
     }
 
     return complex;
+  }
+
+  async findHouses(id: string): Promise<House[]> {
+    const complex = await this.complex_model
+      .findById(id)
+      .populate('houses')
+      .exec();
+
+    return complex.houses;
   }
 
   async update(id: string, dto: UpdateComplexDto): Promise<ComplexDocument> {

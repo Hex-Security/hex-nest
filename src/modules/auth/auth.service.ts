@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   HttpException,
   Injectable,
   NotFoundException,
@@ -9,7 +10,7 @@ import { RolesEnum } from 'src/shared/enum/roles.enum';
 import { FirebaseService } from '../firebase/firebase.service';
 import { UserService } from '../user/user.service';
 import { LoginDto } from './dto/login.dto';
-import { SignupResponseDto } from './dto/signup-response.dto';
+import { UserTokenDto } from './dto/signup-response.dto';
 import mongoose from 'mongoose';
 import { isEmail } from 'class-validator';
 import { RegistrationCodeService } from '../registration-code/registration-code.service';
@@ -17,6 +18,8 @@ import { ComplexService } from '../complex/complex.service';
 import { RegisterBaseDto } from 'src/shared/dto/auth/register-base.dto';
 import { RegistrationCodeDocument } from 'src/schemas/registration-codes.schema';
 import { RegisterCodeDto } from 'src/shared/dto/auth/register-code.dto';
+import { RegisterResidentDto } from 'src/shared/dto/auth/register-resident.dto';
+import { UserDocument } from 'src/schemas/user.schema';
 
 @Injectable()
 export class AuthService {
@@ -27,7 +30,7 @@ export class AuthService {
     private readonly complex_service: ComplexService,
   ) {}
 
-  async login(dto: LoginDto): Promise<FirebaseToken> {
+  async login(dto: LoginDto): Promise<UserTokenDto> {
     const { emailOrUsername, password } = dto;
 
     // 1. Check if is email or username
@@ -41,13 +44,13 @@ export class AuthService {
 
     const token = await this.firebase_service.login(user.email, password);
 
-    return token;
+    return {
+      user,
+      token,
+    };
   }
 
-  async signUp(
-    dto: RegisterBaseDto,
-    role: RolesEnum,
-  ): Promise<SignupResponseDto> {
+  async signUp(dto: RegisterBaseDto, role: RolesEnum): Promise<UserTokenDto> {
     let stage = 0;
     let reg_code: RegistrationCodeDocument;
 
@@ -199,5 +202,40 @@ export class AuthService {
         }
       }
     }
+  }
+
+  async registerResident(dto: RegisterResidentDto): Promise<UserDocument> {
+    // 1. Check email is not already in use
+    const user = await this.user_service.findByEmail(dto.email);
+
+    if (user) {
+      throw new ConflictException(`Email ${dto.email} already in use`);
+    }
+
+    // 2. Create custom ObjectId
+    const _id = new mongoose.Types.ObjectId().toString();
+
+    // 3. Create user in Firebase Auth
+    const fb_user = await this.firebase_service.signUp(
+      dto,
+      _id,
+      RolesEnum.USER,
+    );
+
+    // 4. Create user on our DB
+    const user_doc = await this.user_service.create({
+      _id,
+      uid: fb_user.user.uid,
+      email: dto.email,
+      username: dto.username,
+      first_name: dto.first_name,
+      last_name: dto.last_name,
+      role: RolesEnum.USER,
+    });
+
+    // 5. Send email to resident
+    // 6. Send email to owner
+
+    return user_doc;
   }
 }

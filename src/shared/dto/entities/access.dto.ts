@@ -8,63 +8,119 @@ import {
 } from 'class-validator';
 import mongoose from 'mongoose';
 import { AccessStatus } from '../../enum/access.enum';
-import { PartialType } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
 
 export class CreateAccessDto {
   @IsNotEmpty()
-  @Type(() => mongoose.Schema.Types.ObjectId)
-  visitor_id: mongoose.Schema.Types.ObjectId;
+  @IsString()
+  @ApiProperty({
+    description: 'Visitor ID',
+    example: '60f8c1f7d9f1f9001f3d5d1',
+  })
+  visitor: string;
 
   @IsNotEmpty()
-  @Type(() => mongoose.Schema.Types.ObjectId)
-  house_id: mongoose.Schema.Types.ObjectId;
+  @IsString()
+  @ApiProperty({
+    description: 'House ID',
+    example: '60f8c1f7d9f1f9001f3d5d1',
+  })
+  house: string;
 
   @IsNotEmpty()
-  @Type(() => mongoose.Schema.Types.ObjectId)
-  complex_id: mongoose.Schema.Types.ObjectId;
+  @IsString()
+  @ApiProperty({
+    description: 'Complex ID',
+    example: '60f8c1f7d9f1f9001f3d5d1',
+  })
+  complex: string;
 
   @IsOptional()
-  @Type(() => mongoose.Schema.Types.ObjectId)
-  vehicle_id?: mongoose.Schema.Types.ObjectId;
+  @IsString()
+  @ApiPropertyOptional({
+    description: 'Vehicle ID',
+    example: '60f8c1f7d9f1f9001f3d5d1',
+  })
+  vehicle?: string;
 
   @IsNotEmpty()
-  @Type(() => mongoose.Schema.Types.ObjectId)
-  requested_by: mongoose.Schema.Types.ObjectId;
+  @IsString()
+  @ApiProperty({
+    description: 'Requested by',
+    example: '60f8c1f7d9f1f9001f3d5d1',
+  })
+  requested_by: string;
 
   @IsOptional()
-  @Type(() => mongoose.Schema.Types.ObjectId)
-  approved_by?: mongoose.Schema.Types.ObjectId;
+  @IsString()
+  @ApiPropertyOptional({
+    description: 'Approved by',
+    example: '60f8c1f7d9f1f9001f3d5d1',
+  })
+  approved_by?: string;
 
   @IsOptional()
-  @Type(() => mongoose.Schema.Types.ObjectId)
-  assigned_guard_id?: mongoose.Schema.Types.ObjectId;
+  @IsString()
+  @ApiPropertyOptional({
+    description: 'Assigned guard ID',
+    example: '60f8c1f7d9f1f9001f3d5d1',
+  })
+  assigned_guard_id?: string;
 
   @IsNotEmpty()
   @IsDate()
+  @ApiProperty({
+    description: 'Expected arrival date',
+    example: '2021-07-23T00:00:00.000Z',
+  })
   expected_arrival: Date;
 
   @IsOptional()
   @IsDate()
+  @ApiPropertyOptional({
+    description: 'Expected departure date',
+    example: '2021-07-23T00:00:00.000Z',
+  })
   expected_departure?: Date;
 
   @IsOptional()
   @IsDate()
+  @ApiPropertyOptional({
+    description: 'Actual arrival date',
+    example: '2021-07-23T00:00:00.000Z',
+  })
   actual_arrival?: Date;
 
   @IsOptional()
   @IsDate()
+  @ApiPropertyOptional({
+    description: 'Actual departure date',
+    example: '2021-07-23T00:00:00.000Z',
+  })
   actual_departure?: Date;
 
   @IsNotEmpty()
   @IsEnum(AccessStatus)
+  @ApiProperty({
+    description: 'Access status',
+    example: AccessStatus.APPROVED,
+  })
   status: AccessStatus;
 
   @IsNotEmpty()
   @IsString()
+  @ApiProperty({
+    description: 'Purpose of visit',
+    example: 'Visit',
+  })
   purpose: string;
 
   @IsOptional()
   @IsString()
+  @ApiPropertyOptional({
+    description: 'Notes',
+    example: 'Notes',
+  })
   notes?: string;
 }
 

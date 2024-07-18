@@ -7,6 +7,7 @@ import {
   Delete,
   UseGuards,
   Put,
+  Req,
 } from '@nestjs/common';
 import { ComplexService } from './complex.service';
 import {
@@ -31,6 +32,8 @@ import { update_complex } from './swagger/update-complex.swagger';
 import { AddGuardDto } from 'src/shared/dto/complex/add-guard.dto';
 import { User } from 'src/schemas/user.schema';
 import { AddAdminDto } from 'src/shared/dto/complex/add-admin.dto';
+import { ReqWithUser } from 'src/shared/interfaces/req-with-user.interface';
+import { AddHouseDto } from './dto/add-house.dto';
 
 @ApiTags('Complex')
 @Controller('complex')
@@ -53,8 +56,8 @@ export class ComplexController {
   @ApiBearerAuth()
   @Roles(RolesEnum.ADMIN)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
-  findAll() {
-    return this.complex_service.findAll();
+  findAll(@Req() req: ReqWithUser) {
+    return this.complex_service.findAllManaged(req.user._id.toString());
   }
 
   @Get(':complex_id')
@@ -96,7 +99,7 @@ export class ComplexController {
   @Roles(RolesEnum.ADMIN)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
   addGuard(@Param('complex_id') complex_id: string, @Body() dto: AddGuardDto) {
-    return this.complex_service.addGuard(complex_id, dto._id);
+    return this.complex_service.addGuard(complex_id, dto.guard);
   }
 
   @Get(':complex_id/guard')
@@ -123,7 +126,7 @@ export class ComplexController {
   @Roles(RolesEnum.ADMIN)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
   addAdmin(@Param('complex_id') complex_id: string, @Body() dto: AddAdminDto) {
-    return this.complex_service.addAdmin(complex_id, dto._id);
+    return this.complex_service.addAdmin(complex_id, dto.admin);
   }
 
   @Get(':complex_id/admin')
@@ -143,5 +146,21 @@ export class ComplexController {
     @Param('admin_id') admin_id: string,
   ) {
     return this.complex_service.removeAdmin(complex_id, admin_id);
+  }
+
+  @Get(':complex_id/houses')
+  @ApiBearerAuth()
+  @Roles(RolesEnum.ADMIN, RolesEnum.GUARD)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
+  findHouses(@Param('complex_id') complex_id: string) {
+    return this.complex_service.findHouses(complex_id);
+  }
+
+  @Post(':complex_id/houses')
+  @ApiBearerAuth()
+  @Roles(RolesEnum.ADMIN)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
+  addHouse(@Param('complex_id') complex_id: string, @Body() dto: AddHouseDto) {
+    return this.complex_service.addHouse(complex_id, dto.house);
   }
 }

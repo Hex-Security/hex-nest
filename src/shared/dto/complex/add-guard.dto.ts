@@ -10,5 +10,5 @@ export class AddGuardDto {
     required: true,
     example: 'guard_id',
   })
-  _id: string;
+  guard: string;
 }

@@ -1,14 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class AddAdminDto {
+export class AddHouseDto {
   @IsNotEmpty()
   @IsString()
   @ApiProperty({
-    type: String,
-    description: 'The Admin ID',
-    required: true,
-    example: 'admin_id',
+    description: "House's ID",
+    example: '123456789012345678901234',
   })
-  admin: string;
+  house: string;
 }

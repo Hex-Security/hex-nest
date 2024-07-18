@@ -1,5 +1,4 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 import {
   IsBoolean,
   IsNotEmpty,
@@ -7,9 +6,16 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import mongoose from 'mongoose';
 
 export class CreateHouseDto {
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({
+    description: 'Complex id',
+    example: '60d5ec9a6a2c1f001f8b4b6b',
+  })
+  complex: string;
+
   @IsNotEmpty()
   @IsString()
   @ApiProperty({
@@ -32,7 +38,7 @@ export class CreateHouseDto {
     description: 'Complex id',
     example: '60d5ec9a6a2c1f001f8b4b6b',
   })
-  owner_id?: string;
+  owner?: string;
 
   @IsOptional()
   @IsString({ each: true })
@@ -40,7 +46,7 @@ export class CreateHouseDto {
     description: 'Complex id',
     example: ['60d5ec9a6a2c1f001f8b4b6b'],
   })
-  resident_ids?: string[];
+  residents?: string[];
 
   @IsOptional()
   @IsString({ each: true })
@@ -48,7 +54,7 @@ export class CreateHouseDto {
     description: 'Complex id',
     example: ['60d5ec9a6a2c1f001f8b4b6b'],
   })
-  vehicle_ids?: string[];
+  vehicles?: string[];
 
   @IsNotEmpty()
   @IsNumber()

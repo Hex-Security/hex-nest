@@ -11,6 +11,7 @@ import { ComplexService } from '../complex/complex.service';
 import { CreateHouseDto } from 'src/shared/dto/house/create-house.dto';
 import { UpdateHouseDto } from 'src/shared/dto/house/update-house.dto';
 import { UserService } from '../user/user.service';
+import { User, UserDocument } from 'src/schemas/user.schema';
 
 @Injectable()
 export class HouseService {
@@ -42,7 +43,7 @@ export class HouseService {
     const created_house = new this.house_model({
       _id,
       ...dto,
-      owner: await this.user_service.findOne(dto.owner_id),
+      owner: await this.user_service.findOne(dto.owner),
       complex,
     }).save();
 
@@ -50,7 +51,7 @@ export class HouseService {
     await this.complex_service.addHouse(complex_id, _id.toString());
 
     // 6. Update user owner entity
-    await this.user_service.addHouse(dto.owner_id, _id.toString());
+    await this.user_service.addHouse(dto.owner, _id.toString());
 
     return created_house;
   }
@@ -112,6 +113,11 @@ export class HouseService {
     return this.update(id, { active: false });
   }
 
+  async getOwner(id: string): Promise<User> {
+    const house = await this.house_model.findById(id).populate('owner').exec();
+    return house.owner;
+  }
+
   async setOwner(_id: string, owner_id: string): Promise<HouseDocument> {
     // 1. Find the house
     const house = await this.findOne(_id);
@@ -127,7 +133,36 @@ export class HouseService {
     return house.save();
   }
 
-  async addResident(_id: string, resident_id: string): Promise<HouseDocument> {
+  async removeOwner(_id: string): Promise<HouseDocument> {
+    // 1. Find the house
+    const house = await this.findOne(_id);
+
+    // 2. Check if the house exists
+    if (!house) {
+      throw new NotFoundException(`House with ID ${_id} not found`);
+    }
+
+    // 3. Update the house entity
+    house.owner = null;
+
+    // 4. Update the user owner entity
+    await this.user_service.removeHouse(house.owner._id.toString(), _id);
+
+    return house.save();
+  }
+
+  async getResidents(_id: string): Promise<User[]> {
+    const house = await this.house_model
+      .findById(_id)
+      .populate('residents')
+      .exec();
+    return house.residents;
+  }
+
+  async addResident(
+    _id: string,
+    resident_ids: string[],
+  ): Promise<HouseDocument> {
     // 1. Find the house
     const house = await this.findOne(_id);
 
@@ -137,19 +172,22 @@ export class HouseService {
     }
 
     // 3. Get the user resident
-    const resident = await this.user_service.findOne(resident_id);
+    const residents: UserDocument[] =
+      await this.user_service.findMany(resident_ids);
 
-    // 3. Check if the resident already exists
-    if (
-      house.residents.some(
-        (resident) => resident._id.toString() === resident_id.toString(),
+    // 4. Filter the residents that are already in the house
+    const new_residents = residents
+      .filter(
+        (resident) =>
+          !house.residents.some(
+            (resident_house) =>
+              resident_house._id.toString() === resident._id.toString(),
+          ),
       )
-    ) {
-      return house; // Resident already exists
-    }
+      .map((resident) => resident as User);
 
-    // 3. Update the house entity
-    house.residents.push(resident);
+    // 5. Update the house entity
+    house.residents.push(...new_residents);
 
     return house.save();
   }

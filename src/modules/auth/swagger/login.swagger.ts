@@ -1,5 +1,6 @@
 import { EndpointDoc } from 'src/shared/dto/swagger/endpoint-doc.dto';
 import { LoginDto } from '../dto/login.dto';
+import { UserTokenDto } from '../dto/signup-response.dto';
 
 export const login: EndpointDoc = {
   operation: {
@@ -13,6 +14,6 @@ export const login: EndpointDoc = {
   },
   ok_response: {
     description: 'User logged in successfully',
-    type: 'string',
+    type: UserTokenDto,
   },
 };
