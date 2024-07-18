@@ -42,6 +42,7 @@ export class HouseService {
     const created_house = new this.house_model({
       _id,
       ...dto,
+      owner: await this.user_service.findOne(dto.owner_id),
       complex,
     }).save();
 
