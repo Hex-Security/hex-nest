@@ -127,6 +127,10 @@ export class CreateComplexDto {
   house_ids?: string[];
 
   @IsOptional()
+  @IsArray()
+  vehicle_ids?: string[];
+
+  @IsOptional()
   @IsBoolean()
   @ApiPropertyOptional({
     type: Boolean,

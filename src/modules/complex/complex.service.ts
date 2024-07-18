@@ -15,6 +15,8 @@ import { UserService } from '../user/user.service';
 import { User, UserDocument } from 'src/schemas/user.schema';
 import { HouseService } from '../house/house.service';
 import { RolesEnum } from 'src/shared/enum/roles.enum';
+import { Vehicle } from 'src/schemas/vehicle.schema';
+import { VehicleService } from '../vehicle/vehicle.service';
 
 @Injectable()
 export class ComplexService {
@@ -25,6 +27,8 @@ export class ComplexService {
     private readonly user_service: UserService,
     @Inject(forwardRef(() => HouseService))
     private readonly house_service: HouseService,
+    @Inject(forwardRef(() => VehicleService))
+    private readonly vehicle_service: VehicleService,
   ) {}
 
   async create(dto: CreateComplexDto): Promise<ComplexDocument> {
@@ -34,6 +38,9 @@ export class ComplexService {
       houses: dto.house_ids.map((id) => new mongoose.Schema.Types.ObjectId(id)),
       admins: dto.admin_ids.map((id) => new mongoose.Schema.Types.ObjectId(id)),
       guards: dto.guard_ids.map((id) => new mongoose.Schema.Types.ObjectId(id)),
+      vehicles: dto.vehicle_ids.map(
+        (id) => new mongoose.Schema.Types.ObjectId(id),
+      ),
       residents: dto.resident_ids.map(
         (id) => new mongoose.Schema.Types.ObjectId(id),
       ),
@@ -246,6 +253,41 @@ export class ComplexService {
     return complex.save();
   }
 
+  async addVehicle(_id: string, vehicle_id: string): Promise<ComplexDocument> {
+    // 1. Find the complex
+    const complex = await this.findOne(_id);
+
+    // 2. Find the vehicle
+    const vehicle = await this.vehicle_service.findOne(vehicle_id);
+
+    // 3. Check if the vehicle is already in the complex
+    if (complex.vehicles.some((v) => v._id === vehicle._id)) {
+      return complex;
+    }
+
+    // 4. Add the vehicle to the complex
+    complex.vehicles.push(vehicle);
+
+    // 5. Save the complex
+    return complex.save();
+  }
+
+  async removeVehicle(
+    _id: string,
+    vehicle_id: string,
+  ): Promise<ComplexDocument> {
+    // 1. Find the complex
+    const complex = await this.findOne(_id);
+
+    // 2. Remove the vehicle from the complex
+    complex.vehicles = complex.vehicles.filter(
+      (v) => v._id.toString() !== vehicle_id,
+    );
+
+    // 3. Save the complex
+    return complex.save();
+  }
+
   async findGuards(_id: string): Promise<User[]> {
     const complex = await this.complex_model
       .findById(_id)
@@ -262,5 +304,14 @@ export class ComplexService {
       .exec();
 
     return complex.admins;
+  }
+
+  async findVehicles(_id: string): Promise<Vehicle[]> {
+    const complex = await this.complex_model
+      .findById(_id)
+      .populate('vehicles')
+      .exec();
+
+    return complex.vehicles;
   }
 }

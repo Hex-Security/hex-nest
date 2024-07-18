@@ -6,6 +6,7 @@ import { UserService } from '../user/user.service';
 import { CreateVehicleDto } from 'src/shared/dto/vehicle/create-vehicle.dto';
 import { UpdateVehicleDto } from 'src/shared/dto/vehicle/update-vehicle.dto';
 import { QueryVehicleDto } from 'src/shared/dto/vehicle/query-vehicle.dto';
+import { ComplexService } from '../complex/complex.service';
 
 @Injectable()
 export class VehicleService {
@@ -14,24 +15,33 @@ export class VehicleService {
     private readonly vehicle_model: Model<VehicleDocument>,
     @Inject(forwardRef(() => UserService))
     private readonly user_service: UserService,
+    @Inject(forwardRef(() => ComplexService))
+    private readonly complex_service: ComplexService,
   ) {}
 
   async create(dto: CreateVehicleDto): Promise<VehicleDocument> {
     // 1. Find the owner in the user collection
     const owner = await this.user_service.findOne(dto.owner);
 
-    // 2. Generate new ObjectId
+    // 2. Find the complex in the complex collection
+    const complex = await this.complex_service.findOne(dto.complex);
+
+    // 3. Generate new ObjectId
     const _id = new mongoose.Types.ObjectId();
 
-    // 3. Create the vehicle
+    // 4. Create the vehicle
     const vehicle = await new this.vehicle_model({
       _id,
       ...dto,
       owner,
+      complex,
     }).save();
 
-    // 3. Add the vehicle to the owner's vehicle list
+    // 5. Add the vehicle to the owner's vehicle list
     await this.user_service.addVehicle(dto.owner, _id.toString());
+
+    // 6. Add the vehicle to the complex's vehicle list
+    await this.complex_service.addVehicle(dto.complex, _id.toString());
 
     return vehicle;
   }

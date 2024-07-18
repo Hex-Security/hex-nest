@@ -12,7 +12,7 @@ export class ResourceAccessGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const req = context.switchToHttp().getRequest();
     const user = req.user as UserDocument;
-    const { user_id, complex_id, house_id } = req.params;
+    const { user_id, complex_id, house_id, vehicle_id } = req.params;
 
     if (!user) {
       throw new UnauthorizedException('Unauthorized access');
@@ -61,6 +61,26 @@ export class ResourceAccessGuard implements CanActivate {
           .map((c) => c._id.toString())
           .includes(complex_id)) ||
         complex_id === undefined)
+    ) {
+      return true;
+    }
+
+    // 4. If the user is trying to access a specific vehicle, the user must
+    //    be the owner or be an admin/guard with access to the vehicle's complex
+    if (
+      vehicle_id !== undefined && // If the user is trying to access a specific vehicle
+      ((user.role === RolesEnum.USER && // If the user is a resident
+        user.vehicles.map((v) => v._id.toString()).includes(vehicle_id)) || // The user is the owner
+        (user.role === RolesEnum.ADMIN && // If the user is an admin
+          user.data.admin.complexes // The user has access to the complex's vehicles
+            .map((c) => c.vehicles.map((v) => v._id.toString()).flat())
+            .flat()
+            .includes(vehicle_id)) ||
+        (user.role === RolesEnum.GUARD && // If the user is a guard
+          user.data.guard.complexes // The user has access to the complex's vehicles
+            .map((c) => c.vehicles.map((v) => v._id.toString()).flat())
+            .flat()
+            .includes(vehicle_id)))
     ) {
       return true;
     }

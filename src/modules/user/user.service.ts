@@ -14,6 +14,7 @@ import { ComplexService } from '../complex/complex.service';
 import { RolesEnum } from 'src/shared/enum/roles.enum';
 import { HouseService } from '../house/house.service';
 import { VehicleService } from '../vehicle/vehicle.service';
+import { Vehicle } from 'src/schemas/vehicle.schema';
 @Injectable()
 export class UserService {
   constructor(
@@ -324,5 +325,14 @@ export class UserService {
     user.vehicles.push(await this.vehicle_service.findOne(vehicle_id));
 
     return user.save();
+  }
+
+  async findVehicles(_id: string): Promise<Vehicle[]> {
+    // 1. Find the user
+    const user = await this.user_model
+      .findById(_id)
+      .populate('vehicles')
+      .exec();
+    return user.vehicles;
   }
 }

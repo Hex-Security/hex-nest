@@ -28,6 +28,7 @@ import { find_one } from './swagger/find-one.swagger';
 import { update_one } from './swagger/update-one.swagger';
 import { UpdateUserDto } from 'src/shared/dto/user/update-user.dto';
 import { search_user } from './swagger/search.swagger';
+import { Vehicle } from 'src/schemas/vehicle.schema';
 
 @ApiTags('User')
 @Controller('user')
@@ -84,6 +85,20 @@ export class UserController {
     }
 
     return user;
+  }
+
+  @Get(':user_id/vehicles')
+  @ApiBearerAuth()
+  @Roles(RolesEnum.ADMIN, RolesEnum.GUARD, RolesEnum.USER)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
+  async findUserVehicles(
+    @Param('user_id') user_id: string,
+  ): Promise<Vehicle[]> {
+    const user: UserDocument = await this.user_service.findOne(user_id);
+
+    const vehicles = await this.user_service.findVehicles(user._id.toString());
+
+    return vehicles;
   }
 
   @Post('search')

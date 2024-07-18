@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { User } from './user.schema';
+import { Complex } from './complex.schema';
 
 export type VehicleDocument = HydratedDocument<Vehicle>;
 
@@ -11,6 +12,13 @@ export class Vehicle {
 
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   owner: User;
+
+  @Prop({
+    required: true,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Complex',
+  })
+  complex: Complex;
 
   @Prop({ required: true, unique: true })
   plate: string;
