@@ -7,7 +7,7 @@ export const find_complex: SwaggerOptions = {
     description: 'This endpoint will return a complex by its id',
   },
   param: {
-    name: '_id',
+    name: '_cid',
     required: true,
     description: 'The id of the complex',
     schema: {

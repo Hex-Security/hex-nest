@@ -353,6 +353,12 @@ $ yarn run test:e2e
 $ yarn run test:cov
 ```
 
+## Manual testing through Swagger API docs
+
+1. Login through the a dev account (if "dev@email.com:password123!--" wont do please create a new account using the `/auth/sign-up/dev` endpoint). Copy the idToken field to the Authorize modal up in the page.
+
+2. 
+
 ## Support
 
 Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).

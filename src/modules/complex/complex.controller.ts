@@ -43,7 +43,7 @@ export class ComplexController {
   @ApiBody(create_complex.body)
   @ApiResponse(create_complex.ok_response)
   @Roles(RolesEnum.DEV)
-  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
   create(@Body() dto: CreateComplexDto): Promise<ComplexDocument> {
     console.log('Creating complex:', dto);
     return this.complex_service.create(dto);
@@ -52,23 +52,23 @@ export class ComplexController {
   @Get()
   @ApiBearerAuth()
   @Roles(RolesEnum.ADMIN)
-  @UseGuards(AuthenticationGuard, AuthorizationGuard)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
   findAll() {
     return this.complex_service.findAll();
   }
 
-  @Get(':_id')
+  @Get(':_cid')
   @ApiBearerAuth()
   @ApiOperation(find_complex.operation)
   @ApiParam(find_complex.param)
   @ApiResponse(find_complex.ok_response)
   @Roles(RolesEnum.ADMIN)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
-  findOne(@Param('_id') _id: string) {
-    return this.complex_service.findOne(_id);
+  findOne(@Param('_cid') _cid: string) {
+    return this.complex_service.findOne(_cid);
   }
 
-  @Put(':_id')
+  @Put(':_cid')
   @ApiBearerAuth()
   @ApiOperation(update_complex.operation)
   @ApiParam(update_complex.param)
@@ -76,63 +76,69 @@ export class ComplexController {
   @ApiResponse(update_complex.ok_response)
   @Roles(RolesEnum.ADMIN)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
-  update(@Param('_id') _id: string, @Body() dto: UpdateComplexDto) {
-    return this.complex_service.update(_id, dto);
+  update(@Param('_cid') _cid: string, @Body() dto: UpdateComplexDto) {
+    return this.complex_service.update(_cid, dto);
   }
 
-  @Delete(':_id')
+  @Delete(':_cid')
   @ApiBearerAuth()
   @Roles(RolesEnum.DEV)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
-  remove(@Param('_id') _id: string) {
-    return this.complex_service.remove(_id);
+  remove(@Param('_cid') _cid: string) {
+    return this.complex_service.remove(_cid);
   }
 
-  @Post(':_id/guard')
+  @Post(':_cid/guard')
   @ApiBearerAuth()
   @Roles(RolesEnum.ADMIN)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
-  addGuard(@Param('_id') _id: string, @Body() dto: AddGuardDto) {
-    return this.complex_service.addGuard(_id, dto._id);
+  addGuard(@Param('_cid') _cid: string, @Body() dto: AddGuardDto) {
+    return this.complex_service.addGuard(_cid, dto._id);
   }
 
-  @Get(':_id/guard')
+  @Get(':_cid/guard')
   @ApiBearerAuth()
   @Roles(RolesEnum.ADMIN)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
-  findGuards(@Param('_id') _id: string): Promise<User[]> {
-    return this.complex_service.findGuards(_id);
+  findGuards(@Param('_cid') _cid: string): Promise<User[]> {
+    return this.complex_service.findGuards(_cid);
   }
 
-  @Delete(':_id/guard/:guard_id')
+  @Delete(':_cid/guard/:guard_id')
   @ApiBearerAuth()
   @Roles(RolesEnum.ADMIN)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
-  removeGuard(@Param('_id') _id: string, @Param('guard_id') guard_id: string) {
-    return this.complex_service.removeGuard(_id, guard_id);
+  removeGuard(
+    @Param('_cid') _cid: string,
+    @Param('guard_id') guard_id: string,
+  ) {
+    return this.complex_service.removeGuard(_cid, guard_id);
   }
 
-  @Post(':_id/admin')
+  @Post(':_cid/admin')
   @ApiBearerAuth()
   @Roles(RolesEnum.ADMIN)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
-  addAdmin(@Param('_id') _id: string, @Body() dto: AddAdminDto) {
-    return this.complex_service.addAdmin(_id, dto._id);
+  addAdmin(@Param('_cid') _cid: string, @Body() dto: AddAdminDto) {
+    return this.complex_service.addAdmin(_cid, dto._id);
   }
 
-  @Get(':_id/admin')
+  @Get(':_cid/admin')
   @ApiBearerAuth()
   @Roles(RolesEnum.ADMIN)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
-  findAdmins(@Param('_id') _id: string): Promise<User[]> {
-    return this.complex_service.findAdmins(_id);
+  findAdmins(@Param('_cid') _cid: string): Promise<User[]> {
+    return this.complex_service.findAdmins(_cid);
   }
 
-  @Delete(':_id/admin/:admin_id')
+  @Delete(':_cid/admin/:admin_id')
   @ApiBearerAuth()
   @Roles(RolesEnum.ADMIN)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
-  removeAdmin(@Param('_id') _id: string, @Param('admin_id') admin_id: string) {
-    return this.complex_service.removeAdmin(_id, admin_id);
+  removeAdmin(
+    @Param('_cid') _cid: string,
+    @Param('admin_id') admin_id: string,
+  ) {
+    return this.complex_service.removeAdmin(_cid, admin_id);
   }
 }

@@ -11,6 +11,7 @@ import { RegistrationCodeService } from '../registration-code/registration-code.
 import { RegistrationCodeModule } from '../registration-code/registration-code.module';
 import { ComplexService } from '../complex/complex.service';
 import { ComplexModule } from '../complex/complex.module';
+import { HouseService } from '../house/house.service';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ComplexModule } from '../complex/complex.module';
     FirebaseClientService,
     RegistrationCodeService,
     ComplexService,
+    HouseService,
   ],
   controllers: [AuthController],
 })

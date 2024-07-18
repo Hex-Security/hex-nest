@@ -11,7 +11,7 @@ export const update_complex: SwaggerOptions = {
     description: 'This endpoint will update a complex by its id',
   },
   param: {
-    name: '_id',
+    name: '_cid',
     required: true,
     description: 'The id of the complex',
     schema: {

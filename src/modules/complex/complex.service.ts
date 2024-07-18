@@ -13,6 +13,7 @@ import { UpdateComplexDto } from 'src/shared/dto/complex/update-complex.dto';
 import mongoose from 'mongoose';
 import { UserService } from '../user/user.service';
 import { User, UserDocument } from 'src/schemas/user.schema';
+import { HouseService } from '../house/house.service';
 
 @Injectable()
 export class ComplexService {
@@ -21,6 +22,8 @@ export class ComplexService {
     private readonly complex_model: Model<ComplexDocument>,
     @Inject(forwardRef(() => UserService))
     private readonly user_service: UserService,
+    @Inject(forwardRef(() => HouseService))
+    private readonly house_service: HouseService,
   ) {}
 
   async create(dto: CreateComplexDto): Promise<ComplexDocument> {
@@ -183,9 +186,12 @@ export class ComplexService {
     return complex.save();
   }
 
-  async addHouse(_id: string, house: House): Promise<ComplexDocument> {
+  async addHouse(_id: string, house_id: string): Promise<ComplexDocument> {
     // 1. Find the complex
     const complex = await this.findOne(_id);
+
+    // 2. Obtain House
+    const house = await this.house_service.findOne(house_id);
 
     // 2. Check if the house is already in the complex
     if (complex.houses.some((h) => h._id === house._id)) {

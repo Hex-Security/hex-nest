@@ -12,6 +12,7 @@ import { SearchUserDto } from 'src/shared/dto/user/search-user.dto';
 import { UpdateUserDto } from 'src/shared/dto/user/update-user.dto';
 import { ComplexService } from '../complex/complex.service';
 import { RolesEnum } from 'src/shared/enum/roles.enum';
+import { HouseService } from '../house/house.service';
 @Injectable()
 export class UserService {
   constructor(
@@ -19,6 +20,8 @@ export class UserService {
     private readonly user_model: Model<UserDocument>,
     @Inject(forwardRef(() => ComplexService))
     private readonly complex_service: ComplexService,
+    @Inject(forwardRef(() => HouseService))
+    private readonly house_service: HouseService,
   ) {}
 
   async create(dto: CreateUserDto): Promise<UserDocument> {
@@ -166,6 +169,28 @@ export class UserService {
     }
 
     return user;
+  }
+
+  async addHouse(_id: string, house_id: string): Promise<UserDocument> {
+    // 1. Find the user
+    const user = await this.findOne(_id);
+
+    // 2. Check if the house is already in the list
+    if (
+      user.data.user.houses.some(
+        (house) => house._id.toString() === house_id.toString(),
+      )
+    ) {
+      return user; // House already exists
+    }
+
+    // 3. Get the house
+    const house = await this.house_service.findOne(house_id);
+
+    // 3. Add the house to the list
+    user.data.user.houses.push(house);
+
+    return user.save();
   }
 
   async addGuardComplex(

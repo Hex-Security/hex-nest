@@ -1,7 +1,5 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { APP_INTERCEPTOR, Reflector } from '@nestjs/core';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { DecodeParamMiddleware } from './middleware/decode/decode.middleware';
 import { ResponseInterceptor } from './middleware/response/response.interceptor';
 import { AccessModule } from './modules/access/access.module';
@@ -24,16 +22,14 @@ import { HealthModule } from './modules/health/health.module';
     AuthModule,
     // AccessModule,
     ComplexModule,
-    // HouseModule,
+    HouseModule,
     UserModule,
     RegistrationCodeModule,
     HealthModule,
     // VehicleModule,
     // VisitorModule,
   ],
-  controllers: [AppController],
   providers: [
-    AppService,
     {
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor,
