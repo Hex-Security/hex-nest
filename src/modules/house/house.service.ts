@@ -73,4 +73,74 @@ export class HouseService {
   async delete(id: string): Promise<HouseDocument> {
     return this.house_model.findByIdAndDelete(id).exec();
   }
+
+  async activate(id: string): Promise<HouseDocument> {
+    return this.update(id, { active: true });
+  }
+
+  async deactivate(id: string): Promise<HouseDocument> {
+    return this.update(id, { active: false });
+  }
+
+  async setOwner(_id: string, owner_id: string): Promise<HouseDocument> {
+    // 1. Find the house
+    const house = await this.findOne(_id);
+
+    // 2. Check if the house exists
+    if (!house) {
+      throw new NotFoundException(`House with ID ${_id} not found`);
+    }
+
+    // 3. Update the house entity
+    house.owner = await this.user_service.findOne(owner_id);
+
+    return house.save();
+  }
+
+  async addResident(_id: string, resident_id: string): Promise<HouseDocument> {
+    // 1. Find the house
+    const house = await this.findOne(_id);
+
+    // 2. Check if the house exists
+    if (!house) {
+      throw new NotFoundException(`House with ID ${_id} not found`);
+    }
+
+    // 3. Get the user resident
+    const resident = await this.user_service.findOne(resident_id);
+
+    // 3. Check if the resident already exists
+    if (
+      house.residents.some(
+        (resident) => resident._id.toString() === resident_id.toString(),
+      )
+    ) {
+      return house; // Resident already exists
+    }
+
+    // 3. Update the house entity
+    house.residents.push(resident);
+
+    return house.save();
+  }
+
+  async removeResident(
+    _id: string,
+    resident_id: string,
+  ): Promise<HouseDocument> {
+    // 1. Find the house
+    const house = await this.findOne(_id);
+
+    // 2. Check if the house exists
+    if (!house) {
+      throw new NotFoundException(`House with ID ${_id} not found`);
+    }
+
+    // 3. Remove the resident from the house
+    house.residents = house.residents.filter(
+      (resident) => resident._id.toString() !== resident_id.toString(),
+    );
+
+    return house.save();
+  }
 }

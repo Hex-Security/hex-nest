@@ -27,7 +27,7 @@ import { AuthorizationGuard } from '../auth/guard/authorization.guard';
 import { ResourceAccessGuard } from '../auth/guard/resource.guard';
 
 @ApiTags('Houses')
-@Controller('complex/:_cid/houses')
+@Controller('complex/:complex_id/houses')
 export class HouseController {
   constructor(private readonly house_service: HouseService) {}
 
@@ -39,7 +39,7 @@ export class HouseController {
   @Roles(RolesEnum.ADMIN)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
   async create(
-    @Param('_cid') complex_id: string,
+    @Param('complex_id') complex_id: string,
     @Body() dto: CreateHouseDto,
   ): Promise<HouseDocument> {
     return this.house_service.create(complex_id, dto);
@@ -47,26 +47,26 @@ export class HouseController {
 
   @Get()
   async findAllByComplex(
-    @Param('_cid') complex_id: string,
+    @Param('complex_id') complex_id: string,
   ): Promise<HouseDocument[]> {
     return this.house_service.findAllByComplex(complex_id);
   }
 
-  @Get(':_hid')
-  async findOne(@Param('_hid') _hid: string): Promise<HouseDocument> {
-    return this.house_service.findOne(_hid);
+  @Get(':house_id')
+  async findOne(@Param('house_id') house_id: string): Promise<HouseDocument> {
+    return this.house_service.findOne(house_id);
   }
 
-  @Put(':_hid')
+  @Put(':house_id')
   async update(
-    @Param('_hid') _hid: string,
+    @Param('house_id') house_id: string,
     @Body() dto: UpdateHouseDto,
   ): Promise<HouseDocument> {
-    return this.house_service.update(_hid, dto);
+    return this.house_service.update(house_id, dto);
   }
 
-  @Delete(':_hid')
-  async remove(@Param('_hid') _hid: string): Promise<HouseDocument> {
-    return this.house_service.delete(_hid);
+  @Delete(':house_id')
+  async remove(@Param('house_id') house_id: string): Promise<HouseDocument> {
+    return this.house_service.delete(house_id);
   }
 }

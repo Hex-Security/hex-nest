@@ -4,10 +4,6 @@ import mongoose from 'mongoose';
 
 export class UpdateHouseDto {
   @IsOptional()
-  @Type(() => mongoose.Schema.Types.ObjectId)
-  owner_id?: mongoose.Schema.Types.ObjectId;
-
-  @IsOptional()
   @IsNumber()
   bedrooms?: number;
 

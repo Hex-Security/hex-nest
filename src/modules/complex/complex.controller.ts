@@ -57,18 +57,18 @@ export class ComplexController {
     return this.complex_service.findAll();
   }
 
-  @Get(':_cid')
+  @Get(':complex_id')
   @ApiBearerAuth()
   @ApiOperation(find_complex.operation)
   @ApiParam(find_complex.param)
   @ApiResponse(find_complex.ok_response)
   @Roles(RolesEnum.ADMIN)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
-  findOne(@Param('_cid') _cid: string) {
-    return this.complex_service.findOne(_cid);
+  findOne(@Param('complex_id') complex_id: string) {
+    return this.complex_service.findOne(complex_id);
   }
 
-  @Put(':_cid')
+  @Put(':complex_id')
   @ApiBearerAuth()
   @ApiOperation(update_complex.operation)
   @ApiParam(update_complex.param)
@@ -76,69 +76,72 @@ export class ComplexController {
   @ApiResponse(update_complex.ok_response)
   @Roles(RolesEnum.ADMIN)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
-  update(@Param('_cid') _cid: string, @Body() dto: UpdateComplexDto) {
-    return this.complex_service.update(_cid, dto);
+  update(
+    @Param('complex_id') complex_id: string,
+    @Body() dto: UpdateComplexDto,
+  ) {
+    return this.complex_service.update(complex_id, dto);
   }
 
-  @Delete(':_cid')
+  @Delete(':complex_id')
   @ApiBearerAuth()
   @Roles(RolesEnum.DEV)
   @UseGuards(AuthenticationGuard, AuthorizationGuard)
-  remove(@Param('_cid') _cid: string) {
-    return this.complex_service.remove(_cid);
+  remove(@Param('complex_id') complex_id: string) {
+    return this.complex_service.remove(complex_id);
   }
 
-  @Post(':_cid/guard')
+  @Post(':complex_id/guard')
   @ApiBearerAuth()
   @Roles(RolesEnum.ADMIN)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
-  addGuard(@Param('_cid') _cid: string, @Body() dto: AddGuardDto) {
-    return this.complex_service.addGuard(_cid, dto._id);
+  addGuard(@Param('complex_id') complex_id: string, @Body() dto: AddGuardDto) {
+    return this.complex_service.addGuard(complex_id, dto._id);
   }
 
-  @Get(':_cid/guard')
+  @Get(':complex_id/guard')
   @ApiBearerAuth()
   @Roles(RolesEnum.ADMIN)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
-  findGuards(@Param('_cid') _cid: string): Promise<User[]> {
-    return this.complex_service.findGuards(_cid);
+  findGuards(@Param('complex_id') complex_id: string): Promise<User[]> {
+    return this.complex_service.findGuards(complex_id);
   }
 
-  @Delete(':_cid/guard/:guard_id')
+  @Delete(':complex_id/guard/:guard_id')
   @ApiBearerAuth()
   @Roles(RolesEnum.ADMIN)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
   removeGuard(
-    @Param('_cid') _cid: string,
+    @Param('complex_id') complex_id: string,
     @Param('guard_id') guard_id: string,
   ) {
-    return this.complex_service.removeGuard(_cid, guard_id);
+    return this.complex_service.removeGuard(complex_id, guard_id);
   }
 
-  @Post(':_cid/admin')
+  @Post(':complex_id/admin')
   @ApiBearerAuth()
   @Roles(RolesEnum.ADMIN)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
-  addAdmin(@Param('_cid') _cid: string, @Body() dto: AddAdminDto) {
-    return this.complex_service.addAdmin(_cid, dto._id);
+  addAdmin(@Param('complex_id') complex_id: string, @Body() dto: AddAdminDto) {
+    return this.complex_service.addAdmin(complex_id, dto._id);
   }
 
-  @Get(':_cid/admin')
+  @Get(':complex_id/admin')
   @ApiBearerAuth()
   @Roles(RolesEnum.ADMIN)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
-  findAdmins(@Param('_cid') _cid: string): Promise<User[]> {
-    return this.complex_service.findAdmins(_cid);
+  findAdmins(@Param('complex_id') complex_id: string): Promise<User[]> {
+    return this.complex_service.findAdmins(complex_id);
   }
 
-  @Delete(':_cid/admin/:admin_id')
+  @Delete(':complex_id/admin/:admin_id')
   @ApiBearerAuth()
   @Roles(RolesEnum.ADMIN)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
   removeAdmin(
-    @Param('_cid') _cid: string,
+    @Param('complex_id') complex_id: string,
     @Param('admin_id') admin_id: string,
   ) {
-    return this.complex_service.removeAdmin(_cid, admin_id);
+    return this.complex_service.removeAdmin(complex_id, admin_id);
   }
 }
