@@ -25,11 +25,16 @@ export class ResourceAccessGuard implements CanActivate {
 
     // Validations:
     // 1. User can only access their own resources
-    //    If _id is provided, the user is trying to access a specific resource
-    //    If _id is not provided, the user is trying to access its own resources
+    //    If user_id is provided, the user is trying to access a specific resource
+    //    If user_id is not provided, the user is trying to access its own resources
+    //    If house_id is provided, the user is trying to access a specific house
     if (
       user.role === RolesEnum.USER &&
       ((user_id !== undefined && user._id.toString() === user_id) ||
+        (house_id !== undefined &&
+          user.data.user.houses
+            .map((h) => h._id.toString())
+            .includes(house_id)) ||
         (user_id === undefined &&
           complex_id === undefined &&
           house_id === undefined))

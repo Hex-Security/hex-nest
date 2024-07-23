@@ -99,10 +99,18 @@ export class UserService {
       user.data.user.houses.map((house) => house._id.toString()),
     );
 
+    console.log(houses);
+
+    if (!houses) {
+      throw new NotFoundException('Houses not found');
+    }
+
     // 3. Find the house owner
-    const owner = houses.find((house) =>
-      house.residents.some((resident) => resident._id.toString() === id),
-    ).owner;
+    const owner = houses[0].owner;
+
+    if (!owner) {
+      throw new NotFoundException('Owner not found');
+    }
 
     return owner;
   }

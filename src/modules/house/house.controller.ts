@@ -59,9 +59,7 @@ export class HouseController {
   @ApiBearerAuth()
   @Roles(RolesEnum.ADMIN, RolesEnum.GUARD, RolesEnum.USER)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
-  async findOne(
-    @Param() @Param('house_id') house_id: string,
-  ): Promise<HouseDocument> {
+  async findOne(@Param('house_id') house_id: string): Promise<HouseDocument> {
     return this.house_service.findOne(house_id);
   }
 

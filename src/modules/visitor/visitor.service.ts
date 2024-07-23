@@ -66,7 +66,12 @@ export class VisitorService {
     const complex = await this.complex_service.findOne(dto.complex);
 
     // 5. Find vehicle in the vehicle collection
-    const vehicle = await this.vehicle_service.findOne(dto.vehicle);
+
+    let vehicle;
+
+    if (dto.vehicle) {
+      vehicle = await this.vehicle_service.findOne(dto.vehicle);
+    }
 
     // 6. Find house in the house collection
     const house = await this.house_service.findOne(dto.house);
@@ -97,8 +102,16 @@ export class VisitorService {
     await this.complex_service.addVisitor(dto.complex, visitor._id.toString());
 
     // 11. Update the vehicle's visitors
-    await this.vehicle_service.setOwnerVisitor(
-      dto.vehicle,
+    if (dto.vehicle) {
+      await this.vehicle_service.setOwnerVisitor(
+        dto.vehicle,
+        visitor._id.toString(),
+      );
+    }
+
+    // 12. Update the user's visitors
+    await this.user_service.addVisitor(
+      requested_by._id.toString(),
       visitor._id.toString(),
     );
 

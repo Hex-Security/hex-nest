@@ -31,7 +31,7 @@ export class House {
   vehicles: Vehicle[];
 
   @Prop({
-    required: true,
+    default: [],
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Visitor' }],
   })
   visitors: Visitor[];

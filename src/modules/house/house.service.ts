@@ -14,6 +14,7 @@ import { UserService } from '../user/user.service';
 import { User, UserDocument } from 'src/schemas/user.schema';
 import { Vehicle } from 'src/schemas/vehicle.schema';
 import { Visitor } from 'src/schemas/visitor.schema';
+import { VisitorService } from '../visitor/visitor.service';
 
 @Injectable()
 export class HouseService {
@@ -24,6 +25,8 @@ export class HouseService {
     private readonly complex_service: ComplexService,
     @Inject(forwardRef(() => UserService))
     private readonly user_service: UserService,
+    @Inject(forwardRef(() => VisitorService))
+    private readonly visitor_service: VisitorService,
   ) {}
 
   async create(
@@ -291,7 +294,7 @@ export class HouseService {
     }
 
     // 3. Get the visitor
-    const visitor = await this.user_service.findOne(visitor_id);
+    const visitor = await this.visitor_service.findOne(visitor_id);
 
     // 4. Check if the visitor exists
     if (!visitor) {
