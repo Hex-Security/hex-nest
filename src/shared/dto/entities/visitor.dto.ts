@@ -1,4 +1,3 @@
-import { Type } from 'class-transformer';
 import {
   IsDate,
   IsEmail,
@@ -8,18 +7,25 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import mongoose from 'mongoose';
 import { VisitorStatus } from '../../enum/visitor.enum';
 import { PartialType } from '@nestjs/swagger';
 
-export class CreateVisitorDto {
+export class VisitorDto {
   @IsNotEmpty()
-  @Type(() => mongoose.Schema.Types.ObjectId)
-  complex_id: mongoose.Schema.Types.ObjectId;
+  @IsString()
+  _id: string;
 
   @IsNotEmpty()
-  @Type(() => mongoose.Schema.Types.ObjectId)
-  host_id: mongoose.Schema.Types.ObjectId;
+  @IsString()
+  complex: string;
+
+  @IsNotEmpty()
+  @IsString()
+  host: string;
+
+  @IsNotEmpty()
+  @IsString()
+  house: string;
 
   @IsNotEmpty()
   @IsString()
@@ -29,49 +35,35 @@ export class CreateVisitorDto {
   @IsString()
   last_name: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsEmail()
-  email: string;
+  email?: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsMobilePhone()
-  phone: string;
+  phone?: string;
+
+  @IsOptional()
+  @IsString()
+  id_number?: string;
+
+  @IsOptional()
+  @IsString()
+  vehicle?: string;
 
   @IsNotEmpty()
   @IsString()
-  id_number: string;
-
-  @IsNotEmpty()
-  @Type(() => mongoose.Schema.Types.ObjectId)
-  vehicle_id: mongoose.Schema.Types.ObjectId;
-
-  @IsNotEmpty()
-  @Type(() => mongoose.Schema.Types.ObjectId)
-  requested_by: mongoose.Schema.Types.ObjectId;
-
-  @IsNotEmpty()
-  @Type(() => mongoose.Schema.Types.ObjectId)
-  approved_by: mongoose.Schema.Types.ObjectId;
-
-  @IsNotEmpty()
-  @IsDate()
-  expected_arrival: Date;
+  requested_by: string;
 
   @IsOptional()
-  @IsDate()
-  expected_departure?: Date;
-
-  @IsOptional()
-  @IsDate()
-  actual_arrival?: Date;
-
-  @IsOptional()
-  @IsDate()
-  actual_departure?: Date;
+  @IsString()
+  approved_by?: string;
 
   @IsNotEmpty()
   @IsEnum({ type: 'enum', enum: VisitorStatus })
   status: VisitorStatus;
 }
 
-export class UpdateVisitorDto extends PartialType(CreateVisitorDto) {}
+
+
+

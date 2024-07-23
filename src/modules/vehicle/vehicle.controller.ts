@@ -28,7 +28,7 @@ import { create_vehicle } from './swagger/create-vehicle.swagger';
 import { QueryVehicleDto } from 'src/shared/dto/vehicle/query-vehicle.dto';
 
 @ApiTags('Vehicles')
-@Controller('vehicles')
+@Controller('vehicle')
 export class VehicleController {
   constructor(private readonly vehicle_service: VehicleService) {}
 
@@ -61,23 +61,25 @@ export class VehicleController {
     return this.vehicle_service.findOne(vehicle_id);
   }
 
-  @Put(':id')
+  @Put(':vehicle_id')
   @ApiBearerAuth()
   @Roles(RolesEnum.ADMIN, RolesEnum.USER)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
   async update(
-    @Param('id') id: string,
+    @Param('vehicle_id') vehicle_id: string,
     @Body() dto: UpdateVehicleDto,
   ): Promise<VehicleDocument> {
-    return this.vehicle_service.update(id, dto);
+    return this.vehicle_service.update(vehicle_id, dto);
   }
 
-  @Delete(':id')
+  @Delete(':vehicle_id')
   @ApiBearerAuth()
   @Roles(RolesEnum.ADMIN, RolesEnum.USER)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
-  async remove(@Param('id') id: string): Promise<VehicleDocument> {
-    return this.vehicle_service.delete(id);
+  async remove(
+    @Param('vehicle_id') vehicle_id: string,
+  ): Promise<VehicleDocument> {
+    return this.vehicle_service.delete(vehicle_id);
   }
 
   @Post('/query')
@@ -86,5 +88,32 @@ export class VehicleController {
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
   async query(@Body() query: QueryVehicleDto): Promise<VehicleDocument[]> {
     return this.vehicle_service.query(query);
+  }
+
+  @Get(':vehicle_id/owner')
+  @ApiBearerAuth()
+  @Roles(RolesEnum.ADMIN, RolesEnum.GUARD, RolesEnum.USER)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
+  async findOwner(@Param('vehicle_id') vehicle_id: string) {
+    return this.vehicle_service.findOwner(vehicle_id);
+  }
+
+  @Post(':vehicle_id/owner')
+  @ApiBearerAuth()
+  @Roles(RolesEnum.ADMIN)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
+  async setOwner(
+    @Param('vehicle_id') vehicle_id: string,
+    @Body() dto: { owner: string },
+  ) {
+    return this.vehicle_service.setOwner(vehicle_id, dto.owner);
+  }
+
+  @Delete(':vehicle_id/owner')
+  @ApiBearerAuth()
+  @Roles(RolesEnum.ADMIN)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
+  async removeOwner(@Param('vehicle_id') vehicle_id: string) {
+    return this.vehicle_service.removeOwner(vehicle_id);
   }
 }

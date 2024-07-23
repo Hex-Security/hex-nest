@@ -9,6 +9,7 @@ import { ComplexService } from '../complex/complex.service';
 import { UserService } from '../user/user.service';
 import { HouseService } from '../house/house.service';
 import { VehicleService } from '../vehicle/vehicle.service';
+import { VisitorService } from '../visitor/visitor.service';
 
 @Module({
   imports: [EntityModule, FirebaseModule],
@@ -20,6 +21,7 @@ import { VehicleService } from '../vehicle/vehicle.service';
     UserService,
     HouseService,
     VehicleService,
+    VisitorService,
   ],
   controllers: [RegistrationCodeController],
   exports: [RegistrationCodeService],

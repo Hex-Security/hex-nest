@@ -29,6 +29,7 @@ import { ResourceAccessGuard } from '../auth/guard/resource.guard';
 import { SetOwnerDto } from './dto/set-owner.dto';
 import { User } from 'src/schemas/user.schema';
 import { AddResidentDto } from './dto/add-resident.dto';
+import { AddVehicleDto } from '../complex/dto/add-vehicle.dto';
 
 @ApiTags('Houses')
 @Controller('house')
@@ -117,7 +118,7 @@ export class HouseController {
   @Roles(RolesEnum.ADMIN, RolesEnum.GUARD, RolesEnum.USER)
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
   async getResidents(@Param('house_id') house_id: string): Promise<User[]> {
-    return this.house_service.getResidents(house_id);
+    return this.house_service.findResidents(house_id);
   }
 
   @Post(':house_id/residents')
@@ -140,5 +141,35 @@ export class HouseController {
     @Param('resident_id') resident_id: string,
   ): Promise<HouseDocument> {
     return this.house_service.removeResident(house_id, resident_id);
+  }
+
+  @Get(':house_id/vehicles')
+  @ApiBearerAuth()
+  @Roles(RolesEnum.ADMIN, RolesEnum.GUARD, RolesEnum.USER)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
+  async getVehicles(@Param('house_id') house_id: string) {
+    return this.house_service.findVehicles(house_id);
+  }
+
+  @Post(':house_id/vehicles')
+  @ApiBearerAuth()
+  @Roles(RolesEnum.ADMIN, RolesEnum.GUARD)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
+  async addVehicle(
+    @Param('house_id') house_id: string,
+    @Body() dto: AddVehicleDto,
+  ) {
+    return this.house_service.addVehicle(house_id, dto.vehicle);
+  }
+
+  @Delete(':house_id/vehicles/:vehicle_id')
+  @ApiBearerAuth()
+  @Roles(RolesEnum.ADMIN, RolesEnum.GUARD)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
+  async removeVehicle(
+    @Param('house_id') house_id: string,
+    @Param('vehicle_id') vehicle_id: string,
+  ) {
+    return this.house_service.removeVehicle(house_id, vehicle_id);
   }
 }

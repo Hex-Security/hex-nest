@@ -15,6 +15,7 @@ import { RolesEnum } from 'src/shared/enum/roles.enum';
 import { HouseService } from '../house/house.service';
 import { VehicleService } from '../vehicle/vehicle.service';
 import { Vehicle } from 'src/schemas/vehicle.schema';
+import { VisitorService } from '../visitor/visitor.service';
 @Injectable()
 export class UserService {
   constructor(
@@ -26,6 +27,8 @@ export class UserService {
     private readonly house_service: HouseService,
     @Inject(forwardRef(() => VehicleService))
     private readonly vehicle_service: VehicleService,
+    @Inject(forwardRef(() => VisitorService))
+    private readonly visitor_service: VisitorService,
   ) {}
 
   async create(dto: CreateUserDto): Promise<UserDocument> {
@@ -85,6 +88,23 @@ export class UserService {
 
   async findMany(ids: string[]) {
     return this.user_model.find({ _id: { $in: ids } }).exec();
+  }
+
+  async findUsersHouseOwner(id: string): Promise<User> {
+    // 1. Find user data
+    const user = await this.findOne(id);
+
+    // 2. Find users house of residence
+    const houses = await this.house_service.findMany(
+      user.data.user.houses.map((house) => house._id.toString()),
+    );
+
+    // 3. Find the house owner
+    const owner = houses.find((house) =>
+      house.residents.some((resident) => resident._id.toString() === id),
+    ).owner;
+
+    return owner;
   }
 
   async update(id: string, dto: UpdateUserDto): Promise<UserDocument> {
@@ -334,5 +354,39 @@ export class UserService {
       .populate('vehicles')
       .exec();
     return user.vehicles;
+  }
+
+  async findVisitors(_id: string): Promise<UserDocument> {
+    // 1. Find the user
+    const user = await this.user_model
+      .findById(_id)
+      .populate('data.user.visitors')
+      .exec();
+    return user;
+  }
+
+  async addVisitor(_id: string, visitor_id: string): Promise<UserDocument> {
+    // 1. Find the user
+    const user = await this.findOne(_id);
+
+    // 2. Find the visitor
+    const visitor = await this.visitor_service.findOne(visitor_id);
+
+    // 3. Add the visitor to the list
+    user.data.user.visitors.push(visitor);
+
+    return user.save();
+  }
+
+  async removeVisitor(_id: string, visitor_id: string): Promise<UserDocument> {
+    // 1. Find the user
+    const user = await this.findOne(_id);
+
+    // 2. Remove the visitor from the list
+    user.data.user.visitors = user.data.user.visitors.filter(
+      (visitor) => visitor._id.toString() !== visitor_id.toString(),
+    );
+
+    return user.save();
   }
 }

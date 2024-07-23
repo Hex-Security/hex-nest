@@ -3,6 +3,7 @@ import mongoose, { HydratedDocument } from 'mongoose';
 import { Complex } from './complex.schema';
 import { User } from './user.schema';
 import { Vehicle } from './vehicle.schema';
+import { Visitor } from './visitor.schema';
 
 export type HouseDocument = HydratedDocument<House>;
 
@@ -28,6 +29,12 @@ export class House {
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Vehicle' }] })
   vehicles: Vehicle[];
+
+  @Prop({
+    required: true,
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Visitor' }],
+  })
+  visitors: Visitor[];
 
   @Prop()
   bedrooms: number;

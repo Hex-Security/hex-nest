@@ -12,6 +12,8 @@ import { CreateHouseDto } from 'src/shared/dto/house/create-house.dto';
 import { UpdateHouseDto } from 'src/shared/dto/house/update-house.dto';
 import { UserService } from '../user/user.service';
 import { User, UserDocument } from 'src/schemas/user.schema';
+import { Vehicle } from 'src/schemas/vehicle.schema';
+import { Visitor } from 'src/schemas/visitor.schema';
 
 @Injectable()
 export class HouseService {
@@ -65,7 +67,17 @@ export class HouseService {
   }
 
   async findOne(id: string): Promise<HouseDocument> {
-    return this.house_model.findById(id).exec();
+    const house = await this.house_model.findById(id).exec();
+
+    if (!house) {
+      throw new NotFoundException(`House with ID ${id} not found`);
+    }
+
+    return house;
+  }
+
+  async findMany(ids: string[]): Promise<HouseDocument[]> {
+    return this.house_model.find({ _id: { $in: ids } }).exec();
   }
 
   async update(id: string, dto: UpdateHouseDto): Promise<HouseDocument> {
@@ -151,7 +163,7 @@ export class HouseService {
     return house.save();
   }
 
-  async getResidents(_id: string): Promise<User[]> {
+  async findResidents(_id: string): Promise<User[]> {
     const house = await this.house_model
       .findById(_id)
       .populate('residents')
@@ -207,6 +219,103 @@ export class HouseService {
     // 3. Remove the resident from the house
     house.residents = house.residents.filter(
       (resident) => resident._id.toString() !== resident_id.toString(),
+    );
+
+    return house.save();
+  }
+
+  async findVehicles(_id: string): Promise<Vehicle[]> {
+    const house = await this.house_model
+      .findById(_id)
+      .populate('vehicles')
+      .exec();
+    return house.vehicles;
+  }
+
+  async addVehicle(_id: string, vehicle_id: string): Promise<HouseDocument> {
+    // 1. Find the house
+    const house = await this.findOne(_id);
+
+    // 2. Check if the house exists
+    if (!house) {
+      throw new NotFoundException(`House with ID ${_id} not found`);
+    }
+
+    // 3. Get the vehicle
+    const vehicle = await this.user_service.findOne(vehicle_id);
+
+    // 4. Check if the vehicle exists
+    if (!vehicle) {
+      throw new NotFoundException(`Vehicle with ID ${vehicle_id} not found`);
+    }
+
+    // 5. Update the house entity
+    house.vehicles.push(vehicle.toObject());
+
+    return house.save();
+  }
+
+  async removeVehicle(_id: string, vehicle_id: string): Promise<HouseDocument> {
+    // 1. Find the house
+    const house = await this.findOne(_id);
+
+    // 2. Check if the house exists
+    if (!house) {
+      throw new NotFoundException(`House with ID ${_id} not found`);
+    }
+
+    // 3. Remove the vehicle from the house
+    house.vehicles = house.vehicles.filter(
+      (vehicle) => vehicle._id.toString() !== vehicle_id.toString(),
+    );
+
+    return house.save();
+  }
+
+  async findVisitors(_id: string): Promise<Visitor[]> {
+    // 1. Find the house
+    const house = await this.house_model
+      .findById(_id)
+      .populate('visitors')
+      .exec();
+    return house.visitors;
+  }
+
+  async addVisitor(_id: string, visitor_id: string): Promise<HouseDocument> {
+    // 1. Find the house
+    const house = await this.findOne(_id);
+
+    // 2. Check if the house exists
+    if (!house) {
+      throw new NotFoundException(`House with ID ${_id} not found`);
+    }
+
+    // 3. Get the visitor
+    const visitor = await this.user_service.findOne(visitor_id);
+
+    // 4. Check if the visitor exists
+    if (!visitor) {
+      throw new NotFoundException(`Visitor with ID ${visitor_id} not found`);
+    }
+
+    // 5. Update the house entity
+    house.visitors.push(visitor.toObject());
+
+    return house.save();
+  }
+
+  async removeVisitor(_id: string, visitor_id: string): Promise<HouseDocument> {
+    // 1. Find the house
+    const house = await this.findOne(_id);
+
+    // 2. Check if the house exists
+    if (!house) {
+      throw new NotFoundException(`House with ID ${_id} not found`);
+    }
+
+    // 3. Remove the visitor from the house
+    house.visitors = house.visitors.filter(
+      (visitor) => visitor._id.toString() !== visitor_id.toString(),
     );
 
     return house.save();

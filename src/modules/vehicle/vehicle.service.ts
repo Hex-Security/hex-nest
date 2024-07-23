@@ -1,4 +1,9 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import mongoose, { Model } from 'mongoose';
 import { Vehicle, VehicleDocument } from 'src/schemas/vehicle.schema';
@@ -7,6 +12,9 @@ import { CreateVehicleDto } from 'src/shared/dto/vehicle/create-vehicle.dto';
 import { UpdateVehicleDto } from 'src/shared/dto/vehicle/update-vehicle.dto';
 import { QueryVehicleDto } from 'src/shared/dto/vehicle/query-vehicle.dto';
 import { ComplexService } from '../complex/complex.service';
+import { User } from 'src/schemas/user.schema';
+import { VisitorService } from '../visitor/visitor.service';
+import { Visitor } from 'src/schemas/visitor.schema';
 
 @Injectable()
 export class VehicleService {
@@ -17,11 +25,16 @@ export class VehicleService {
     private readonly user_service: UserService,
     @Inject(forwardRef(() => ComplexService))
     private readonly complex_service: ComplexService,
+    @Inject(forwardRef(() => VisitorService))
+    private readonly visitor_service: VisitorService,
   ) {}
 
   async create(dto: CreateVehicleDto): Promise<VehicleDocument> {
     // 1. Find the owner in the user collection
     const owner = await this.user_service.findOne(dto.owner);
+
+    // 2. Find the visitor owner in the visitor collection
+    const owner_visitor = await this.user_service.findOne(dto.owner_visitor);
 
     // 2. Find the complex in the complex collection
     const complex = await this.complex_service.findOne(dto.complex);
@@ -34,6 +47,7 @@ export class VehicleService {
       _id,
       ...dto,
       owner,
+      owner_visitor,
       complex,
     }).save();
 
@@ -76,7 +90,13 @@ export class VehicleService {
   }
 
   async findOne(id: string): Promise<VehicleDocument> {
-    return this.vehicle_model.findById(id).exec();
+    const vechicle = await this.vehicle_model.findById(id).exec();
+
+    if (!vechicle) {
+      throw new NotFoundException(`Vehicle with id ${id} not found`);
+    }
+
+    return vechicle;
   }
 
   async update(id: string, dto: UpdateVehicleDto): Promise<VehicleDocument> {
@@ -85,5 +105,72 @@ export class VehicleService {
 
   async delete(id: string): Promise<VehicleDocument> {
     return this.vehicle_model.findByIdAndDelete(id).exec();
+  }
+
+  async findOwner(id: string): Promise<User> {
+    const vehicle = await this.findOne(id);
+    return this.user_service.findOne(vehicle.owner._id.toString());
+  }
+
+  async setOwner(id: string, owner_id: string): Promise<VehicleDocument> {
+    // 1. Find the vehicle
+    const vehicle = await this.findOne(id);
+
+    // 2. Find the new owner
+    const owner = await this.user_service.findOne(owner_id);
+
+    // 3. Update the vehicle's owner
+    vehicle.owner = owner;
+
+    // 4. Save the changes
+    return vehicle.save();
+  }
+
+  async removeOwner(id: string): Promise<VehicleDocument> {
+    // 1. Find the vehicle
+    const vehicle = await this.findOne(id);
+
+    // 2. Update the vehicle's owner
+    vehicle.owner = null;
+
+    // 3. Save the changes
+    return vehicle.save();
+  }
+
+  async findOwnerVisitor(id: string): Promise<Visitor> {
+    const vehicle = await this.vehicle_model
+      .findById(id)
+      .populate('owner_visitor')
+      .exec();
+
+    return vehicle.owner_visitor;
+  }
+
+  async setOwnerVisitor(
+    id: string,
+    owner_visitor_id: string,
+  ): Promise<VehicleDocument> {
+    // 1. Find the vehicle
+    const vehicle = await this.findOne(id);
+
+    // 2. Find the new owner visitor
+    const owner_visitor = await this.visitor_service.findOne(owner_visitor_id);
+
+    // 3. Update the vehicle's owner visitor
+    vehicle.owner_visitor = owner_visitor;
+
+    // 4. Save the changes
+    return vehicle.save();
+  }
+
+  async removeOwnerVisitor(id: string): Promise<VehicleDocument> {
+    // 1. Find the vehicle
+    const vehicle = await this.findOne(id);
+
+    // 2. Update the vehicle's owner visitor
+    vehicle.owner_visitor = null;
+
+    // 3. Save the changes
+    return vehicle.save();
   }
 }

@@ -13,6 +13,7 @@ import { ComplexService } from '../complex/complex.service';
 import { ComplexModule } from '../complex/complex.module';
 import { HouseService } from '../house/house.service';
 import { VehicleService } from '../vehicle/vehicle.service';
+import { VisitorService } from '../visitor/visitor.service';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { VehicleService } from '../vehicle/vehicle.service';
     ComplexService,
     HouseService,
     VehicleService,
+    VisitorService,
   ],
   controllers: [AuthController],
 })

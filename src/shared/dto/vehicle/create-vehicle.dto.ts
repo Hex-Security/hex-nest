@@ -21,6 +21,15 @@ export class CreateVehicleDto {
   @IsString()
   @ApiProperty({
     type: String,
+    description: 'Visitor Id',
+    example: '60f1b0b3b3f3b3b3b3f3b3b4',
+  })
+  owner_visitor: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @ApiProperty({
+    type: String,
     description: 'Vehicle complex',
     example: '60f1b0b3b3f3b3b3b3f3b3b4',
   })

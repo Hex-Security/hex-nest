@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
 import { User } from './user.schema';
 import { Complex } from './complex.schema';
+import { Visitor } from './visitor.schema';
 
 export type VehicleDocument = HydratedDocument<Vehicle>;
 
@@ -10,8 +11,11 @@ export class Vehicle {
   @Prop({ type: mongoose.Schema.Types.ObjectId })
   _id: mongoose.Types.ObjectId;
 
-  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   owner: User;
+
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Visitor' })
+  owner_visitor: Visitor;
 
   @Prop({
     required: true,

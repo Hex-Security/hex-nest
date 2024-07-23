@@ -3,6 +3,7 @@ import mongoose, { HydratedDocument } from 'mongoose';
 import { House } from './house.schema';
 import { Vehicle } from './vehicle.schema';
 import { Complex } from './complex.schema';
+import { Visitor } from './visitor.schema';
 
 export type UserDataDocument = HydratedDocument<UserData>;
 
@@ -16,6 +17,9 @@ export type GuardScheduleDocument = HydratedDocument<GuardSchedule>;
 export class ResidentData {
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'House' }] })
   houses: House[];
+
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Visitor' }] })
+  visitors: Visitor[];
 }
 
 @Schema({ _id: false })

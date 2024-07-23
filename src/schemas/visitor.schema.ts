@@ -5,6 +5,7 @@ import { isEmail, isMobilePhone } from 'class-validator';
 import { Vehicle } from './vehicle.schema';
 import { User } from './user.schema';
 import { VisitorStatus } from 'src/shared/enum/visitor.enum';
+import { House } from './house.schema';
 
 export type VisitorDocument = HydratedDocument<Visitor>;
 
@@ -22,6 +23,9 @@ export class Visitor {
 
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   host: User;
+
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'House' })
+  house: House;
 
   @Prop({ required: true })
   first_name: string;
@@ -41,7 +45,7 @@ export class Visitor {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Vehicle' })
   vehicle: Vehicle;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+  @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   requested_by: User;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })

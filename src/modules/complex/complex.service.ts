@@ -17,6 +17,7 @@ import { HouseService } from '../house/house.service';
 import { RolesEnum } from 'src/shared/enum/roles.enum';
 import { Vehicle } from 'src/schemas/vehicle.schema';
 import { VehicleService } from '../vehicle/vehicle.service';
+import { Visitor } from 'src/schemas/visitor.schema';
 
 @Injectable()
 export class ComplexService {
@@ -313,5 +314,58 @@ export class ComplexService {
       .exec();
 
     return complex.vehicles;
+  }
+
+  async findVisitors(_id: string): Promise<Visitor[]> {
+    const complex = await this.complex_model
+      .findById(_id)
+      .populate('visitors')
+      .exec();
+
+    return complex.visitors;
+  }
+
+  async findResidents(_id: string): Promise<User[]> {
+    const complex = await this.complex_model
+      .findById(_id)
+      .populate('residents')
+      .exec();
+
+    return complex.residents;
+  }
+
+  async addVisitor(_id: string, visitor_id: string): Promise<ComplexDocument> {
+    // 1. Find the complex
+    const complex = await this.findOne(_id);
+
+    // 2. Find the visitor
+    const visitor = await this.user_service.findOne(visitor_id);
+
+    // 3. Check if the visitor is already in the complex
+    if (complex.visitors.some((v) => v._id === visitor._id)) {
+      return complex;
+    }
+
+    // 4. Add the visitor to the complex
+    complex.visitors.push(visitor.toObject());
+
+    // 5. Save the complex
+    return complex.save();
+  }
+
+  async removeVisitor(
+    _id: string,
+    visitor_id: string,
+  ): Promise<ComplexDocument> {
+    // 1. Find the complex
+    const complex = await this.findOne(_id);
+
+    // 2. Remove the visitor from the complex
+    complex.visitors = complex.visitors.filter(
+      (v) => v._id.toString() !== visitor_id,
+    );
+
+    // 3. Save the complex
+    return complex.save();
   }
 }

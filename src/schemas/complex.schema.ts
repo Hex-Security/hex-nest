@@ -5,6 +5,7 @@ import { User } from './user.schema';
 import { AccessPoint, AccessPointSchema } from './access-point.schema';
 import { House } from './house.schema';
 import { Vehicle } from './vehicle.schema';
+import { Visitor } from './visitor.schema';
 
 export type ComplexDocument = HydratedDocument<Complex>;
 
@@ -67,6 +68,12 @@ export class Complex {
     ref: 'Vehicle',
   })
   vehicles: Vehicle[];
+
+  @Prop({
+    required: true,
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Visitor' }],
+  })
+  visitors: Visitor[];
 
   @Prop({ type: [AccessPointSchema] })
   access_points: AccessPoint[];

@@ -34,6 +34,7 @@ import { User } from 'src/schemas/user.schema';
 import { AddAdminDto } from 'src/shared/dto/complex/add-admin.dto';
 import { ReqWithUser } from 'src/shared/interfaces/req-with-user.interface';
 import { AddHouseDto } from './dto/add-house.dto';
+import { AddVehicleDto } from './dto/add-vehicle.dto';
 
 @ApiTags('Complex')
 @Controller('complex')
@@ -162,5 +163,46 @@ export class ComplexController {
   @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
   addHouse(@Param('complex_id') complex_id: string, @Body() dto: AddHouseDto) {
     return this.complex_service.addHouse(complex_id, dto.house);
+  }
+
+  @Delete(':complex_id/houses/:house_id')
+  @ApiBearerAuth()
+  @Roles(RolesEnum.ADMIN)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
+  removeHouse(
+    @Param('complex_id') complex_id: string,
+    @Param('house_id') house_id: string,
+  ) {
+    return this.complex_service.removeHouse(complex_id, house_id);
+  }
+
+  @Get(':complex_id/vehicles')
+  @ApiBearerAuth()
+  @Roles(RolesEnum.ADMIN, RolesEnum.GUARD)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
+  findVehicles(@Param('complex_id') complex_id: string) {
+    return this.complex_service.findVehicles(complex_id);
+  }
+
+  @Post(':complex_id/vehicles')
+  @ApiBearerAuth()
+  @Roles(RolesEnum.ADMIN, RolesEnum.GUARD)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
+  addVehicle(
+    @Param('complex_id') complex_id: string,
+    @Body() dto: AddVehicleDto,
+  ) {
+    return this.complex_service.addVehicle(complex_id, dto.vehicle);
+  }
+
+  @Delete(':complex_id/vehicles/:vehicle_id')
+  @ApiBearerAuth()
+  @Roles(RolesEnum.ADMIN, RolesEnum.GUARD)
+  @UseGuards(AuthenticationGuard, AuthorizationGuard, ResourceAccessGuard)
+  removeVehicle(
+    @Param('complex_id') complex_id: string,
+    @Param('vehicle_id') vehicle_id: string,
+  ) {
+    return this.complex_service.removeVehicle(complex_id, vehicle_id);
   }
 }
